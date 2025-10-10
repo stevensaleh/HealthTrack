@@ -8,7 +8,7 @@ export default function Home() {
         margin: 0,
         padding: 0,
         textAlign: "center",
-        backgroundColor: "#a2a9a5ff",
+        background: "linear-gradient(to top, #a2a9a5, #d7e0dd, #f5f5f5)"
       }}
     >
       <h1 style={{ 
