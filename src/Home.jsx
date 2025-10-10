@@ -10,9 +10,11 @@ export default function Home() {
         margin: 0,
         padding: 0,
         textAlign: "center",
+        backgroundColor: "#a2a9a5ff",
       }}
     >
-      <h1 style={{ fontFamily: "'BBH Sans Hegarty', sans-serif", fontSize: "2.5rem" }}>
+      <h1 style={{ fontFamily: "'BBH Sans Hegarty', sans-serif", 
+        fontSize: "2.5rem" , color: "#1E1E1E" }}>
         Welcome to HealthTrack 👟🏋️‍♂️🥗
       </h1>
     </div>
