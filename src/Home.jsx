@@ -12,7 +12,7 @@ export default function Home() {
         textAlign: "center",
       }}
     >
-      <h1 style={{ fontSize: "2.5rem" }}>
+      <h1 style={{ fontFamily: "'BBH Sans Hegarty', sans-serif", fontSize: "2.5rem" }}>
         Welcome to HealthTrack 👟🏋️‍♂️🥗
       </h1>
     </div>
