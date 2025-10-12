@@ -8,7 +8,7 @@ export default function Home() {
         margin: 0,
         padding: 0,
         textAlign: "center",
-        background: "linear-gradient(to top, #a2a9a5, #d7e0dd, #f5f5f5)"
+        background: "linear-gradient(to bottom, #1E1E1E, #3E8E7E, #F2F2F2)"
       }}
     >
       <h1 style={{ 
@@ -18,7 +18,7 @@ export default function Home() {
         transform: "translateX(-50%)",
         fontFamily: "'BBH Sans Hegarty', sans-serif",
         fontSize: "2.5rem",
-        color: "#1E1E1E" ,
+        color: "#FFF" ,
         whiteSpace: "nowrap", 
       }}
     >
