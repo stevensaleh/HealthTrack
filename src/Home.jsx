@@ -2,28 +2,18 @@ export default function Home() {
   return (
     <div
       style={{
-        position: "relative",
-        height: "100vh",
-        width: "100vw",
-        margin: 0,
-        padding: 0,
+        position: "fixed",
+        inset: 0,
+        background: "linear-gradient(to bottom, #1E1E1E, #3E8E7E, #F2F2F2)",
+        color: "#fff",
         textAlign: "center",
-        background: "linear-gradient(to bottom, #1E1E1E, #3E8E7E, #F2F2F2)"
+        padding: "40px",
+        overflowY: "auto",
+        overflowX: "auto",
       }}
     >
-      <h1 style={{ 
-        position: "absolute",
-        top: "50px",
-        left: "50%",
-        transform: "translateX(-50%)",
-        fontFamily: "'BBH Sans Hegarty', sans-serif",
-        fontSize: "2.5rem",
-        color: "#FFF" ,
-        whiteSpace: "nowrap", 
-      }}
-    >
-        Welcome to HealthTrack 👟🏋️‍♂️🥗
-      </h1>
+      <h1>Welcome to HealthTrack 👟</h1>
+      <p>Your journey to a healthier you starts here.</p>
     </div>
   );
 }
