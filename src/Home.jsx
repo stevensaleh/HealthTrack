@@ -12,8 +12,23 @@ export default function Home() {
         overflowX: "auto",
       }}
     >
-      <h1>Welcome to HealthTrack 👟</h1>
-      <p>Your journey to a healthier you starts here.</p>
+      <h1>Welcome to HealthTrack 👟🥗🏋🏼‍♂️</h1>
+      <h3>Your journey to a healthier you starts here 📌</h3>
+      
+      <div
+        style={{
+          marginTop: "200px",
+          display: "flex",
+          justifyContent: "center",
+          gap: "50px",
+          fontSize: "1.2rem",
+        }}
+      >
+        <button>Button 1</button>
+        <button>Button 2</button>
+        <button>Button 3</button>
+      </div>
+
     </div>
   );
 }
