@@ -41,57 +41,20 @@ export default function Login() {
   };
 
   return (
-    <div
-      style={{
-        position: 'fixed',
-        inset: 0,
-        background: 'linear-gradient(to bottom, #1E1E1E, #3E8E7E, #F2F2F2)',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: '20px',
-      }}
-    >
-      <div
-        style={{
-          backgroundColor: 'rgba(255, 255, 255, 0.95)',
-          padding: '40px',
-          borderRadius: '12px',
-          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
-          width: '100%',
-          maxWidth: '400px',
-        }}
-      >
-        <h1
-          style={{
-            textAlign: 'center',
-            color: '#1E1E1E',
-            marginBottom: '10px',
-            fontSize: '2rem',
-          }}
-        >
+    <div className="fixed inset-0 bg-gradient-to-b from-primary-dark via-primary-teal to-primary-light flex justify-center items-center p-5">
+      <div className="bg-white/95 p-10 rounded-xl shadow-2xl w-full max-w-md">
+        <h1 className="text-center text-primary-dark mb-2 text-3xl font-bold">
           Welcome to HealthTrack
         </h1>
-        <p
-          style={{
-            textAlign: 'center',
-            color: '#666',
-            marginBottom: '30px',
-          }}
-        >
+        <p className="text-center text-gray-600 mb-8">
           Login to your account
         </p>
 
         <form onSubmit={handleSubmit}>
-          <div style={{ marginBottom: '20px' }}>
+          <div className="mb-5">
             <label
               htmlFor="email"
-              style={{
-                display: 'block',
-                marginBottom: '8px',
-                color: '#333',
-                fontWeight: '500',
-              }}
+              className="block mb-2 text-gray-700 font-medium"
             >
               Email
             </label>
@@ -101,29 +64,14 @@ export default function Login() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email"
-              style={{
-                width: '100%',
-                padding: '12px',
-                border: '2px solid #ddd',
-                borderRadius: '8px',
-                fontSize: '1rem',
-                transition: 'border-color 0.3s',
-                boxSizing: 'border-box',
-              }}
-              onFocus={(e) => (e.target.style.borderColor = '#3E8E7E')}
-              onBlur={(e) => (e.target.style.borderColor = '#ddd')}
+              className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg text-base transition-colors focus:border-primary-teal focus:outline-none"
             />
           </div>
 
-          <div style={{ marginBottom: '20px' }}>
+          <div className="mb-5">
             <label
               htmlFor="password"
-              style={{
-                display: 'block',
-                marginBottom: '8px',
-                color: '#333',
-                fontWeight: '500',
-              }}
+              className="block mb-2 text-gray-700 font-medium"
             >
               Password
             </label>
@@ -133,32 +81,12 @@ export default function Login() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Enter your password"
-              style={{
-                width: '100%',
-                padding: '12px',
-                border: '2px solid #ddd',
-                borderRadius: '8px',
-                fontSize: '1rem',
-                transition: 'border-color 0.3s',
-                boxSizing: 'border-box',
-              }}
-              onFocus={(e) => (e.target.style.borderColor = '#3E8E7E')}
-              onBlur={(e) => (e.target.style.borderColor = '#ddd')}
+              className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg text-base transition-colors focus:border-primary-teal focus:outline-none"
             />
           </div>
 
           {error && (
-            <div
-              style={{
-                backgroundColor: '#fee',
-                color: '#c33',
-                padding: '12px',
-                borderRadius: '8px',
-                marginBottom: '20px',
-                textAlign: 'center',
-                fontSize: '0.9rem',
-              }}
-            >
+            <div className="bg-red-50 text-red-600 px-4 py-3 rounded-lg mb-5 text-center text-sm">
               {error}
             </div>
           )}
@@ -166,45 +94,17 @@ export default function Login() {
           <button
             type="submit"
             disabled={loading}
-            style={{
-              width: '100%',
-              padding: '14px',
-              backgroundColor: loading ? '#8cc4b8' : '#3E8E7E',
-              color: 'white',
-              border: 'none',
-              borderRadius: '8px',
-              fontSize: '1.1rem',
-              fontWeight: '600',
-              cursor: loading ? 'not-allowed' : 'pointer',
-              transition: 'background-color 0.3s',
-            }}
-            onMouseOver={(e) => {
-              if (!loading) e.target.style.backgroundColor = '#2d6b5e';
-            }}
-            onMouseOut={(e) => {
-              if (!loading) e.target.style.backgroundColor = '#3E8E7E';
-            }}
+            className="w-full py-3.5 bg-primary-teal text-white border-none rounded-lg text-lg font-semibold cursor-pointer transition-colors hover:bg-primary-teal/80 disabled:bg-primary-teal/50 disabled:cursor-not-allowed"
           >
             {loading ? 'Logging in...' : 'Login'}
           </button>
         </form>
 
-        <p
-          style={{
-            textAlign: 'center',
-            marginTop: '20px',
-            color: '#666',
-            fontSize: '0.95rem',
-          }}
-        >
+        <p className="text-center mt-5 text-gray-600 text-sm">
           Don't have an account?{' '}
           <Link
             to="/register"
-            style={{
-              color: '#3E8E7E',
-              textDecoration: 'none',
-              fontWeight: '600',
-            }}
+            className="text-primary-teal no-underline font-semibold hover:underline"
           >
             Sign up
           </Link>

@@ -6,19 +6,9 @@ export default function ProtectedRoute({ children }) {
 
   if (loading) {
     return (
-      <div
-        style={{
-          position: 'fixed',
-          inset: 0,
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          background: 'linear-gradient(to bottom, #1E1E1E, #3E8E7E, #F2F2F2)',
-          color: '#fff',
-        }}
-      >
-        <div style={{ textAlign: 'center' }}>
-          <h2>Loading...</h2>
+      <div className="fixed inset-0 flex justify-center items-center bg-gradient-to-b from-primary-dark via-primary-teal to-primary-light text-white">
+        <div className="text-center">
+          <h2 className="text-2xl">Loading...</h2>
         </div>
       </div>
     );
