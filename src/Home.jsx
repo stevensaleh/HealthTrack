@@ -21,9 +21,9 @@ export default function Home() {
       >
         Sign In
       </button>
-      <h1 style={{ marginBottom: '0.25rem' }}>Step Into Intelligent</h1>
-      <h1 style={{ marginTop: 0 }}>Health Tracking</h1>
-      <h3>Your journey to a healthier you starts here</h3>
+      <h1 style={{ marginBottom: '1rem', fontFamily: "'Playfair Display'"  }}>Step Into Intelligent</h1>
+      <h1 style={{ marginTop: 0, marginBottom: '2rem', fontFamily: "'Playfair Display'"  }}>Health Tracking</h1>
+      <h3 style={{ marginTop: 0 , fontFamily: "'Playfair Display'"  }}>Your journey to a healthier you starts here</h3>
     </div>
   );
 }
