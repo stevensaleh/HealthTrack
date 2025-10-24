@@ -4,16 +4,17 @@ export default function Home() {
       style={{
         position: "fixed",
         inset: 0,
-        background: "linear-gradient(to bottom, #1E1E1E, #3E8E7E, #F2F2F2)",
-        color: "#fff",
+        background: "linear-gradient(180deg, #ffffff 0%, #fdf6f0 100%)",
+        color: "#000000ff",
         textAlign: "center",
-        padding: "40px",
+        padding: "160px",
         overflowY: "auto",
         overflowX: "auto",
       }}
     >
-      <h1>Welcome to HealthTrack 👟🥗🏋🏼‍♂️</h1>
-      <h3>Your journey to a healthier you starts here 📌</h3>
+      <h1 style={{ marginBottom: '0.25rem' }}>Step Into Intelligent</h1>
+      <h1 style={{ marginTop: 0 }}>Health Tracking</h1>
+      <h3>Your journey to a healthier you starts here</h3>
       
       <div
         style={{
