@@ -1,3 +1,4 @@
+import logo from './assets/HealthTrackLogo.png';
 export default function Home() {
   return (
     <div
@@ -12,15 +13,52 @@ export default function Home() {
         overflowX: "auto",
       }}
     >
+      <img
+        src={logo}
+        alt="HealthTrack logo"
+        style={{
+          position: 'fixed',
+          top: '40px',
+          left: '100px',
+          height: '100px',
+          width: 'auto',
+          zIndex: 1000,
+          backgroundColor: "transparent" 
+        }}
+      />
+
       <button
         style={{
           position: "fixed",
-          top: "20px",
+          top: "40px",
           right: "100px",
         }}
       >
         Sign In
       </button>
+      <button
+        style={{
+          position: "absolute",
+          top: "40px",
+          left: "300px",
+          backgroundColor: "transparent",
+          fontFamily: "'Tinos'"
+        }}
+      >
+        Home
+      </button>
+      <button
+        style={{
+          position: "absolute",
+          top: "40px",
+          left: "400px",
+          backgroundColor: "transparent",
+          fontFamily: "'Tinos'"          
+        }}
+      >
+        How It Works
+      </button>      
+
       <h1 style={{ marginBottom: '15px', fontFamily: "'Playfair Display'"  }}>Step Into Intelligent</h1>
       <h1 style={{ marginTop: 0, marginBottom: '30px', fontFamily: "'Playfair Display'"  }}>Health Tracking</h1>
       <h3 style={{ marginTop: 0, fontFamily: "'Tinos'"  }}>Your journey to a healthier you starts here</h3>
