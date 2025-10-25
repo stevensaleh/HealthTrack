@@ -1,4 +1,5 @@
 import logo from './assets/HealthTrackLogo.png';
+import pic from './assets/Pic.avif';
 export default function Home() {
   return (
     <div
@@ -65,7 +66,7 @@ export default function Home() {
       <h1 style={{ marginTop: 0, marginBottom: '25px'}}>Health Tracking</h1>
       <p style={{ marginTop: 0, fontSize: '25px' }}>Your journey to a healthier you starts here</p>
       <img
-        src="https://hips.hearstapps.com/hmg-prod/images/gettyimages-1166696259.jpg?crop=1.00xw:0.753xh;0,0.127xh&resize=1200:*"
+        src={pic}
         style={{
           marginTop: '25px',
           width: '100%',
