@@ -42,7 +42,8 @@ export default function Home() {
           top: "40px",
           left: "300px",
           backgroundColor: "transparent",
-          fontFamily: "'Tinos'"
+          fontFamily: "'Tinos'",
+          fontSize: "17px",
         }}
       >
         <b>Home</b>
@@ -53,7 +54,8 @@ export default function Home() {
           top: "40px",
           left: "400px",
           backgroundColor: "transparent",
-          fontFamily: "'Tinos'"          
+          fontFamily: "'Tinos'",
+          fontSize: "17px",        
         }}
       >
         <b>How It Works</b>
