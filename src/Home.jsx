@@ -39,6 +39,7 @@ export default function Home() {
       >
         <b>Sign In</b>
       </button>
+
       <button
         style={{
           position: "absolute",
@@ -51,6 +52,7 @@ export default function Home() {
       >
         <b>Home</b>
       </button>
+
       <button
         style={{
           position: "absolute",
@@ -62,7 +64,20 @@ export default function Home() {
         }}
       >
         <b>How It Works</b>
-      </button>      
+      </button> 
+
+      <button
+        style={{
+          position: "absolute",
+          top: "40px",
+          left: "560px",
+          backgroundColor: "transparent",
+          fontFamily: "'Tinos'",
+          fontSize: "17px",        
+        }}
+      >
+        <b>Get Started</b>
+      </button>
 
       <h1 style={{ marginBottom: '15px'}}>Step Into Intelligent</h1>
       <h1 style={{ marginTop: 0, marginBottom: '25px'}}>Health Tracking</h1>
@@ -97,13 +112,21 @@ export default function Home() {
       >
         lead to big changes tomorrow.
       </p>
-      <div style={{ textAlign: 'left' }}>
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '70px',
+          marginTop: '150px',
+          textAlign: 'left',
+        }}
+      >
         <div
           style={{
+            marginLeft: '30px',
             position: 'relative',
             width: '500px',
             height: '500px',
-            marginTop: '150px',
           }}
         >
           <img
@@ -134,7 +157,46 @@ export default function Home() {
             }}
           />
         </div>
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          <p
+            style={{
+              margin: '0px 100px 10px 100px',
+              fontSize: '50px',
+              lineHeight: 1.3,
+              fontFamily: "'Playfair Display'",
+              maxWidth: '520px',
+            }}
+          >
+            "Good habits fade<br />when life speeds up"
+          </p>
+          <p
+            style={{
+              margin: '6px 100px 0px 100px',
+              fontSize: '24px',
+              lineHeight: 1.5,
+              maxWidth: '520px',
+              fontStyle: 'italic',
+            }}
+          >
+            &ldquo;Tracking your health keeps you honest, consistent, and aware—turning every workout, meal, and choice into progress you can see.&rdquo;
+          </p>
+          <button
+            style={{
+              margin: '40px 0px 0 260px',
+              backgroundColor: '#000',
+              color: '#fff',
+              fontFamily: "'Tinos'",
+              fontSize: '17px',
+              alignSelf: 'flex-start',
+              padding: '8px 16px',
+              borderRadius: '6px',
+            }}
+          >
+            <b>Get Started</b>
+          </button>
+        </div>        
       </div>
+      
     </div>
   );
 }
