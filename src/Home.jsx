@@ -17,13 +17,11 @@ export default function Home() {
         src={logo}
         alt="HealthTrack logo"
         style={{
-          position: 'fixed',
-          top: '40px',
-          left: '100px',
-          height: '100px',
+          position: 'absolute',
+          top: "100px",
+          transform: 'translate(-50%, -50%)',
+          height: '250px',
           width: 'auto',
-          zIndex: 1000,
-          backgroundColor: "transparent" 
         }}
       />
 
