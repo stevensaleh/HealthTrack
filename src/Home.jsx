@@ -11,6 +11,7 @@ export default function Home() {
         padding: "160px",
         overflowY: "auto",
         overflowX: "auto",
+        fontFamily: "'Playfair Display'",
       }}
     >
       <img
@@ -30,9 +31,10 @@ export default function Home() {
           position: "fixed",
           top: "40px",
           right: "100px",
+          fontFamily: "'Tinos'",
         }}
       >
-        Sign In
+        <b>Sign In</b>
       </button>
       <button
         style={{
@@ -43,7 +45,7 @@ export default function Home() {
           fontFamily: "'Tinos'"
         }}
       >
-        Home
+        <b>Home</b>
       </button>
       <button
         style={{
@@ -54,12 +56,12 @@ export default function Home() {
           fontFamily: "'Tinos'"          
         }}
       >
-        How It Works
+        <b>How It Works</b>
       </button>      
 
-      <h1 style={{ marginBottom: '15px', fontFamily: "'Playfair Display'"  }}>Step Into Intelligent</h1>
-      <h1 style={{ marginTop: 0, marginBottom: '30px', fontFamily: "'Playfair Display'"  }}>Health Tracking</h1>
-      <h3 style={{ marginTop: 0, fontFamily: "'Tinos'"  }}>Your journey to a healthier you starts here</h3>
+      <h1 style={{ marginBottom: '15px'}}>Step Into Intelligent</h1>
+      <h1 style={{ marginTop: 0, marginBottom: '25px'}}>Health Tracking</h1>
+      <p style={{ marginTop: 0, fontSize: '25px' }}>Your journey to a healthier you starts here</p>
       <img
         src="https://hips.hearstapps.com/hmg-prod/images/gettyimages-1166696259.jpg?crop=1.00xw:0.753xh;0,0.127xh&resize=1200:*"
         style={{
@@ -72,6 +74,24 @@ export default function Home() {
           boxShadow: '0 8px 24px rgba(0,0,0,0.15)'
         }}
       />
+      <p
+        style={{
+          marginTop: '50px',
+          marginBottom: '0px',
+          fontSize: '30px',
+        }}
+      >
+        Small steps each day,
+      </p>
+      <p
+        style={{
+          marginTop: '1px',
+          fontStyle: 'italic',
+          fontSize: '30px',
+        }}
+      >
+        lead to big changes tomorrow.
+      </p>
     </div>
   );
 }
