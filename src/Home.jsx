@@ -1,5 +1,7 @@
 import logo from './assets/HealthTrackLogo.png';
-import pic from './assets/Pic.avif';
+import pic from './assets/Pic.jpg';
+import pic2 from './assets/Pic2.jpg';
+import HeartRate from './assets/HeartRate.png';
 export default function Home() {
   return (
     <div
@@ -69,10 +71,10 @@ export default function Home() {
         src={pic}
         style={{
           marginTop: '25px',
-          width: '100%',
-          maxWidth: '1500px',
+          width: '97%',
           height: '600px',
           objectFit: 'cover',
+          objectPosition: 'center',
           borderRadius: '20px',
           boxShadow: '0 8px 24px rgba(0,0,0,0.15)'
         }}
@@ -95,6 +97,44 @@ export default function Home() {
       >
         lead to big changes tomorrow.
       </p>
+      <div style={{ textAlign: 'left' }}>
+        <div
+          style={{
+            position: 'relative',
+            width: '500px',
+            height: '500px',
+            marginTop: '150px',
+          }}
+        >
+          <img
+            src={pic2}
+            alt="Additional"
+            style={{
+              position: 'absolute',
+              inset: 0,
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              objectPosition: 'right',
+              borderRadius: '20px',
+              boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
+            }}
+          />
+          <img
+            src={HeartRate}
+            style={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              width: '350px',
+              height: '350px',
+              borderRadius: '20px',
+              opacity: 0.9,
+            }}
+          />
+        </div>
+      </div>
     </div>
   );
 }
