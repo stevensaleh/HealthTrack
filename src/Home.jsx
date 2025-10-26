@@ -81,9 +81,9 @@ export default function Home() {
         <b>Get Started</b>
       </button>
 
-      <h1 style={{ marginBottom: '1%'}}>Step Into Intelligent</h1>
-      <h1 style={{ marginTop: 0, marginBottom: '1%'}}>Health Tracking</h1>
-      <p style={{ marginTop: 0, fontSize: '25px' }}>Your journey to a healthier you starts here</p>
+      <h1 style={{ marginBottom: '1%', fontSize: '300%'}}>Step Into Intelligent</h1>
+      <h1 style={{ marginTop: 0, marginBottom: '1%', fontSize: '300%'}}>Health Tracking</h1>
+      <p style={{ marginTop: 0, fontSize: '140%' }}>Your journey to a healthier you starts here</p>
       <img
         src={pic}
         style={{
@@ -127,8 +127,8 @@ export default function Home() {
           style={{
             marginLeft: '2%',
             position: 'relative',
-            width: '30%',
-            height: '500px',
+            width: '50vh',
+            height: '50vh',
           }}
         >
           <img
@@ -213,8 +213,8 @@ export default function Home() {
           style={{
             marginRight: '2%',
             position: 'relative',
-            width: '30%',
-            height: '500px',
+            width: '50vh',
+            height: '50vh',
           }}
         >
           <img
