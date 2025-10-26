@@ -2,6 +2,8 @@ import logo from './assets/HealthTrackLogo.png';
 import pic from './assets/Pic.jpg';
 import pic2 from './assets/Pic2.jpg';
 import HeartRate from './assets/HeartRate.png';
+import Steps from './assets/Steps.png';
+import Shoe from './assets/Pic3.webp';
 export default function Home() {
   return (
     <div
@@ -160,25 +162,25 @@ export default function Home() {
         <div style={{ display: 'flex', flexDirection: 'column' }}>
           <p
             style={{
-              margin: '0px 100px 10px 100px',
+              margin: '0px 100px 10px 200px',
               fontSize: '50px',
               lineHeight: 1.3,
               fontFamily: "'Playfair Display'",
               maxWidth: '520px',
             }}
           >
-            "Good habits fade<br />when life speeds up"
+            Good habits fade<br />when life speeds up
           </p>
           <p
             style={{
-              margin: '6px 100px 0px 100px',
+              margin: '6px 100px 0px 200px',
               fontSize: '24px',
               lineHeight: 1.5,
               maxWidth: '520px',
               fontStyle: 'italic',
             }}
           >
-            &ldquo;Tracking your health keeps you honest, consistent, and aware—turning every workout, meal, and choice into progress you can see.&rdquo;
+            “When you track your health, you don’t just measure numbers—you build momentum, accountability, and a clearer path toward the person you want to become.”
           </p>
           <button
             style={{
@@ -194,9 +196,94 @@ export default function Home() {
           >
             <b>Get Started</b>
           </button>
-        </div>        
-      </div>
-      
+        </div>                
+      </div>      
+
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '70px',
+          marginTop: '150px',
+          textAlign: 'left',
+          flexDirection: 'row-reverse',
+        }}
+      >
+        <div
+          style={{
+            marginRight: '30px',
+            position: 'relative',
+            width: '500px',
+            height: '500px',
+          }}
+        >
+          <img
+            src={Shoe}
+            alt="Additional"
+            style={{
+              position: 'absolute',
+              inset: 0,
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              objectPosition: 'right',
+              borderRadius: '20px',
+              boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
+            }}
+          />
+          <img
+            src={Steps}
+            style={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              width: '350px',
+              height: '350px',
+              borderRadius: '20px',
+              opacity: 0.9,
+            }}
+          />
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          <p
+            style={{
+              margin: '0px 100px 10px 100px',
+              fontSize: '50px',
+              lineHeight: 1.3,
+              fontFamily: "'Playfair Display'",
+              maxWidth: '520px',
+            }}
+          >
+            Awareness is the first step to better health.
+          </p>
+          <p
+            style={{
+              margin: '6px 250px 0px 100px',
+              fontSize: '24px',
+              lineHeight: 1.5,
+              maxWidth: '520px',
+              fontStyle: 'italic',
+            }}
+          >
+            "Tracking your health keeps you honest, consistent, and aware—turning every workout, meal, and choice into progress you can see."
+          </p>
+          <button
+            style={{
+              margin: '40px 0px 0 260px',
+              backgroundColor: '#000',
+              color: '#fff',
+              fontFamily: "'Tinos'",
+              fontSize: '17px',
+              alignSelf: 'flex-start',
+              padding: '8px 16px',
+              borderRadius: '6px',
+            }}
+          >
+            <b>Get Started</b>
+          </button>
+        </div>                
+      </div>      
     </div>
   );
 }
