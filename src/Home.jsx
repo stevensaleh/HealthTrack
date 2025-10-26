@@ -213,8 +213,8 @@ export default function Home() {
           style={{
             marginRight: '2%',
             position: 'relative',
-            width: '50vh',
-            height: '50vh',
+            width: 'max-width',
+            height: 'max-height',
           }}
         >
           <img
