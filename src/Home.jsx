@@ -24,7 +24,7 @@ export default function Home() {
         alt="HealthTrack logo"
         style={{
           position: 'absolute',
-          top: "100px",
+          top: "120px",
           transform: 'translate(-50%, -50%)',
           height: '250px',
           width: 'auto',
@@ -100,7 +100,7 @@ export default function Home() {
         style={{
           marginTop: '50px',
           marginBottom: '0px',
-          fontSize: '30px',
+          fontSize: '35px',
         }}
       >
         Small steps each day,
@@ -184,7 +184,7 @@ export default function Home() {
           </p>
           <button
             style={{
-              margin: '40px 0px 0 260px',
+              margin: '40px 0px 0 350px',
               backgroundColor: '#000',
               color: '#fff',
               fontFamily: "'Tinos'",
