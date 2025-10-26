@@ -24,9 +24,9 @@ export default function Home() {
         alt="HealthTrack logo"
         style={{
           position: 'absolute',
-          top: "120px",
+          top: "15%",
           transform: 'translate(-50%, -50%)',
-          height: '250px',
+          height: '25%',
           width: 'auto',
         }}
       />
@@ -34,8 +34,8 @@ export default function Home() {
       <button
         style={{
           position: "fixed",
-          top: "40px",
-          right: "100px",
+          top: "5%",
+          right: "5%",
           fontFamily: "'Tinos'",
         }}
       >
@@ -45,8 +45,8 @@ export default function Home() {
       <button
         style={{
           position: "absolute",
-          top: "40px",
-          left: "300px",
+          top: "5%",
+          left: "14%",
           backgroundColor: "transparent",
           fontFamily: "'Tinos'",
           fontSize: "17px",
@@ -58,8 +58,8 @@ export default function Home() {
       <button
         style={{
           position: "absolute",
-          top: "40px",
-          left: "400px",
+          top: "5%",
+          left: "20%",
           backgroundColor: "transparent",
           fontFamily: "'Tinos'",
           fontSize: "17px",        
@@ -71,8 +71,8 @@ export default function Home() {
       <button
         style={{
           position: "absolute",
-          top: "40px",
-          left: "560px",
+          top: "5%",
+          left: "29%",
           backgroundColor: "transparent",
           fontFamily: "'Tinos'",
           fontSize: "17px",        
@@ -81,15 +81,15 @@ export default function Home() {
         <b>Get Started</b>
       </button>
 
-      <h1 style={{ marginBottom: '15px'}}>Step Into Intelligent</h1>
-      <h1 style={{ marginTop: 0, marginBottom: '25px'}}>Health Tracking</h1>
+      <h1 style={{ marginBottom: '1%'}}>Step Into Intelligent</h1>
+      <h1 style={{ marginTop: 0, marginBottom: '1%'}}>Health Tracking</h1>
       <p style={{ marginTop: 0, fontSize: '25px' }}>Your journey to a healthier you starts here</p>
       <img
         src={pic}
         style={{
-          marginTop: '25px',
+          marginTop: '1%',
           width: '97%',
-          height: '600px',
+          height: '100%',
           objectFit: 'cover',
           objectPosition: 'center',
           borderRadius: '20px',
@@ -98,8 +98,8 @@ export default function Home() {
       />
       <p
         style={{
-          marginTop: '50px',
-          marginBottom: '0px',
+          marginTop: '3%',
+          marginBottom: '0%',
           fontSize: '35px',
         }}
       >
@@ -107,7 +107,7 @@ export default function Home() {
       </p>
       <p
         style={{
-          marginTop: '1px',
+          marginTop: '0.5%',
           fontStyle: 'italic',
           fontSize: '30px',
         }}
@@ -118,16 +118,16 @@ export default function Home() {
         style={{
           display: 'flex',
           alignItems: 'center',
-          gap: '70px',
-          marginTop: '150px',
+          gap: '5%',
+          marginTop: '10%',
           textAlign: 'left',
         }}
       >
         <div
           style={{
-            marginLeft: '30px',
+            marginLeft: '2%',
             position: 'relative',
-            width: '500px',
+            width: '30%',
             height: '500px',
           }}
         >
@@ -152,8 +152,8 @@ export default function Home() {
               top: '50%',
               left: '50%',
               transform: 'translate(-50%, -50%)',
-              width: '350px',
-              height: '350px',
+              width: '70%',
+              height: '70%',
               borderRadius: '20px',
               opacity: 0.9,
             }}
@@ -203,17 +203,17 @@ export default function Home() {
         style={{
           display: 'flex',
           alignItems: 'center',
-          gap: '70px',
-          marginTop: '150px',
+          gap: '5%',
+          marginTop: '10%',
           textAlign: 'left',
           flexDirection: 'row-reverse',
         }}
       >
         <div
           style={{
-            marginRight: '30px',
+            marginRight: '2%',
             position: 'relative',
-            width: '500px',
+            width: '30%',
             height: '500px',
           }}
         >
@@ -238,8 +238,8 @@ export default function Home() {
               top: '50%',
               left: '50%',
               transform: 'translate(-50%, -50%)',
-              width: '350px',
-              height: '350px',
+              width: '70%',
+              height: '70%',
               borderRadius: '20px',
               opacity: 0.9,
             }}
