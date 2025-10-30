@@ -271,6 +271,22 @@ export default function Home() {
           </button>
         </div>                
       </div>      
+      <section
+        id="how-it-works"
+        style={{
+          marginTop: '8%',
+          padding: '40px 5% 80px 5%',
+          textAlign: 'left',
+        }}
+      >
+        <h2 style={{ fontSize: '42px', marginBottom: '16px' }}>How It Works</h2>
+        <p style={{ fontSize: '20px', lineHeight: 1.7 }}>
+          HealthTrack brings all your health and fitness data together in one place. Whether you track your steps with Fitbit, monitor your sleep through Apple Health, or log your meals manually, HealthTrack consolidates every source into a single, dynamic dashboard. Once you sign in, you’ll see a complete health summary — from total steps and calories burned to hours slept and current weight, designed to give you a clear picture of your progress over time.
+        </p>
+        <p style={{ fontSize: '18px', lineHeight: 1.7, marginTop: '16px' }}>
+          You can also manually add your own data points, like a new workout session, a meal’s calorie count, or your latest blood pressure reading. HealthTrack syncs seamlessly with major platforms such as Apple Health, Fitbit, and Google Health, ensuring that your data stays accurate and up to date. Beyond tracking, HealthTrack empowers you to set personal health goals — like reaching 10,000 daily steps or hitting your target weight — and visualize your journey toward achieving them. With an intuitive interface and smart data integration, HealthTrack transforms complex health data into meaningful insights that help you stay on track every day.
+        </p>
+      </section>
     </div>
   );
 }
