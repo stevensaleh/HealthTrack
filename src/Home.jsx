@@ -5,6 +5,12 @@ import HeartRate from './assets/HeartRate.png';
 import Steps from './assets/Steps.png';
 import Shoe from './assets/Pic3.webp';
 export default function Home() {
+  const handleScrollToHowItWorks = () => {
+    const el = document.getElementById('how-it-works');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
   return (
     <div
       style={{
@@ -56,6 +62,7 @@ export default function Home() {
       </button>
 
       <button
+        onClick={handleScrollToHowItWorks}
         style={{
           position: "absolute",
           top: "5%",
@@ -63,6 +70,7 @@ export default function Home() {
           backgroundColor: "transparent",
           fontFamily: "'Tinos'",
           fontSize: "17px",        
+          cursor: 'pointer',
         }}
       >
         <b>How It Works</b>
@@ -283,7 +291,7 @@ export default function Home() {
         <p style={{ fontSize: '20px', lineHeight: 1.7 }}>
           HealthTrack brings all your health and fitness data together in one place. Whether you track your steps with Fitbit, monitor your sleep through Apple Health, or log your meals manually, HealthTrack consolidates every source into a single, dynamic dashboard. Once you sign in, you’ll see a complete health summary — from total steps and calories burned to hours slept and current weight, designed to give you a clear picture of your progress over time.
         </p>
-        <p style={{ fontSize: '18px', lineHeight: 1.7, marginTop: '16px' }}>
+        <p style={{ fontSize: '20px', lineHeight: 1.7, marginTop: '16px' }}>
           You can also manually add your own data points, like a new workout session, a meal’s calorie count, or your latest blood pressure reading. HealthTrack syncs seamlessly with major platforms such as Apple Health, Fitbit, and Google Health, ensuring that your data stays accurate and up to date. Beyond tracking, HealthTrack empowers you to set personal health goals — like reaching 10,000 daily steps or hitting your target weight — and visualize your journey toward achieving them. With an intuitive interface and smart data integration, HealthTrack transforms complex health data into meaningful insights that help you stay on track every day.
         </p>
       </section>
