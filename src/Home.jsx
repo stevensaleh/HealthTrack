@@ -68,19 +68,6 @@ export default function Home() {
         <b>How It Works</b>
       </button> 
 
-      <button
-        style={{
-          position: "absolute",
-          top: "5%",
-          left: "29%",
-          backgroundColor: "transparent",
-          fontFamily: "'Tinos'",
-          fontSize: "17px",        
-        }}
-      >
-        <b>Get Started</b>
-      </button>
-
       <h1 style={{ marginBottom: '1%', fontSize: '300%'}}>Step Into Intelligent</h1>
       <h1 style={{ marginTop: 0, marginBottom: '1%', fontSize: '300%'}}>Health Tracking</h1>
       <p style={{ marginTop: 0, fontSize: '140%' }}>Your journey to a healthier you starts here</p>
