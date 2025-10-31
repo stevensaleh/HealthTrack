@@ -74,6 +74,20 @@ export default function Home() {
         }}
       >
         <b>How It Works</b>
+      </button>
+
+      <button
+        style={{
+          position: "absolute",
+          top: "5%",
+          left: "29%",
+          backgroundColor: "transparent",
+          fontFamily: "'Tinos'",
+          fontSize: "17px",        
+          cursor: 'pointer',
+        }}
+      >
+        <b>Dashboard</b>
       </button> 
 
       <h1 style={{ marginBottom: '1%', fontSize: '300%'}}>Step Into Intelligent</h1>
