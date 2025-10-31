@@ -1,16 +1,31 @@
 import logo from './assets/HealthTrackLogo.png';
+import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import pic from './assets/Pic.jpg';
 import pic2 from './assets/Pic2.jpg';
 import HeartRate from './assets/HeartRate.png';
 import Steps from './assets/Steps.png';
 import Shoe from './assets/Pic3.webp';
 export default function Home() {
+  const navigate = useNavigate();
   const handleScrollToHowItWorks = () => {
     const el = document.getElementById('how-it-works');
     if (el) {
       el.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   };
+  const location = useLocation();
+  useEffect(() => {
+    // Scroll when arriving with state or hash
+    if (location?.state?.scrollTo === 'how-it-works' || location?.hash === '#how-it-works') {
+      // Defer to ensure DOM is ready
+      setTimeout(() => {
+        const el = document.getElementById('how-it-works');
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 0);
+    }
+  }, [location]);
   return (
     <div
       style={{
@@ -77,6 +92,7 @@ export default function Home() {
       </button>
 
       <button
+        onClick={() => navigate('/dashboard')}
         style={{
           position: "absolute",
           top: "5%",
