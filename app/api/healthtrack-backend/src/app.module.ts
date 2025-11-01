@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { PrismaModule } from './infrastructure/database/prisma.module';
+import { PrismaModule } from './infra/database/prisma.module';
 
 @Module({
   imports: [
@@ -8,7 +8,7 @@ import { PrismaModule } from './infrastructure/database/prisma.module';
     ConfigModule.forRoot({
       isGlobal: true, // Makes ConfigModule available everywhere
     }),
-    
+
     // Database module
     PrismaModule,
   ],
