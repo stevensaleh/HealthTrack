@@ -1,0 +1,62 @@
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Build output
+dist/
+build/
+tmp/
+temp/
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Prisma
+prisma/*.db
+prisma/migrations/dev.db
+prisma/dev.db
+prisma/.DS_Store
+
+# Logs
+logs
+*.log
+*.pid
+*.seed
+*.pid.lock
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDEs
+.vscode/
+.idea/
+*.iml
+
+# Coverage
+coverage/
+
+# TypeScript
+*.tsbuildinfo
+
+# Optional caches
+.cache/
+.next/
+out/
+.eslintcache
+.prettiercache
+
+# Docker
+docker-compose.override.yml
+*.local.yml
+
+# Temporary files
+*.swp
+*.swo
+*.bak
+*.tmp
