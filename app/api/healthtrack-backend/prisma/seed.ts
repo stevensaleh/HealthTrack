@@ -10,10 +10,10 @@ async function main() {
   const hashedPassword = await bcrypt.hash('password123', 10);
   
   const user1 = await prisma.user.upsert({
-    where: { email: 'test@healthhive.com' },
+    where: { email: 'test@healthtrack.com' },
     update: {},
     create: {
-      email: 'test@healthhive.com',
+      email: 'test@healthtrack.com',
       password: hashedPassword,
       firstName: 'John',
       lastName: 'Doe',
@@ -24,10 +24,10 @@ async function main() {
 
   // Create a Google OAuth user
   const user2 = await prisma.user.upsert({
-    where: { email: 'google@healthhive.com' },
+    where: { email: 'google@healthtrack.com' },
     update: {},
     create: {
-      email: 'google@healthhive.com',
+      email: 'google@healthtrack.com',
       googleId: 'google-oauth-id-123',
       firstName: 'Jane',
       lastName: 'Smith',
@@ -39,7 +39,18 @@ async function main() {
 
   // Create sample health data for user1
   const today = new Date();
-  const healthDataEntries = [];
+  const healthDataEntries: Array<{
+    userId: string;
+    date: Date;
+    weight: number;
+    steps: number;
+    calories: number;
+    sleep: number;
+    water: number;
+    exercise: number;
+    heartRate: number;
+    mood: string;
+  }> = [];
 
   for (let i = 0; i < 7; i++) {
     const date = new Date(today);
@@ -116,7 +127,7 @@ async function main() {
   console.log('🎉 Database seeding completed successfully!');
   console.log('');
   console.log('Test credentials:');
-  console.log('  Email: test@healthhive.com');
+  console.log('  Email: test@healthtrack.com');
   console.log('  Password: password123');
 }
 
