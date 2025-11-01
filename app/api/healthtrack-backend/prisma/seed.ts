@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { PrismaClient } from '@prisma/client';
-import * as bcrypt from 'bcrypt';
+import bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
 
@@ -7,7 +8,7 @@ async function main() {
   console.log('🌱 Starting database seeding...');
 
   // Create a test user with email/password
-  const hashedPassword = await bcrypt.hash('password123', 10);
+  const hashedPassword: string = await bcrypt.hash('password123', 10);
   
   const user1 = await prisma.user.upsert({
     where: { email: 'test@healthtrack.com' },
@@ -19,6 +20,7 @@ async function main() {
       lastName: 'Doe',
     },
   });
+
 
   console.log('✅ Created test user:', user1.email);
 
@@ -59,14 +61,16 @@ async function main() {
     healthDataEntries.push({
       userId: user1.id,
       date: date,
-      weight: 75 - (i * 0.2), // Gradual weight loss
+      weight: 75 - i * 0.2, // Gradual weight loss
       steps: 8000 + Math.floor(Math.random() * 4000),
       calories: 2000 + Math.floor(Math.random() * 500),
       sleep: 7 + Math.random() * 2,
       water: 2 + Math.random() * 1,
       exercise: 30 + Math.floor(Math.random() * 60),
       heartRate: 70 + Math.floor(Math.random() * 20),
-      mood: ['happy', 'energetic', 'tired', 'neutral'][Math.floor(Math.random() * 4)],
+      mood: ['happy', 'energetic', 'tired', 'neutral'][
+        Math.floor(Math.random() * 4)
+      ],
     });
   }
 
