@@ -3,14 +3,14 @@ version: '3.8'
 services:
   postgres:
     image: postgres:15-alpine
-    container_name: healthhive-db
+    container_name: healthtrack-db
     restart: unless-stopped
     ports:
       - "5432:5432"
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: dev123
-      POSTGRES_DB: healthhive
+      POSTGRES_DB: healthtrack
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
