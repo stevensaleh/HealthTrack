@@ -3,13 +3,13 @@ export interface User {
   id: string;
   email: string;
   name: string;
-  picture?: string; // For Google OAuth profile picture
-  provider: 'email' | 'google'; // Track auth provider
+  picture?: string;
+  provider: 'email' | 'google';
   dateOfBirth?: Date;
   gender?: 'male' | 'female' | 'other';
-  height?: number; // cm
-  weight?: number; // kg
-  activityLevel?: number; // 1.2 - 1.9
+  height?: number;
+  weight?: number;
+  activityLevel?: number;
   preferences?: UserPreferences;
   createdAt?: Date;
   updatedAt?: Date;
@@ -53,12 +53,8 @@ export interface RegisterData {
   weight?: number;
 }
 
-// Google OAuth types
-export interface GoogleCredentialResponse {
-  credential: string;
-  select_by?: string;
-  clientId?: string;
-}
+// Remove the custom GoogleCredentialResponse - we'll use the library's type
+// export interface GoogleCredentialResponse { ... }
 
 export interface GoogleUserInfo {
   sub: string;

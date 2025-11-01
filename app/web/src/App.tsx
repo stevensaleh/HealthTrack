@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { AuthProvider } from './context/AuthContext';
+import StyleGuide from "./pages/StyleGuide";
 import ProtectedRoute from './components/common/ProtectedRoute';
 
 // Pages
@@ -40,15 +41,16 @@ export default function App() {
               {/* Public Routes */}
               <Route path="/" element={<Landing />} />
               <Route path="/login" element={<Login />} />
+              <Route path="/style-guide" element={<StyleGuide />} />
               
 
               {/* Protected Routes */}
               <Route
                 path="/dashboard"
                 element={
-                  <ProtectedRoute>
+                 
                     <Dashboard />
-                  </ProtectedRoute>
+                  
                 }
               />
               {/* TO BE IMPLEMENTED LATER

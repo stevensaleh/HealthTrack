@@ -22,29 +22,17 @@ export default function Landing() {
   };
 
   const handleGetStarted = () => {
-    navigate('/register');
+    navigate('/login');
   };
 
   return (
-    <div
-      style={{
-        position: "fixed",
-        inset: 0,
-        background: "linear-gradient(180deg, #ffffff 0%, #fdf6f0 100%)",
-        color: "#000000ff",
-        textAlign: "center",
-        padding: "160px",
-        overflowY: "auto",
-        overflowX: "auto",
-        fontFamily: "'Playfair Display'",
-      }}
-    >
+    <div className="page-gradient" style={{ padding: '160px', textAlign: 'center' }}>
       <img
         src={logo}
-        alt="HealthHive logo"
+        alt="HealthTrack logo"
         style={{
           position: 'absolute',
-          top: "15%",
+          top: '15%',
           transform: 'translate(-50%, -50%)',
           height: '25%',
           width: 'auto',
@@ -53,48 +41,49 @@ export default function Landing() {
 
       <button
         onClick={handleSignIn}
+        className="btn-primary btn-md"
         style={{
-          position: "fixed",
-          top: "5%",
-          right: "5%",
-          fontFamily: "'Tinos'",
+          position: 'fixed',
+          top: '5%',
+          right: '5%',
         }}
       >
-        <b>Sign In</b>
+        Sign In
       </button>
 
       <button
+        className="btn-ghost btn-md"
         style={{
-          position: "absolute",
-          top: "5%",
-          left: "14%",
-          backgroundColor: "transparent",
-          fontFamily: "'Tinos'",
-          fontSize: "17px",
+          position: 'absolute',
+          top: '5%',
+          left: '14%',
         }}
       >
-        <b>Home</b>
+        Home
       </button>
 
       <button
         onClick={handleScrollToHowItWorks}
+        className="btn-ghost btn-md cursor-pointer"
         style={{
-          position: "absolute",
-          top: "5%",
-          left: "20%",
-          backgroundColor: "transparent",
-          fontFamily: "'Tinos'",
-          fontSize: "17px",        
-          cursor: 'pointer',
+          position: 'absolute',
+          top: '5%',
+          left: '20%',
         }}
       >
-        <b>How It Works</b>
-      </button> 
+        How It Works
+      </button>
 
-      <h1 style={{ marginBottom: '1%', fontSize: '300%'}}>Step Into Intelligent</h1>
-      <h1 style={{ marginTop: 0, marginBottom: '1%', fontSize: '300%'}}>Health Tracking</h1>
-      <p style={{ marginTop: 0, fontSize: '140%' }}>Your journey to a healthier you starts here</p>
-      
+      <h1 className="heading-1 mb-2" style={{ fontSize: '300%' }}>
+        Step Into Intelligent
+      </h1>
+      <h1 className="heading-1 mt-0 mb-2" style={{ fontSize: '300%' }}>
+        Health Tracking
+      </h1>
+      <p className="body-xl mt-0" style={{ fontSize: '140%' }}>
+        Your journey to a healthier you starts here
+      </p>
+
       <img
         src={pic}
         alt="Health tracking illustration"
@@ -104,17 +93,13 @@ export default function Landing() {
           height: '100%',
           objectFit: 'cover',
           objectPosition: 'center',
-          borderRadius: '20px',
-          boxShadow: '0 8px 24px rgba(0,0,0,0.15)'
+          borderRadius: 'var(--radius-lg)',
+          boxShadow: 'var(--shadow-lg)',
         }}
       />
-      
-      <p style={{ marginTop: '3%', marginBottom: '0%', fontSize: '35px' }}>
-        Small steps each day,
-      </p>
-      <p style={{ marginTop: '0.5%', fontStyle: 'italic', fontSize: '30px' }}>
-        lead to big changes tomorrow.
-      </p>
+
+      <p className="heading-5 mt-12 mb-2">Small steps each day,</p>
+      <p className="heading-6 text-italic mt-2">lead to big changes tomorrow.</p>
 
       {/* Heart Rate Section */}
       <div
@@ -144,8 +129,8 @@ export default function Landing() {
               height: '100%',
               objectFit: 'cover',
               objectPosition: 'right',
-              borderRadius: '20px',
-              boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
+              borderRadius: 'var(--radius-lg)',
+              boxShadow: 'var(--shadow-lg)',
             }}
           />
           <img
@@ -158,52 +143,34 @@ export default function Landing() {
               transform: 'translate(-50%, -50%)',
               width: '70%',
               height: '70%',
-              borderRadius: '20px',
+              borderRadius: 'var(--radius-lg)',
               opacity: 0.9,
             }}
           />
         </div>
         <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <p
-            style={{
-              margin: '0px 100px 10px 200px',
-              fontSize: '50px',
-              lineHeight: 1.3,
-              fontFamily: "'Playfair Display'",
-              maxWidth: '520px',
-            }}
-          >
+          <p className="heading-2" style={{ margin: '0px 100px 10px 200px', maxWidth: '520px' }}>
             Good habits fade<br />when life speeds up
           </p>
           <p
+            className="body-xl text-italic"
             style={{
               margin: '6px 100px 0px 200px',
-              fontSize: '24px',
-              lineHeight: 1.5,
               maxWidth: '520px',
-              fontStyle: 'italic',
             }}
           >
-            "When you track your health, you don't just measure numbers—you build momentum, accountability, and a clearer path toward the person you want to become."
+            "When you track your health, you don't just measure numbers—you build momentum,
+            accountability, and a clearer path toward the person you want to become."
           </p>
           <button
             onClick={handleGetStarted}
-            style={{
-              margin: '40px 0px 0 350px',
-              backgroundColor: '#000',
-              color: '#fff',
-              fontFamily: "'Tinos'",
-              fontSize: '17px',
-              alignSelf: 'flex-start',
-              padding: '8px 16px',
-              borderRadius: '6px',
-              cursor: 'pointer',
-            }}
+            className="btn-primary btn-md cursor-pointer"
+            style={{ margin: '40px 0px 0 350px', alignSelf: 'flex-start' }}
           >
-            <b>Get Started</b>
+            Get Started
           </button>
-        </div>                
-      </div>      
+        </div>
+      </div>
 
       {/* Steps Section */}
       <div
@@ -234,8 +201,8 @@ export default function Landing() {
               height: '100%',
               objectFit: 'cover',
               objectPosition: 'right',
-              borderRadius: '20px',
-              boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
+              borderRadius: 'var(--radius-lg)',
+              boxShadow: 'var(--shadow-lg)',
             }}
           />
           <img
@@ -248,52 +215,34 @@ export default function Landing() {
               transform: 'translate(-50%, -50%)',
               width: '70%',
               height: '70%',
-              borderRadius: '20px',
+              borderRadius: 'var(--radius-lg)',
               opacity: 0.9,
             }}
           />
         </div>
         <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <p
-            style={{
-              margin: '0px 100px 10px 100px',
-              fontSize: '50px',
-              lineHeight: 1.3,
-              fontFamily: "'Playfair Display'",
-              maxWidth: '520px',
-            }}
-          >
+          <p className="heading-2" style={{ margin: '0px 100px 10px 100px', maxWidth: '520px' }}>
             Awareness is the first step to better health.
           </p>
           <p
+            className="body-xl text-italic"
             style={{
               margin: '6px 250px 0px 100px',
-              fontSize: '24px',
-              lineHeight: 1.5,
               maxWidth: '520px',
-              fontStyle: 'italic',
             }}
           >
-            "Tracking your health keeps you honest, consistent, and aware—turning every workout, meal, and choice into progress you can see."
+            "Tracking your health keeps you honest, consistent, and aware—turning every workout,
+            meal, and choice into progress you can see."
           </p>
           <button
             onClick={handleGetStarted}
-            style={{
-              margin: '40px 0px 0 260px',
-              backgroundColor: '#000',
-              color: '#fff',
-              fontFamily: "'Tinos'",
-              fontSize: '17px',
-              alignSelf: 'flex-start',
-              padding: '8px 16px',
-              borderRadius: '6px',
-              cursor: 'pointer',
-            }}
+            className="btn-primary btn-md cursor-pointer"
+            style={{ margin: '40px 0px 0 260px', alignSelf: 'flex-start' }}
           >
-            <b>Get Started</b>
+            Get Started
           </button>
-        </div>                
-      </div>      
+        </div>
+      </div>
 
       {/* How It Works Section */}
       <section
@@ -304,12 +253,24 @@ export default function Landing() {
           textAlign: 'left',
         }}
       >
-        <h2 style={{ fontSize: '42px', marginBottom: '16px' }}>How It Works</h2>
-        <p style={{ fontSize: '20px', lineHeight: 1.7 }}>
-          HealthHive brings all your health and fitness data together in one place. Whether you track your steps with Fitbit, monitor your sleep through Apple Health, or log your meals manually, HealthHive consolidates every source into a single, dynamic dashboard. Once you sign in, you'll see a complete health summary — from total steps and calories burned to hours slept and current weight, designed to give you a clear picture of your progress over time.
+        <h2 className="heading-3 mb-4">How It Works</h2>
+        <p className="body-lg" style={{ lineHeight: 1.7 }}>
+          HealthTrack brings all your health and fitness data together in one place. Whether you
+          track your steps with Fitbit, monitor your sleep through Apple Health, or log your meals
+          manually, HealthTrack consolidates every source into a single, dynamic dashboard. Once you
+          sign in, you'll see a complete health summary — from total steps and calories burned to
+          hours slept and current weight, designed to give you a clear picture of your progress
+          over time.
         </p>
-        <p style={{ fontSize: '20px', lineHeight: 1.7, marginTop: '16px' }}>
-          You can also manually add your own data points, like a new workout session, a meal's calorie count, or your latest blood pressure reading. HealthHive syncs seamlessly with major platforms such as Apple Health, Fitbit, and Google Health, ensuring that your data stays accurate and up to date. Beyond tracking, HealthHive empowers you to set personal health goals — like reaching 10,000 daily steps or hitting your target weight — and visualize your journey toward achieving them. With an intuitive interface and smart data integration, HealthHive transforms complex health data into meaningful insights that help you stay on track every day.
+        <p className="body-lg mt-4" style={{ lineHeight: 1.7 }}>
+          You can also manually add your own data points, like a new workout session, a meal's
+          calorie count, or your latest blood pressure reading. HealthTrack syncs seamlessly with
+          major platforms such as Apple Health, Fitbit, and Google Health, ensuring that your data
+          stays accurate and up to date. Beyond tracking, HealthTrack empowers you to set personal
+          health goals — like reaching 10,000 daily steps or hitting your target weight — and
+          visualize your journey toward achieving them. With an intuitive interface and smart data
+          integration, HealthTrack transforms complex health data into meaningful insights that help
+          you stay on track every day.
         </p>
       </section>
     </div>

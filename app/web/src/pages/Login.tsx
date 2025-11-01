@@ -1,15 +1,13 @@
 // src/pages/Login.tsx
 import { useState, useEffect, FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { GoogleLogin } from '@react-oauth/google';
+import { GoogleLogin, CredentialResponse } from '@react-oauth/google';
 import { useAuth } from '@/context/AuthContext';
-import { GoogleCredentialResponse } from '@/types/user';
 
 export default function Login() {
   const { isAuthenticated, login, register, loginWithGoogle } = useAuth();
   const navigate = useNavigate();
 
-  // Redirect if already authenticated
   useEffect(() => {
     if (isAuthenticated) {
       navigate('/dashboard', { replace: true });
@@ -68,12 +66,17 @@ export default function Login() {
     }
   };
 
-  const handleGoogleSuccess = async (credentialResponse: GoogleCredentialResponse) => {
+  const handleGoogleSuccess = async (credentialResponse: CredentialResponse) => {
+    if (!credentialResponse.credential) {
+      setError('Google sign-in failed. No credential received.');
+      return;
+    }
+
     setError('');
     setLoading(true);
 
     try {
-      const result = await loginWithGoogle(credentialResponse);
+      const result = await loginWithGoogle(credentialResponse.credential);
       if (result.success) {
         navigate('/dashboard');
       } else {
@@ -98,19 +101,21 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-teal-800 to-gray-100 p-5">
-      <div className="bg-white/95 rounded-3xl shadow-2xl p-10 w-full max-w-md animate-fadeIn">
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-teal-700 mb-2">HealthHive</h1>
-          <p className="text-gray-600">
+    <div className="page-gradient" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 'var(--space-10)', minHeight: '100vh' }}>
+      <div className="card auth-container animate-fadeIn">
+        {/* Header */}
+        <div className="text-center mb-10">
+          <h1 className="heading-2 mb-2">HealthTrack</h1>
+          <p className="body-lg text-secondary">
             {isLoginMode ? 'Welcome back!' : 'Create your account'}
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-5">
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="mb-8">
           {!isLoginMode && (
-            <div className="space-y-2">
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+            <div className="form-group">
+              <label htmlFor="name" className="input-label">
                 Full Name
               </label>
               <input
@@ -120,13 +125,13 @@ export default function Login() {
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 placeholder="Enter your name"
                 disabled={loading}
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-600/20 transition-all disabled:bg-gray-100 disabled:cursor-not-allowed"
+                className="input-field"
               />
             </div>
           )}
 
-          <div className="space-y-2">
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+          <div className="form-group">
+            <label htmlFor="email" className="input-label">
               Email
             </label>
             <input
@@ -137,12 +142,12 @@ export default function Login() {
               placeholder="Enter your email"
               disabled={loading}
               required
-              className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-600/20 transition-all disabled:bg-gray-100 disabled:cursor-not-allowed"
+              className="input-field"
             />
           </div>
 
-          <div className="space-y-2">
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+          <div className="form-group">
+            <label htmlFor="password" className="input-label">
               Password
             </label>
             <input
@@ -154,49 +159,53 @@ export default function Login() {
               disabled={loading}
               required
               minLength={6}
-              className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-600/20 transition-all disabled:bg-gray-100 disabled:cursor-not-allowed"
+              className="input-field"
             />
           </div>
 
-          {error && (
-            <div className="bg-red-50 border-l-4 border-red-500 text-red-700 p-3 rounded text-sm">
-              {error}
-            </div>
-          )}
+          {error && <div className="error-message">{error}</div>}
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-gradient-to-r from-teal-600 to-teal-700 text-white py-3 rounded-lg font-semibold hover:from-teal-700 hover:to-teal-800 transform hover:-translate-y-0.5 transition-all disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none shadow-lg hover:shadow-xl"
+            className="btn-primary btn-md btn-full btn-elevated"
           >
             {loading ? 'Loading...' : isLoginMode ? 'Sign In' : 'Sign Up'}
           </button>
         </form>
 
-        <div className="flex items-center my-6">
-          <div className="flex-1 border-t border-gray-300"></div>
-          <span className="px-4 text-sm text-gray-500 font-medium">OR</span>
-          <div className="flex-1 border-t border-gray-300"></div>
+        {/* Divider */}
+        <div className="divider">
+          <span className="divider-text">OR</span>
         </div>
 
-        <div className="flex justify-center mb-6">
+        {/* Google Login */}
+        <div className="flex-center mb-8">
           <GoogleLogin
             onSuccess={handleGoogleSuccess}
             onError={handleGoogleError}
-            theme="filled_blue"
+            theme="outline"
             size="large"
             text={isLoginMode ? 'signin_with' : 'signup_with'}
-            width="320"
+            width="360"
           />
         </div>
 
-        <div className="text-center text-sm text-gray-600">
-          <p>
+        {/* Footer */}
+        <div className="text-center">
+          <p className="body-sm text-secondary">
             {isLoginMode ? "Don't have an account? " : 'Already have an account? '}
             <button
               type="button"
               onClick={toggleMode}
-              className="text-teal-600 font-semibold hover:text-teal-700 hover:underline transition-colors"
+              className="text-accent text-bold cursor-pointer no-underline"
+              style={{
+                background: 'none',
+                border: 'none',
+                textDecoration: 'underline',
+                padding: 0,
+                fontSize: 'inherit',
+              }}
             >
               {isLoginMode ? 'Sign Up' : 'Sign In'}
             </button>

@@ -1,6 +1,6 @@
 // src/context/AuthContext.tsx
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { User, AuthResponse, LoginCredentials, RegisterData, GoogleCredentialResponse, GoogleUserInfo } from '@/types/user';
+import { User, AuthResponse, LoginCredentials, RegisterData, GoogleUserInfo } from '@/types/user';
 
 interface AuthContextType {
   user: User | null;
@@ -8,7 +8,7 @@ interface AuthContextType {
   loading: boolean;
   login: (credentials: LoginCredentials) => Promise<AuthResponse>;
   register: (data: RegisterData) => Promise<AuthResponse>;
-  loginWithGoogle: (credentialResponse: GoogleCredentialResponse) => Promise<AuthResponse>;
+  loginWithGoogle: (credential: string) => Promise<AuthResponse>; // Changed parameter type
   logout: () => void;
   updateUser: (user: User) => void;
 }
@@ -73,7 +73,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return { 
         success: true, 
         user: mockUser,
-        // In production, these would come from backend
         accessToken: 'mock_access_token',
         refreshToken: 'mock_refresh_token'
       };
@@ -141,12 +140,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  // Login with Google
-  const loginWithGoogle = async (credentialResponse: GoogleCredentialResponse): Promise<AuthResponse> => {
+  // Login with Google - now accepts string token directly
+  const loginWithGoogle = async (credential: string): Promise<AuthResponse> => {
     try {
       // Decode the JWT token to get user info
-      const token = credentialResponse.credential;
-      const base64Url = token.split('.')[1];
+      const base64Url = credential.split('.')[1];
       const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
       const jsonPayload = decodeURIComponent(
         atob(base64)
@@ -158,7 +156,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const googleUser: GoogleUserInfo = JSON.parse(jsonPayload);
       
       // TODO: Send this token to backend for verification
-      // const response = await authService.loginWithGoogle(token);
+      // const response = await authService.loginWithGoogle(credential);
       
       const user: User = {
         id: googleUser.sub,

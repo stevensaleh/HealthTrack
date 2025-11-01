@@ -12,27 +12,18 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-teal-800 to-gray-100">
+    <div className="page-gradient" style={{ minHeight: '100vh' }}>
       {/* Header */}
-      <header className="bg-white/10 backdrop-blur-sm border-b border-white/20">
-        <div className="container mx-auto px-6 py-4 flex items-center justify-between">
-          <h1 className="text-2xl font-bold text-white">HealthHive</h1>
-          
-          <div className="flex items-center gap-4">
+      <header className="header">
+        <div className="header-container">
+          <h1 className="heading-4">HealthTrack</h1>
+
+          <div className="header-actions">
             {user?.picture && (
-              <img
-                src={user.picture}
-                alt={user.name}
-                className="w-10 h-10 rounded-full border-2 border-white/30"
-              />
+              <img src={user.picture} alt={user.name} className="user-avatar" />
             )}
-            <span className="text-white font-medium">
-              {user?.name || user?.email}
-            </span>
-            <button
-              onClick={handleLogout}
-              className="px-4 py-2 border-2 border-white/30 text-white rounded-lg hover:bg-white/10 transition-all"
-            >
+            <span className="user-name">{user?.name || user?.email}</span>
+            <button onClick={handleLogout} className="btn-secondary btn-sm">
               Logout
             </button>
           </div>
@@ -40,43 +31,44 @@ export default function Dashboard() {
       </header>
 
       {/* Main Content */}
-      <main className="container mx-auto px-6 py-12 text-center text-white">
-        <h2 className="text-5xl font-bold mb-4">
-          Welcome to HealthHive 🏃‍♂️🥗🏋️‍♂️
-        </h2>
-        <p className="text-2xl mb-12 text-white/90">
+      <main className="page-container text-center">
+        {/* Welcome Section */}
+        <h2 className="heading-1 mb-4">Welcome to HealthTrack 🏃‍♂️🥗🏋️‍♂️</h2>
+        <p className="body-xl text-secondary text-italic mb-16">
           Your journey to a healthier you starts here 📍
         </p>
 
         {/* Quick Action Buttons */}
-        <div className="flex justify-center gap-8 mt-20">
-          <button 
+        <div className="button-group mt-16 mb-20">
+          <button
             onClick={() => navigate('/data-entry')}
-            className="px-8 py-4 bg-white/20 backdrop-blur-sm border-2 border-white/30 text-white rounded-xl hover:bg-white/30 transition-all text-lg font-semibold"
+            className="btn-primary btn-lg btn-elevated"
           >
             Add Entry
           </button>
-          <button 
+          <button
             onClick={() => navigate('/goals')}
-            className="px-8 py-4 bg-white/20 backdrop-blur-sm border-2 border-white/30 text-white rounded-xl hover:bg-white/30 transition-all text-lg font-semibold"
+            className="btn-primary btn-lg btn-elevated"
           >
             My Goals
           </button>
-          <button 
+          <button
             onClick={() => navigate('/analytics')}
-            className="px-8 py-4 bg-white/20 backdrop-blur-sm border-2 border-white/30 text-white rounded-xl hover:bg-white/30 transition-all text-lg font-semibold"
+            className="btn-primary btn-lg btn-elevated"
           >
             Analytics
           </button>
         </div>
 
-        {/* Coming Soon Section */}
-        <div className="mt-20 bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-12 max-w-2xl mx-auto">
-          <h3 className="text-3xl font-bold mb-4">Dashboard Coming Soon!</h3>
-          <p className="text-lg text-white/80">
-            We're building an amazing dashboard to track your health metrics, 
-            view progress charts, and get personalized insights.
-          </p>
+        {/* Coming Soon Card */}
+        <div className="content-wrapper">
+          <div className="card card-elevated">
+            <h3 className="heading-3 mb-4">Dashboard Coming Soon!</h3>
+            <p className="body-lg text-secondary">
+              We're building an amazing dashboard to track your health metrics, view
+              progress charts, and get personalized insights.
+            </p>
+          </div>
         </div>
       </main>
     </div>

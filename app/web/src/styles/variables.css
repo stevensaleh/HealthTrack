@@ -1,0 +1,131 @@
+/* src/styles/variables.css */
+
+:root {
+  /* ===== COLORS ===== */
+  
+  /* Primary */
+  --color-primary: #000000;
+  --color-primary-hover: #333333;
+  --color-primary-light: #1a1a1a;
+  
+  /* Accent */
+  --color-accent: #ff8c42;
+  --color-accent-hover: #ff7b29;
+  --color-accent-light: #ffa666;
+  
+  /* Backgrounds */
+  --color-bg-gradient-start: #ffffff;
+  --color-bg-gradient-end: #fdf6f0;
+  --color-bg-white: #ffffff;
+  --color-bg-card: #ffffff;
+  --color-bg-input: #ffffff;
+  --color-bg-disabled: #f5f5f5;
+  
+  /* Text */
+  --color-text-primary: #333333;
+  --color-text-secondary: #666666;
+  --color-text-muted: #999999;
+  --color-text-light: #cccccc;
+  --color-text-white: #ffffff;
+  
+  /* Borders */
+  --color-border-default: #e8e8e8;
+  --color-border-hover: #ff8c42;
+  --color-border-focus: #ff8c42;
+  --color-border-light: #e0e0e0;
+  
+  /* Feedback Colors */
+  --color-error: #c33333;
+  --color-error-bg: #fee;
+  --color-error-border: #c33;
+  --color-success: #2d6b5e;
+  --color-success-bg: #e6f7f4;
+  --color-warning: #f59e0b;
+  --color-warning-bg: #fef3c7;
+  
+  /* ===== TYPOGRAPHY ===== */
+  
+  /* Font Families */
+  --font-heading: 'Playfair Display', serif;
+  --font-body: 'Tinos', serif;
+  --font-system: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  
+  /* Font Sizes */
+  --font-size-xs: 14px;
+  --font-size-sm: 15px;
+  --font-size-base: 16px;
+  --font-size-md: 17px;
+  --font-size-lg: 18px;
+  --font-size-xl: 20px;
+  --font-size-2xl: 24px;
+  --font-size-3xl: 28px;
+  --font-size-4xl: 32px;
+  --font-size-5xl: 42px;
+  --font-size-6xl: 48px;
+  --font-size-7xl: 64px;
+  
+  /* Font Weights */
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  
+  /* Line Heights */
+  --line-height-tight: 1.1;
+  --line-height-snug: 1.2;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.6;
+  --line-height-loose: 1.7;
+  
+  /* ===== SPACING ===== */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-15: 60px;
+  --space-16: 64px;
+  --space-20: 80px;
+  --space-24: 96px;
+  --space-32: 128px;
+  
+  /* ===== SHADOWS ===== */
+  --shadow-xs: 0 1px 4px rgba(0, 0, 0, 0.06);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.12);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.15);
+  --shadow-xl: 0 12px 32px rgba(0, 0, 0, 0.2);
+  --shadow-2xl: 0 16px 48px rgba(0, 0, 0, 0.25);
+  
+  /* ===== BORDER RADIUS ===== */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-xl: 24px;
+  --radius-full: 50%;
+  --radius-round: 9999px;
+  
+  /* ===== TRANSITIONS ===== */
+  --transition-fast: 0.15s ease;
+  --transition-base: 0.3s ease;
+  --transition-slow: 0.5s ease;
+  
+  /* ===== Z-INDEX ===== */
+  --z-base: 1;
+  --z-dropdown: 10;
+  --z-sticky: 100;
+  --z-fixed: 200;
+  --z-modal: 1000;
+  --z-tooltip: 2000;
+  
+  /* ===== BREAKPOINTS (for reference) ===== */
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
+}
