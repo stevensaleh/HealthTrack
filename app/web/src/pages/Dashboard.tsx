@@ -1,10 +1,12 @@
 // src/pages/Dashboard.tsx
 import { useAuth } from '@/context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
 export default function Dashboard() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const [showEntryModal, setShowEntryModal] = useState(false);
 
   const handleLogout = () => {
     logout();
@@ -41,7 +43,7 @@ export default function Dashboard() {
         {/* Quick Action Buttons */}
         <div className="button-group mt-16 mb-20">
           <button
-            onClick={() => navigate('/data-entry')}
+            onClick={() => setShowEntryModal(true)}
             className="btn-primary btn-lg btn-elevated"
           >
             Add Entry
@@ -71,6 +73,58 @@ export default function Dashboard() {
           </div>
         </div>
       </main>
+
+      {/* --- CENTERED BLANK POPUP MODAL --- */}
+      {showEntryModal && (
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100vw',
+            height: '100vh',
+            background: 'rgba(0,0,0,0.4)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 9999,
+          }}
+          onMouseDown={(e) => {
+            // Close when clicking backdrop
+            if (e.target === e.currentTarget) setShowEntryModal(false);
+          }}
+        >
+          <div
+            style={{
+              background: 'white',
+              borderRadius: '1rem',
+              padding: '1.25rem',
+              width: 'min(520px, 95vw)',
+              boxShadow: '0 10px 30px rgba(0,0,0,0.15)',
+            }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                marginBottom: '1rem',
+              }}
+            >
+              <h3 style={{ margin: 0 }}>Add Entry</h3>
+              <button
+                onClick={() => setShowEntryModal(false)}
+                className="btn-secondary btn-sm"
+              >
+                Close
+              </button>
+            </div>
+
+            {/* Blank body area */}
+            <div style={{ minHeight: 160 }} />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
