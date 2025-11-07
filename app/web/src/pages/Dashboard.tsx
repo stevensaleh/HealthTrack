@@ -8,9 +8,20 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const [showEntryModal, setShowEntryModal] = useState(false);
 
+  // form fields (text only)
+  const [calories, setCalories] = useState('');
+  const [steps, setSteps] = useState('');
+  const [hours, setHours] = useState('');
+
   const handleLogout = () => {
     logout();
     navigate('/login');
+  };
+
+  const resetForm = () => {
+    setCalories('');
+    setSteps('');
+    setHours('');
   };
 
   return (
@@ -34,13 +45,11 @@ export default function Dashboard() {
 
       {/* Main Content */}
       <main className="page-container text-center">
-        {/* Welcome Section */}
         <h2 className="heading-1 mb-4">Welcome to HealthTrack 🏃‍♂️🥗🏋️‍♂️</h2>
         <p className="body-xl text-secondary text-italic mb-16">
           Your journey to a healthier you starts here 📍
         </p>
 
-        {/* Quick Action Buttons */}
         <div className="button-group mt-16 mb-20">
           <button
             onClick={() => setShowEntryModal(true)}
@@ -62,7 +71,6 @@ export default function Dashboard() {
           </button>
         </div>
 
-        {/* Coming Soon Card */}
         <div className="content-wrapper">
           <div className="card card-elevated">
             <h3 className="heading-3 mb-4">Dashboard Coming Soon!</h3>
@@ -74,7 +82,7 @@ export default function Dashboard() {
         </div>
       </main>
 
-      {/* --- CENTERED BLANK POPUP MODAL --- */}
+      {/* --- CENTERED POPUP ENTRY FORM --- */}
       {showEntryModal && (
         <div
           style={{
@@ -90,9 +98,13 @@ export default function Dashboard() {
             zIndex: 9999,
           }}
           onMouseDown={(e) => {
-            // Close when clicking backdrop
-            if (e.target === e.currentTarget) setShowEntryModal(false);
+            if (e.target === e.currentTarget) {
+              setShowEntryModal(false);
+              resetForm();
+            }
           }}
+          role="dialog"
+          aria-modal="true"
         >
           <div
             style={{
@@ -102,6 +114,7 @@ export default function Dashboard() {
               width: 'min(520px, 95vw)',
               boxShadow: '0 10px 30px rgba(0,0,0,0.15)',
             }}
+            onMouseDown={(e) => e.stopPropagation()} // prevent accidental close
           >
             <div
               style={{
@@ -111,17 +124,59 @@ export default function Dashboard() {
                 marginBottom: '1rem',
               }}
             >
-              <h3 style={{ margin: 0 }}>Add Entry</h3>
+              <h3 style={{ margin: 0 }}>ADD ENTRIES FOR THE WEEK</h3>
               <button
-                onClick={() => setShowEntryModal(false)}
+                onClick={() => {
+                  setShowEntryModal(false);
+                  resetForm();
+                }}
                 className="btn-secondary btn-sm"
               >
                 Close
               </button>
             </div>
 
-            {/* Blank body area */}
-            <div style={{ minHeight: 160 }} />
+            {/* Simple text input fields */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <input
+                type="text"
+                placeholder="Calories"
+                value={calories}
+                onChange={(e) => setCalories(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '0.75rem 0.9rem',
+                  border: '1px solid #e5e7eb',
+                  borderRadius: '0.75rem',
+                }}
+              />
+
+              <input
+                type="text"
+                placeholder="Steps"
+                value={steps}
+                onChange={(e) => setSteps(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '0.75rem 0.9rem',
+                  border: '1px solid #e5e7eb',
+                  borderRadius: '0.75rem',
+                }}
+              />
+
+              <input
+                type="text"
+                placeholder="Hours Slept"
+                value={hours}
+                onChange={(e) => setHours(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '0.75rem 0.9rem',
+                  border: '1px solid #e5e7eb',
+                  borderRadius: '0.75rem',
+                }}
+              />
+            </div>
           </div>
         </div>
       )}
