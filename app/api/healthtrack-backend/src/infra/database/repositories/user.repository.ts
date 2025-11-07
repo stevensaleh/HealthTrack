@@ -51,6 +51,7 @@ export class UserRepository implements IUserRepository {
       where: { email },
       select: { id: true },
     });
+
     return user !== null;
   }
 
