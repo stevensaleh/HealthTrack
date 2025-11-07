@@ -12,6 +12,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
+import sanitizeHtml from 'sanitize-html';
 import type { IUserRepository } from '../repositories/user.repository.interface';
 import {
   //CreateUserData,
@@ -265,10 +266,46 @@ export class UserService {
    * Sanitize profile data to prevent XSS attacks
    * Strip HTML tags, trim whitespace
    */
+  // private sanitizeProfileData(data: UpdateProfileDto): UpdateProfileDto {
+  //   const stripHtml = (text: string | undefined): string | undefined => {
+  //     if (!text) return text;
+  //     // Remove all HTML tags
+  //     return text.replace(/<[^>]*>/g, '').trim();
+  //   };
+
+  //   return {
+  //     firstName: stripHtml(data.firstName),
+  //     lastName: stripHtml(data.lastName),
+  //     profileImage: data.profileImage?.trim(),
+  //   };
+  // }
   private sanitizeProfileData(data: UpdateProfileDto): UpdateProfileDto {
+    const clean = (text: string | undefined): string | undefined => {
+      if (!text) return text;
+
+      // Cast sanitizeHtml to a known function signature to avoid `error`-typed value issues,
+      // then ensure the result is a string before calling .trim().
+      const sanitizer = sanitizeHtml as unknown as (
+        input: string,
+        options?: {
+          allowedTags?: string[];
+          allowedAttributes?: Record<string, unknown>;
+        },
+      ) => unknown;
+
+      const raw = sanitizer(text, { allowedTags: [], allowedAttributes: {} });
+
+      if (typeof raw === 'string') {
+        return raw.trim();
+      }
+
+      // If sanitizer returns something unexpected fall back to a safe stripped string.
+      return String(raw).trim();
+    };
+
     return {
-      firstName: data.firstName?.trim().replace(/<[^>]*>/g, ''),
-      lastName: data.lastName?.trim().replace(/<[^>]*>/g, ''),
+      firstName: clean(data.firstName),
+      lastName: clean(data.lastName),
       profileImage: data.profileImage?.trim(),
     };
   }

@@ -2,11 +2,10 @@
  * InfrastructureModule - Provides Repository Implementations
  *
  * This module is responsible for:
- * 1. Providing concrete implementations of repository interfaces
- * 2. Wiring up dependency injection for repositories
- * 3. Making repositories available to other modules
+ * Providing concrete implementations of repository interfaces
+ * Wiring up dependency injection for repositories
+ * Making repositories available to other modules
  *
- * it is the "factory" that creates and provides adapters
  */
 
 import { Module } from '@nestjs/common';
@@ -18,24 +17,12 @@ import { UserRepository } from './database/repositories/user.repository';
     PrismaModule, // Import PrismaModule so we can use PrismaService
   ],
   providers: [
-    /**
-     * Repository Provider Configuration
-     * This tells NestJS:
-     * "When someone asks for 'IUserRepository', give them UserRepository"
-     */
     {
-      provide: 'IUserRepository', // Token (what services ask for)
-      useClass: UserRepository, // Implementation (what NestJS provides)
+      provide: 'IUserRepository',
+      useClass: UserRepository,
     },
   ],
-  exports: [
-    /**
-     * Export repositories so other modules can use them
-     * Other modules can import InfrastructureModule and use repositories
-     * CoreModule will import this to get repositories for services
-     */
-    'IUserRepository',
-  ],
+  exports: ['IUserRepository'],
 })
 export class InfrastructureModule {}
 
