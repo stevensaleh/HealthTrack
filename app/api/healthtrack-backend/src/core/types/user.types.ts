@@ -2,7 +2,6 @@
  * User Type Definitions
  * These types define the shape of data for User operations.
  */
-
 import { User } from '@prisma/client';
 
 /**
@@ -26,29 +25,26 @@ export type UpdateUserData = {
   firstName?: string;
   lastName?: string;
   profileImage?: string;
-  googleId?: string; // For linking OAuth account later
+  googleId?: string;
 };
 
 /**
  * UserResponse - Safe user data for API responses
  * Used when: Returning user data to frontend
- * prevents accidental data leaks
  */
 export type UserResponse = Omit<User, 'password' | 'googleId'>;
 
 /**
  * UserWithRelations - User with all related data
- * Useful for dashboard views where we need everything at once
  */
 export type UserWithRelations = User & {
-  healthData: any[]; // Will be typed properly when we implement HealthData
-  goals: any[]; // Will be typed properly when we implement Goal
-  integrations: any[]; // Will be typed properly when we implement Integration
+  healthData: any[];
+  goals: any[];
+  integrations: any[];
 };
 
 /**
  * Helper function to convert User to UserResponse
- * Strips sensitive fields
  */
 export function toUserResponse(user: User): UserResponse {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
