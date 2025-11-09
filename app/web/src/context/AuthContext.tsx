@@ -1,5 +1,6 @@
 // src/context/AuthContext.tsx
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { authService } from '@/services/authService';
 import { User, AuthResponse, LoginCredentials, RegisterData, GoogleUserInfo } from '@/types/user';
 
 interface AuthContextType {
@@ -21,14 +22,115 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
+  const toDate = (value?: string | Date): Date | undefined => {
+    if (!value) {
+      return undefined;
+    }
+
+    if (value instanceof Date) {
+      return value;
+    }
+
+    const parsed = new Date(value);
+    return Number.isNaN(parsed.getTime()) ? undefined : parsed;
+  };
+
+  const hydrateStoredUser = (storedValue: string): User | null => {
+    try {
+      const parsed = JSON.parse(storedValue) as User & {
+        createdAt?: string | Date;
+        updatedAt?: string | Date;
+        dateOfBirth?: string | Date;
+      };
+
+      if (!parsed || !parsed.id || !parsed.email) {
+        return null;
+      }
+
+      return {
+        ...parsed,
+        createdAt: toDate(parsed.createdAt),
+        updatedAt: toDate(parsed.updatedAt),
+        dateOfBirth: toDate(parsed.dateOfBirth),
+      };
+    } catch (error) {
+      console.error('Error parsing stored user:', error);
+      return null;
+    }
+  };
+
+  const storeUser = (nextUser: User | null) => {
+    setUser(nextUser);
+
+    if (!nextUser) {
+      localStorage.removeItem(STORAGE_KEY);
+      return;
+    }
+
+    const serializableUser = {
+      ...nextUser,
+      createdAt: nextUser.createdAt?.toISOString(),
+      updatedAt: nextUser.updatedAt?.toISOString(),
+      dateOfBirth:
+        nextUser.dateOfBirth instanceof Date
+          ? nextUser.dateOfBirth.toISOString()
+          : nextUser.dateOfBirth,
+    };
+
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(serializableUser));
+  };
+
+  const persistTokens = (tokens?: {
+    accessToken?: string | null;
+    refreshToken?: string | null;
+  }) => {
+    if (!tokens) {
+      return;
+    }
+
+    if (tokens.accessToken !== undefined) {
+      if (tokens.accessToken) {
+        localStorage.setItem('accessToken', tokens.accessToken);
+      } else {
+        localStorage.removeItem('accessToken');
+      }
+    }
+
+    if (tokens.refreshToken !== undefined) {
+      if (tokens.refreshToken) {
+        localStorage.setItem('refreshToken', tokens.refreshToken);
+      } else {
+        localStorage.removeItem('refreshToken');
+      }
+    }
+  };
+
+  const persistSession = (
+    sessionUser: User,
+    tokens?: { accessToken?: string; refreshToken?: string },
+  ) => {
+    storeUser(sessionUser);
+    persistTokens(tokens);
+  };
+
+  const clearSession = () => {
+    storeUser(null);
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+  };
+
   // Check if user is logged in on mount
   useEffect(() => {
     const initAuth = () => {
       try {
         const storedUser = localStorage.getItem(STORAGE_KEY);
         if (storedUser) {
-          const parsedUser = JSON.parse(storedUser) as User;
-          setUser(parsedUser);
+          const hydratedUser = hydrateStoredUser(storedUser);
+          if (hydratedUser) {
+            setUser(hydratedUser);
+          } else {
+            localStorage.removeItem(STORAGE_KEY);
+          }
         }
       } catch (error) {
         console.error('Error parsing stored user:', error);
@@ -44,43 +146,31 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // Login with email and password
   const login = async (credentials: LoginCredentials): Promise<AuthResponse> => {
     try {
-      // TODO: Replace with actual API call to backend
-      // const response = await authService.login(credentials);
-      
-      // Mock authentication for now
-      if (!credentials.email || !credentials.password) {
-        return { 
-          success: false, 
-          error: 'Please provide email and password' 
-        };
+      const response = await authService.login(credentials);
+
+      if (response.success && response.user) {
+        const tokenPayload: { accessToken?: string; refreshToken?: string } = {};
+
+        if (response.accessToken !== undefined) {
+          tokenPayload.accessToken = response.accessToken;
+        }
+
+        if (response.refreshToken !== undefined) {
+          tokenPayload.refreshToken = response.refreshToken;
+        }
+
+        persistSession(
+          response.user,
+          Object.keys(tokenPayload).length > 0 ? tokenPayload : undefined,
+        );
       }
 
-      // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 500));
-
-      const mockUser: User = {
-        id: Date.now().toString(),
-        email: credentials.email,
-        name: credentials.email.split('@')[0],
-        provider: 'email',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      };
-      
-      setUser(mockUser);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(mockUser));
-      
-      return { 
-        success: true, 
-        user: mockUser,
-        accessToken: 'mock_access_token',
-        refreshToken: 'mock_refresh_token'
-      };
+      return response;
     } catch (error) {
       console.error('Login error:', error);
-      return { 
-        success: false, 
-        error: error instanceof Error ? error.message : 'Login failed' 
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Login failed',
       };
     }
   };
@@ -88,54 +178,32 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // Register new user
   const register = async (data: RegisterData): Promise<AuthResponse> => {
     try {
-      // TODO: Replace with actual API call to backend
-      // const response = await authService.register(data);
-      
-      // Mock registration for now
-      if (!data.email || !data.password || !data.name) {
-        return { 
-          success: false, 
-          error: 'Please provide all required fields' 
-        };
+      const response = await authService.register(data);
+
+      if (response.success && response.user) {
+        const tokenPayload: { accessToken?: string; refreshToken?: string } = {};
+
+        if (response.accessToken !== undefined) {
+          tokenPayload.accessToken = response.accessToken;
+        }
+
+        if (response.refreshToken !== undefined) {
+          tokenPayload.refreshToken = response.refreshToken;
+        }
+
+        persistSession(
+          response.user,
+          Object.keys(tokenPayload).length > 0 ? tokenPayload : undefined,
+        );
       }
 
-      if (data.password.length < 6) {
-        return { 
-          success: false, 
-          error: 'Password must be at least 6 characters' 
-        };
-      }
-
-      // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 500));
-
-      const mockUser: User = {
-        id: Date.now().toString(),
-        email: data.email,
-        name: data.name,
-        provider: 'email',
-        dateOfBirth: data.dateOfBirth ? new Date(data.dateOfBirth) : undefined,
-        gender: data.gender,
-        height: data.height,
-        weight: data.weight,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      };
-      
-      setUser(mockUser);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(mockUser));
-      
-      return { 
-        success: true, 
-        user: mockUser,
-        accessToken: 'mock_access_token',
-        refreshToken: 'mock_refresh_token'
-      };
+      return response;
     } catch (error) {
       console.error('Registration error:', error);
-      return { 
-        success: false, 
-        error: error instanceof Error ? error.message : 'Registration failed' 
+      return {
+        success: false,
+        error:
+          error instanceof Error ? error.message : 'Registration failed',
       };
     }
   };
@@ -168,8 +236,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         updatedAt: new Date(),
       };
 
-      setUser(user);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(user));
+      persistSession(user, {
+        accessToken: 'mock_google_access_token',
+        refreshToken: 'mock_google_refresh_token',
+      });
       
       return { 
         success: true, 
@@ -188,16 +258,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // Logout
   const logout = () => {
-    setUser(null);
-    localStorage.removeItem(STORAGE_KEY);
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
+    clearSession();
   };
 
   // Update user profile
   const updateUser = (updatedUser: User) => {
-    setUser(updatedUser);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedUser));
+    storeUser(updatedUser);
   };
 
   const value: AuthContextType = {

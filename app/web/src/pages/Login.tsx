@@ -56,7 +56,7 @@ export default function Login() {
       if (result.success) {
         navigate('/dashboard');
       } else {
-        setError(result.error || 'Authentication failed');
+        setError(result.error || result.message || 'Authentication failed');
       }
     } catch (err) {
       setError('An error occurred. Please try again.');
@@ -80,7 +80,7 @@ export default function Login() {
       if (result.success) {
         navigate('/dashboard');
       } else {
-        setError(result.error || 'Google authentication failed');
+        setError(result.error || result.message || 'Google authentication failed');
       }
     } catch (err) {
       setError('An error occurred with Google sign-in. Please try again.');

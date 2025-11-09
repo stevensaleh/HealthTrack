@@ -5,6 +5,8 @@ export interface User {
   name: string;
   picture?: string;
   provider: 'email' | 'google';
+  firstName?: string;
+  lastName?: string;
   dateOfBirth?: Date;
   gender?: 'male' | 'female' | 'other';
   height?: number;
@@ -36,6 +38,7 @@ export interface AuthResponse {
   accessToken?: string;
   refreshToken?: string;
   error?: string;
+  message?: string;
 }
 
 export interface LoginCredentials {
@@ -47,6 +50,8 @@ export interface RegisterData {
   email: string;
   password: string;
   name: string;
+  firstName?: string;
+  lastName?: string;
   dateOfBirth?: string;
   gender?: 'male' | 'female' | 'other';
   height?: number;
