@@ -124,7 +124,7 @@ export default function Dashboard() {
                 marginBottom: '1rem',
               }}
             >
-              <h3 style={{ margin: 0 }}>ADD ENTRIES FOR THE WEEK</h3>
+              <h3 style={{ margin: 0 }}>ADD ENTRIEs FOR THE WEEK</h3>
               <button
                 onClick={() => {
                   setShowEntryModal(false);
