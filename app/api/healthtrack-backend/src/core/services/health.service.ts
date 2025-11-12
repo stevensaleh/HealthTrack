@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import type { IHealthDataRepository } from '@core/repositories/health-data.repository.interface';
 import {
-  CreateHealthDataDto,
+  //CreateHealthDataDto,
   UpdateHealthDataDto,
   HealthDataResponse,
   HealthDataStats,
@@ -21,8 +21,8 @@ import {
   METRIC_VALIDATION_RULES,
   getLastNDaysRange,
   toDateOnly,
-  isSameDay,
-} from '@core/types/health-data.types';
+  //isSameDay,
+} from '../types/health-data.types';
 
 //DTOs for service methods
 export interface LogHealthDataDto {
