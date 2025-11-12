@@ -2,14 +2,15 @@
  * CoreModule - Business Logic Layer Module
  *
  * This module is responsible for:
- * 1. Providing domain services (business logic)
- * 2. Importing repositories from InfrastructureModule
- * 3. Making services available to application layer (controllers)
+ * - Providing domain services business logic
+ * - Importing repositories from InfrastructureModule
+ * - Making services available to application layer (controllers)
  */
 
 import { Module } from '@nestjs/common';
 import { InfrastructureModule } from './infra/infrastructure.module';
-import { UserService } from './core/services/user.service';
+import { UserService } from '@core/services/user.service';
+import { HealthService } from '@core/services/health.service';
 
 @Module({
   imports: [
@@ -19,19 +20,12 @@ import { UserService } from './core/services/user.service';
   providers: [
     //Domain Services contain business logic and use repositories
     UserService,
-
-    // Future services:
-    // GoalService,
-    // HealthService,
-    // IntegrationService,
+    HealthService,
   ],
   exports: [
     //Export services so controllers can use them
     UserService,
-
-    // Future exports:
-    // GoalService,
-    // HealthService,
+    HealthService,
   ],
 })
 export class CoreModule {}
