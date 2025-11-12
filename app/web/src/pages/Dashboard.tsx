@@ -35,6 +35,21 @@ export default function Dashboard() {
     setGoalSleep('');
   };
 
+  // 🔹 Calculate the Sunday of this week
+  const getSundayDate = () => {
+    const today = new Date();
+    const day = today.getDay(); // 0 = Sunday
+    const sunday = new Date(today);
+    sunday.setDate(today.getDate() - day); // back to Sunday
+    return sunday.toLocaleDateString('en-US', {
+      month: 'long',
+      day: 'numeric',
+      year: 'numeric',
+    });
+  };
+
+  const sundayDate = getSundayDate();
+
   const inputStyle = {
     width: '100%',
     padding: '0.75rem 0.9rem',
@@ -138,7 +153,7 @@ export default function Dashboard() {
       {/* Add Entry Popup */}
       {showEntryModal && (
         <Modal
-          title="ADD ENTRIES FOR THE WEEK"
+          title={`Add entries for the week of ${sundayDate}`}
           onClose={() => {
             setShowEntryModal(false);
             resetForm();
@@ -173,7 +188,7 @@ export default function Dashboard() {
       {/* My Goals Popup */}
       {showGoalsModal && (
         <Modal
-          title="MY GOALS"
+          title={`My goals for the week of ${sundayDate}`}
           onClose={() => {
             setShowGoalsModal(false);
             resetGoals();
