@@ -15,19 +15,17 @@ import {
   NotFoundException,
   ConflictException,
 } from '@nestjs/common';
-import { GoalType, GoalStatus } from '@prisma/client';
+import { GoalType } from '@prisma/client';
 import type { IGoalRepository } from '@core/repositories/goal.repository.interface';
 import type { IHealthDataRepository } from '@core/repositories/health-data.repository.interface';
 import {
-  CreateGoalDto,
-  UpdateGoalDto,
   GoalResponse,
   GoalWithProgress,
   GoalProgress,
   GOAL_VALIDATION_RULES,
   isTrajectoryGoal,
-  getLastNDaysRange,
 } from '@core/types/goal.types';
+import { getLastNDaysRange } from '@core/types/health-data.types';
 import { GoalCalculationStrategyFactory } from '@core/strategies/goal-calculation-strategy.factory';
 
 /**
@@ -127,7 +125,13 @@ export class GoalService {
 
     // Additional validation for weight goals
     if (data.type === 'WEIGHT_LOSS' || data.type === 'WEIGHT_GAIN') {
-      this.validateWeightGoal(data.type, data.startValue!, data.targetValue);
+      if (!data.startValue) {
+        throw new BadRequestException(
+          'Start value is required for weight goals',
+        );
+      }
+
+      this.validateWeightGoal(data.type, data.startValue, data.targetValue);
     }
 
     // Create goal
@@ -235,6 +239,11 @@ export class GoalService {
 
       // Additional validation for weight goals
       if (goal.type === 'WEIGHT_LOSS' || goal.type === 'WEIGHT_GAIN') {
+        if (!goal.startValue) {
+          throw new BadRequestException(
+            'Cannot update target for weight goal without start value',
+          );
+        }
         this.validateWeightGoal(goal.type, goal.startValue, data.targetValue);
       }
     }
@@ -277,7 +286,7 @@ export class GoalService {
     return this.goalRepo.update(goalId, { status: 'COMPLETED' });
   }
 
-//Cancel a goal
+  //Cancel a goal
   async cancelGoal(userId: string, goalId: string): Promise<GoalResponse> {
     const goal = await this.goalRepo.findById(goalId);
 
@@ -294,7 +303,7 @@ export class GoalService {
     return this.goalRepo.update(goalId, { status: 'CANCELLED' });
   }
 
-//Pause a goal
+  //Pause a goal
   async pauseGoal(userId: string, goalId: string): Promise<GoalResponse> {
     const goal = await this.goalRepo.findById(goalId);
 
@@ -309,7 +318,7 @@ export class GoalService {
     return this.goalRepo.update(goalId, { status: 'PAUSED' });
   }
 
-//Resume a paused goal
+  //Resume a paused goal
   async resumeGoal(userId: string, goalId: string): Promise<GoalResponse> {
     const goal = await this.goalRepo.findById(goalId);
 
@@ -324,7 +333,7 @@ export class GoalService {
     return this.goalRepo.update(goalId, { status: 'ACTIVE' });
   }
 
-//Delete a goal
+  //Delete a goal
   async deleteGoal(userId: string, goalId: string): Promise<void> {
     const goal = await this.goalRepo.findById(goalId);
 
@@ -335,7 +344,7 @@ export class GoalService {
     await this.goalRepo.delete(goalId);
   }
 
-//Get goal statistics
+  //Get goal statistics
   async getGoalStatistics(userId: string) {
     const [total, active, completed, cancelled] = await Promise.all([
       this.goalRepo.countByUser(userId),
@@ -400,7 +409,7 @@ export class GoalService {
     return progress;
   }
 
-//Validate target value against realistic ranges
+  //Validate target value against realistic ranges
   private validateTargetValue(type: GoalType, targetValue: number): void {
     const rules = GOAL_VALIDATION_RULES[type];
 
@@ -416,7 +425,7 @@ export class GoalService {
     }
   }
 
-//Validate weight goals specifically
+  //Validate weight goals specifically
   private validateWeightGoal(
     type: GoalType,
     startWeight: number,

@@ -25,7 +25,7 @@ export class ExerciseStrategy implements IGoalCalculationStrategy {
   calculate(goal: Goal, healthData: HealthData[]): GoalProgress {
     const now = new Date();
     const remainingDays = getDaysRemaining(goal.endDate);
-    const targetExercise = goal.targetValue;
+    const targetExercise: number = Number(goal.targetValue ?? 0);
 
     // Get today's exercise minutes
     const todayData = healthData.find((data) => data.exercise !== null);
