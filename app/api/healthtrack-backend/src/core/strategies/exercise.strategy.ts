@@ -1,11 +1,10 @@
 /**
- * StepsStrategy - Calculate progress for daily step goals
+ * ExerciseStrategy - Calculate progress for daily exercise goals
  *
  * Algorithm:
- * - Get today's steps (or latest entry)
- * - Calculate progress: todaySteps / targetSteps * 100
+ * - Get today's exercise minutes (or latest entry)
+ * - Calculate progress: todayExercise / targetExercise * 100
  * - This is a DAILY goal - resets each day
- *
  */
 
 import { Injectable } from '@nestjs/common';
@@ -18,22 +17,22 @@ import {
 } from '@core/types/goal.types';
 
 @Injectable()
-export class StepsStrategy implements IGoalCalculationStrategy {
+export class ExerciseStrategy implements IGoalCalculationStrategy {
   supports(goalType: string): boolean {
-    return goalType === 'STEPS';
+    return goalType === 'EXERCISE';
   }
 
   calculate(goal: Goal, healthData: HealthData[]): GoalProgress {
     const now = new Date();
     const remainingDays = getDaysRemaining(goal.endDate);
-    const targetSteps = goal.targetValue;
+    const targetExercise = goal.targetValue;
 
-    // Get today's steps (most recent entry)
-    const todayData = healthData.find((data) => data.steps !== null);
-    const currentSteps = todayData?.steps || 0;
+    // Get today's exercise minutes
+    const todayData = healthData.find((data) => data.exercise !== null);
+    const currentExercise = todayData?.exercise || 0;
 
     // Calculate progress percentage
-    const percentage = Math.min(100, (currentSteps / targetSteps) * 100);
+    const percentage = Math.min(100, (currentExercise / targetExercise) * 100);
 
     // Determine status
     let status: 'not_started' | 'in_progress' | 'completed' | 'overdue';
@@ -47,17 +46,13 @@ export class StepsStrategy implements IGoalCalculationStrategy {
       status = 'not_started';
     }
 
-    // For daily goals, "on track" means making progress today
     const isOnTrack = percentage > 0;
+    const remainingValue = Math.max(0, targetExercise - currentExercise);
 
-    // Remaining steps
-    const remainingValue = Math.max(0, targetSteps - currentSteps);
-
-    // Generate message
     const message = formatProgressMessage(
-      'STEPS',
-      currentSteps,
-      targetSteps,
+      'EXERCISE',
+      currentExercise,
+      targetExercise,
       percentage,
     );
 
@@ -66,8 +61,8 @@ export class StepsStrategy implements IGoalCalculationStrategy {
     return {
       percentage,
       status,
-      currentValue: currentSteps,
-      targetValue: targetSteps,
+      currentValue: currentExercise,
+      targetValue: targetExercise,
       remainingValue,
       remainingDays,
       isOnTrack,
