@@ -15,7 +15,7 @@ import {
   NotFoundException,
   ConflictException,
 } from '@nestjs/common';
-import { GoalType } from '@prisma/client';
+import { GoalType, GoalStatus } from '@prisma/client';
 import type { IGoalRepository } from '@core/repositories/goal.repository.interface';
 import type { IHealthDataRepository } from '@core/repositories/health-data.repository.interface';
 import {
@@ -371,8 +371,6 @@ export class GoalService {
   /**
    * Calculate goal progress using Strategy Pattern
    *
-   * THIS IS THE KEY METHOD demonstrating Strategy Pattern!
-   *
    * Steps:
    * 1. Select correct strategy based on goal type
    * 2. Get relevant health data
@@ -417,6 +415,21 @@ export class GoalService {
       // Goal type not yet implemented
       throw new BadRequestException(`Goal type ${type} is not yet supported`);
     }
+
+    // For weight goals, validate the target weight is reasonable (not too low/high)
+    if (type === 'WEIGHT_LOSS' || type === 'WEIGHT_GAIN') {
+      // Target weight should be reasonable for a human (20-300kg)
+
+      if (targetValue < 20 || targetValue > 300) {
+        throw new BadRequestException(
+          `Target weight must be between 20 and 300 kg`,
+        );
+      }
+
+      return; // Don't check against GOAL_VALIDATION_RULES for weight goals
+    }
+
+    // For other goals, validate against rules
 
     if (targetValue < rules.min || targetValue > rules.max) {
       throw new BadRequestException(

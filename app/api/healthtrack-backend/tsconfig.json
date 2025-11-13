@@ -25,8 +25,8 @@
     "typeRoots": ["node_modules/@types"],
     "paths": {
       "@core/*": ["src/core/*"],
-      "@infrastructure/*": ["src/infrastructure/*"],
-      "@application/*": ["src/application/*"]
+      "@infra/*": ["src/infra/*"],
+      "@app/*": ["src/app/*"]
     }
   },
   "include": ["src/**/*.ts", "prisma/**/*.ts"]

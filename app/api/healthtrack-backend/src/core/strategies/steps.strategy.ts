@@ -26,7 +26,7 @@ export class StepsStrategy implements IGoalCalculationStrategy {
   calculate(goal: Goal, healthData: HealthData[]): GoalProgress {
     const now = new Date();
     const remainingDays = getDaysRemaining(goal.endDate);
-    const targetSteps: number = goal.targetValue;
+    const targetSteps = goal.targetValue;
 
     // Get today's steps (most recent entry)
     const todayData = healthData.find((data) => data.steps !== null);

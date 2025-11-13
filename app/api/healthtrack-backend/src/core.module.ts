@@ -12,6 +12,8 @@ import { InfrastructureModule } from './infra/infrastructure.module';
 import { UserService } from '@core/services/user.service';
 import { HealthService } from '@core/services/health.service';
 import { GoalService } from '@core/services/goal.service';
+import { WeightLossStrategy } from '@core/strategies/weight-loss.strategy';
+import { WeightGainStrategy } from '@core/strategies/weight-gain.strategy';
 import { StepsStrategy } from '@core/strategies/steps.strategy';
 import { ExerciseStrategy } from '@core/strategies/exercise.strategy';
 import { GoalCalculationStrategyFactory } from '@core/strategies/goal-calculation-strategy.factory';
@@ -28,6 +30,8 @@ import { GoalCalculationStrategyFactory } from '@core/strategies/goal-calculatio
     GoalService,
 
     // Strategy Pattern Implementations - These are injected into GoalCalculationStrategyFactory
+    WeightLossStrategy,
+    WeightGainStrategy,
     StepsStrategy,
     ExerciseStrategy,
     GoalCalculationStrategyFactory,
