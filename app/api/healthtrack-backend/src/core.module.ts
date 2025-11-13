@@ -11,6 +11,10 @@ import { Module } from '@nestjs/common';
 import { InfrastructureModule } from './infra/infrastructure.module';
 import { UserService } from '@core/services/user.service';
 import { HealthService } from '@core/services/health.service';
+import { GoalService } from '@core/services/goal.service';
+import { StepsStrategy } from '@core/strategies/steps.strategy';
+import { ExerciseStrategy } from '@core/strategies/exercise.strategy';
+import { GoalCalculationStrategyFactory } from '@core/strategies/goal-calculation-strategy.factory';
 
 @Module({
   imports: [
@@ -21,11 +25,18 @@ import { HealthService } from '@core/services/health.service';
     //Domain Services contain business logic and use repositories
     UserService,
     HealthService,
+    GoalService,
+
+    // Strategy Pattern Implementations - These are injected into GoalCalculationStrategyFactory
+    StepsStrategy,
+    ExerciseStrategy,
+    GoalCalculationStrategyFactory,
   ],
   exports: [
     //Export services so controllers can use them
     UserService,
     HealthService,
+    GoalService,
   ],
 })
 export class CoreModule {}

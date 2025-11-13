@@ -5,12 +5,13 @@
  * Providing concrete implementations of repository interfaces
  * Wiring up dependency injection for repositories
  * Making repositories available to other modules
- *
  */
 
 import { Module } from '@nestjs/common';
 import { PrismaModule } from './database/prisma.module';
 import { UserRepository } from './database/repositories/user.repository';
+import { HealthDataRepository } from './database/repositories/health-data.repository';
+import { GoalRepository } from './database/repositories/goal.repository';
 
 @Module({
   imports: [
@@ -21,8 +22,16 @@ import { UserRepository } from './database/repositories/user.repository';
       provide: 'IUserRepository',
       useClass: UserRepository,
     },
+    {
+      provide: 'IHealthDataRepository',
+      useClass: HealthDataRepository,
+    },
+    {
+      provide: 'IGoalRepository',
+      useClass: GoalRepository,
+    },
   ],
-  exports: ['IUserRepository'],
+  exports: ['IUserRepository', 'IHealthDataRepository', 'IGoalRepository'],
 })
 export class InfrastructureModule {}
 
