@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
 
@@ -9,7 +8,7 @@ async function main() {
 
   // Create a test user with email/password
   const hashedPassword: string = await bcrypt.hash('password123', 10);
-  
+
   const user1 = await prisma.user.upsert({
     where: { email: 'test@healthtrack.com' },
     update: {},
@@ -20,7 +19,6 @@ async function main() {
       lastName: 'Doe',
     },
   });
-
 
   console.log('✅ Created test user:', user1.email);
 
@@ -90,9 +88,8 @@ async function main() {
       title: 'Lose 5kg',
       description: 'Lose 5kg in 3 months through healthy eating and exercise',
       type: 'WEIGHT_LOSS',
-      target: 70,
-      current: 75,
-      unit: 'kg',
+      targetValue: 70,
+      startValue: 75,
       endDate: futureDate,
       status: 'ACTIVE',
     },
@@ -104,9 +101,8 @@ async function main() {
       title: 'Walk 10,000 steps daily',
       description: 'Achieve 10,000 steps every day',
       type: 'STEPS',
-      target: 10000,
-      current: 8500,
-      unit: 'steps',
+      targetValue: 10000,
+      startValue: 8500,
       endDate: futureDate,
       status: 'ACTIVE',
     },
