@@ -84,16 +84,15 @@ model Goal {
   @@index([userId, status])
 }
 
-// Enum for goal types
 enum GoalType {
   WEIGHT_LOSS
   WEIGHT_GAIN
   STEPS
   EXERCISE
+  CALORIES_INTAKE
+  CALORIES_BURN
   SLEEP
-  WATER
-  CALORIES
-  CUSTOM
+  WATER_INTAKE
 }
 
 // Enum for goal status
