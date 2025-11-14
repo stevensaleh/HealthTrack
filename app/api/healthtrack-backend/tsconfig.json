@@ -23,6 +23,11 @@
     "noFallthroughCasesInSwitch": false,
     "strict": false,
     "typeRoots": ["node_modules/@types"],
+    "paths": {
+      "@core/*": ["src/core/*"],
+      "@infra/*": ["src/infra/*"],
+      "@app/*": ["src/app/*"]
+    }
   },
   "include": ["src/**/*.ts", "prisma/**/*.ts"]
 }
