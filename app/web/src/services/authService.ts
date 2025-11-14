@@ -256,6 +256,27 @@ export const authService = {
       };
     }
   },
+
+  async loginWithGoogle(credential: string): Promise<AuthResponse> {
+    try {
+      const response = await apiClient.post('/auth/google', { credential });
+      const payload = resolvePayload(response.data);
+
+      if (!payload) {
+        return {
+          success: false,
+          error: 'Unexpected response from authentication service',
+        };
+      }
+
+      return buildAuthResponse(payload);
+    } catch (error) {
+      return {
+        success: false,
+        error: extractErrorMessage(error),
+      };
+    }
+  },
 };
 
 export type AuthService = typeof authService;
