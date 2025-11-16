@@ -10,13 +10,23 @@ export default function Dashboard() {
   const [showEntryModal, setShowEntryModal] = useState(false);
   const [showGoalsModal, setShowGoalsModal] = useState(false);
 
+  // ENTRY FIELDS
   const [calories, setCalories] = useState('');
   const [steps, setSteps] = useState('');
   const [hours, setHours] = useState('');
+  const [water, setWater] = useState('');
+  const [exercise, setExercise] = useState('');
+  const [weight, setWeight] = useState('');
+  const [protein, setProtein] = useState('');
 
+  // GOALS FIELDS
   const [goalCalories, setGoalCalories] = useState('');
   const [goalSteps, setGoalSteps] = useState('');
   const [goalSleep, setGoalSleep] = useState('');
+  const [goalWater, setGoalWater] = useState('');
+  const [goalExercise, setGoalExercise] = useState('');
+  const [goalWeight, setGoalWeight] = useState('');
+  const [goalProtein, setGoalProtein] = useState('');
 
   const handleLogout = () => {
     logout();
@@ -27,20 +37,28 @@ export default function Dashboard() {
     setCalories('');
     setSteps('');
     setHours('');
+    setWater('');
+    setExercise('');
+    setWeight('');
+    setProtein('');
   };
 
   const resetGoals = () => {
     setGoalCalories('');
     setGoalSteps('');
     setGoalSleep('');
+    setGoalWater('');
+    setGoalExercise('');
+    setGoalWeight('');
+    setGoalProtein('');
   };
 
-  // 🔹 Calculate the Sunday of this week
+  // Calculate Sunday date
   const getSundayDate = () => {
     const today = new Date();
-    const day = today.getDay(); // 0 = Sunday
+    const day = today.getDay();
     const sunday = new Date(today);
-    sunday.setDate(today.getDate() - day); // back to Sunday
+    sunday.setDate(today.getDate() - day);
     return sunday.toLocaleDateString('en-US', {
       month: 'long',
       day: 'numeric',
@@ -129,28 +147,19 @@ export default function Dashboard() {
         </p>
 
         <div className="button-group mt-16 mb-20">
-          <button
-            onClick={() => setShowEntryModal(true)}
-            className="btn-primary btn-lg btn-elevated"
-          >
+          <button onClick={() => setShowEntryModal(true)} className="btn-primary btn-lg btn-elevated">
             Add Entry
           </button>
-          <button
-            onClick={() => setShowGoalsModal(true)}
-            className="btn-primary btn-lg btn-elevated"
-          >
+          <button onClick={() => setShowGoalsModal(true)} className="btn-primary btn-lg btn-elevated">
             My Goals
           </button>
-          <button
-            onClick={() => navigate('/analytics')}
-            className="btn-primary btn-lg btn-elevated"
-          >
+          <button onClick={() => navigate('/analytics')} className="btn-primary btn-lg btn-elevated">
             Analytics
           </button>
         </div>
       </main>
 
-      {/* Add Entry Popup */}
+      {/* Add Entry Modal */}
       {showEntryModal && (
         <Modal
           title={`Add entries for the week of ${sundayDate}`}
@@ -160,32 +169,18 @@ export default function Dashboard() {
           }}
         >
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            <input
-              type="text"
-              placeholder="Calories"
-              value={calories}
-              onChange={(e) => setCalories(e.target.value)}
-              style={inputStyle}
-            />
-            <input
-              type="text"
-              placeholder="Steps"
-              value={steps}
-              onChange={(e) => setSteps(e.target.value)}
-              style={inputStyle}
-            />
-            <input
-              type="text"
-              placeholder="Hours Slept"
-              value={hours}
-              onChange={(e) => setHours(e.target.value)}
-              style={inputStyle}
-            />
+            <input style={inputStyle} type="text" placeholder="Calories" value={calories} onChange={(e) => setCalories(e.target.value)} />
+            <input style={inputStyle} type="text" placeholder="Steps" value={steps} onChange={(e) => setSteps(e.target.value)} />
+            <input style={inputStyle} type="text" placeholder="Hours Slept" value={hours} onChange={(e) => setHours(e.target.value)} />
+            <input style={inputStyle} type="text" placeholder="Water Intake (oz)" value={water} onChange={(e) => setWater(e.target.value)} />
+            <input style={inputStyle} type="text" placeholder="Exercise Hours" value={exercise} onChange={(e) => setExercise(e.target.value)} />
+            <input style={inputStyle} type="text" placeholder="Weight (lbs)" value={weight} onChange={(e) => setWeight(e.target.value)} />
+            <input style={inputStyle} type="text" placeholder="Protein Intake (g)" value={protein} onChange={(e) => setProtein(e.target.value)} />
           </div>
         </Modal>
       )}
 
-      {/* My Goals Popup */}
+      {/* My Goals Modal */}
       {showGoalsModal && (
         <Modal
           title={`My goals for the week of ${sundayDate}`}
@@ -195,27 +190,13 @@ export default function Dashboard() {
           }}
         >
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            <input
-              type="text"
-              placeholder="Calories Goal"
-              value={goalCalories}
-              onChange={(e) => setGoalCalories(e.target.value)}
-              style={inputStyle}
-            />
-            <input
-              type="text"
-              placeholder="Steps Goal"
-              value={goalSteps}
-              onChange={(e) => setGoalSteps(e.target.value)}
-              style={inputStyle}
-            />
-            <input
-              type="text"
-              placeholder="Sleep Goal (hrs)"
-              value={goalSleep}
-              onChange={(e) => setGoalSleep(e.target.value)}
-              style={inputStyle}
-            />
+            <input style={inputStyle} type="text" placeholder="Calories Goal" value={goalCalories} onChange={(e) => setGoalCalories(e.target.value)} />
+            <input style={inputStyle} type="text" placeholder="Steps Goal" value={goalSteps} onChange={(e) => setGoalSteps(e.target.value)} />
+            <input style={inputStyle} type="text" placeholder="Sleep Goal (hrs)" value={goalSleep} onChange={(e) => setGoalSleep(e.target.value)} />
+            <input style={inputStyle} type="text" placeholder="Water Intake Goal (oz)" value={goalWater} onChange={(e) => setGoalWater(e.target.value)} />
+            <input style={inputStyle} type="text" placeholder="Exercise Hours Goal" value={goalExercise} onChange={(e) => setGoalExercise(e.target.value)} />
+            <input style={inputStyle} type="text" placeholder="Weight Goal (lbs)" value={goalWeight} onChange={(e) => setGoalWeight(e.target.value)} />
+            <input style={inputStyle} type="text" placeholder="Protein Intake Goal (g)" value={goalProtein} onChange={(e) => setGoalProtein(e.target.value)} />
           </div>
         </Modal>
       )}
