@@ -13,6 +13,14 @@ import { UserRepository } from './database/repositories/user.repository';
 import { HealthDataRepository } from './database/repositories/health-data.repository';
 import { GoalRepository } from './database/repositories/goal.repository';
 
+// Health provider adapters
+import { StravaAdapter } from './adapters/health-providers/strava.adapter';
+import { LoseItAdapter } from './adapters/health-providers/lose-it.adapter';
+import { FitbitAdapter } from './adapters/health-providers/fitbit.adapter';
+
+// Factory
+import { HealthDataProviderFactory } from './factories/health-data-provider.factory';
+
 @Module({
   imports: [
     PrismaModule, // Import PrismaModule so we can use PrismaService
@@ -30,8 +38,24 @@ import { GoalRepository } from './database/repositories/goal.repository';
       provide: 'IGoalRepository',
       useClass: GoalRepository,
     },
+    // Health povider adapters
+    StravaAdapter,
+    LoseItAdapter,
+    FitbitAdapter,
+
+    // Factory
+    {
+      provide: 'IHealthDataProviderFactory',
+      useClass: HealthDataProviderFactory,
+    },
   ],
-  exports: ['IUserRepository', 'IHealthDataRepository', 'IGoalRepository'],
+  exports: [
+    'IUserRepository',
+    'IHealthDataRepository',
+    'IGoalRepository',
+    'IIntegrationRepository',
+    'IHealthDataProviderFactory',
+  ],
 })
 export class InfrastructureModule {}
 

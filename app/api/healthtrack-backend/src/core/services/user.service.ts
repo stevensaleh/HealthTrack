@@ -226,6 +226,67 @@ export class UserService {
     return !exists;
   }
 
+  /**
+   * Change user password
+   * @throws NotFoundException if user doesn't exist
+   * @throws UnauthorizedException if current password is incorrect
+   * @throws BadRequestException if new password is weak or same as current
+   */
+  async changePassword(
+    userId: string,
+    currentPassword: string,
+    newPassword: string,
+  ): Promise<void> {
+    // Get user
+    const user = await this.userRepo.findById(userId);
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    // Check if user has a password (not OAuth-only user)
+    if (!user.password) {
+      throw new BadRequestException(
+        'Cannot change password for OAuth-only accounts',
+      );
+    }
+
+    // Verify current password
+    const isPasswordValid = await bcrypt.compare(
+      currentPassword,
+      user.password,
+    );
+    if (!isPasswordValid) {
+      throw new UnauthorizedException('Current password is incorrect');
+    }
+
+    // Check if new password is different
+    const isSamePassword = await bcrypt.compare(newPassword, user.password);
+    if (isSamePassword) {
+      throw new BadRequestException(
+        'New password must be different from current password',
+      );
+    }
+
+    // Validate new password strength
+    this.validatePasswordStrength(newPassword);
+
+    // Hash new password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    // Update password
+    await this.userRepo.update(userId, {
+      password: hashedPassword,
+    });
+  }
+
+  /**
+   * Delete user (alias for deleteAccount)
+   */
+  async deleteUser(userId: string): Promise<void> {
+    return this.deleteAccount(userId);
+  }
+
   //PRIVATE HELPER METHODS
 
   /**
