@@ -49,6 +49,7 @@ describe('IntegrationService', () => {
     provider: HealthDataProvider.STRAVA,
     credentials: mockCredentials,
     status: IntegrationStatus.ACTIVE,
+    isActive: true,
     lastSyncedAt: null,
     syncErrorMessage: null,
     createdAt: new Date(),
@@ -71,7 +72,7 @@ describe('IntegrationService', () => {
     };
 
     const mockHealthDataRepo = {
-      findByUserIdAndDate: jest.fn(),
+      findByUserAndDate: jest.fn(), // ✅ FIXED METHOD NAME
       create: jest.fn(),
     };
 
@@ -151,6 +152,7 @@ describe('IntegrationService', () => {
       integrationRepo.findByUserIdAndProvider.mockResolvedValue({
         ...mockIntegration,
         status: IntegrationStatus.ACTIVE,
+        isActive: true,
       } as any);
 
       // Act & Assert
@@ -164,6 +166,7 @@ describe('IntegrationService', () => {
       integrationRepo.findByUserIdAndProvider.mockResolvedValue({
         ...mockIntegration,
         status: IntegrationStatus.REVOKED,
+        isActive: false,
       } as any);
       mockProvider.getAuthorizationUrl.mockResolvedValue({
         authUrl: 'https://accounts.google.com/o/oauth2/auth?...',
@@ -198,7 +201,11 @@ describe('IntegrationService', () => {
       // Arrange
       integrationRepo.findByUserIdAndProvider.mockResolvedValue(null);
       mockProvider.exchangeCodeForToken.mockResolvedValue(mockCredentials);
-      integrationRepo.create.mockResolvedValue(mockIntegration as any);
+      integrationRepo.create.mockResolvedValue({
+        ...mockIntegration,
+        status: IntegrationStatus.ACTIVE, // ✅ FIXED - was EXPIRED
+        isActive: true,
+      } as any);
 
       // Act
       const result = await service.completeConnection(mockAuthCode, mockState);
@@ -222,14 +229,19 @@ describe('IntegrationService', () => {
 
     it('should update existing integration if already exists', async () => {
       // Arrange
-      integrationRepo.findByUserIdAndProvider.mockResolvedValue(
-        mockIntegration as any,
-      );
+      integrationRepo.findByUserIdAndProvider.mockResolvedValue({
+        ...mockIntegration,
+        isActive: true,
+      } as any);
       mockProvider.exchangeCodeForToken.mockResolvedValue(mockCredentials);
-      integrationRepo.updateCredentials.mockResolvedValue(
-        mockIntegration as any,
-      );
-      integrationRepo.updateStatus.mockResolvedValue(mockIntegration as any);
+      integrationRepo.updateCredentials.mockResolvedValue({
+        ...mockIntegration,
+        isActive: true,
+      } as any);
+      integrationRepo.updateStatus.mockResolvedValue({
+        ...mockIntegration,
+        isActive: true,
+      } as any);
 
       // Act
       const result = await service.completeConnection(mockAuthCode, mockState);
@@ -296,13 +308,17 @@ describe('IntegrationService', () => {
 
     it('should sync health data successfully', async () => {
       // Arrange
-      integrationRepo.findById.mockResolvedValue(mockIntegration as any);
+      integrationRepo.findById.mockResolvedValue({
+        ...mockIntegration,
+        isActive: true,
+      } as any);
       mockProvider.fetchHealthData.mockResolvedValue(mockExternalData);
-      healthDataRepo.findByUserIdAndDate.mockResolvedValue(null);
+      healthDataRepo.findByUserAndDate.mockResolvedValue(null); // ✅ FIXED METHOD NAME
       healthDataRepo.create.mockResolvedValue({} as any);
-      integrationRepo.updateLastSynced.mockResolvedValue(
-        mockIntegration as any,
-      );
+      integrationRepo.updateLastSynced.mockResolvedValue({
+        ...mockIntegration,
+        isActive: true,
+      } as any);
 
       // Act
       const result = await service.syncHealthData(mockIntegrationId);
@@ -319,12 +335,16 @@ describe('IntegrationService', () => {
 
     it('should skip existing records when not force syncing', async () => {
       // Arrange
-      integrationRepo.findById.mockResolvedValue(mockIntegration as any);
+      integrationRepo.findById.mockResolvedValue({
+        ...mockIntegration,
+        isActive: true,
+      } as any);
       mockProvider.fetchHealthData.mockResolvedValue(mockExternalData);
-      healthDataRepo.findByUserIdAndDate.mockResolvedValue({} as any); // Record exists
-      integrationRepo.updateLastSynced.mockResolvedValue(
-        mockIntegration as any,
-      );
+      healthDataRepo.findByUserAndDate.mockResolvedValue({} as any); // Record exists - ✅ FIXED METHOD NAME
+      integrationRepo.updateLastSynced.mockResolvedValue({
+        ...mockIntegration,
+        isActive: true,
+      } as any);
 
       // Act
       const result = await service.syncHealthData(mockIntegrationId);
@@ -344,21 +364,24 @@ describe('IntegrationService', () => {
       const integrationWithExpiredToken = {
         ...mockIntegration,
         credentials: expiredCredentials,
+        isActive: true,
       };
 
       integrationRepo.findById.mockResolvedValue(
         integrationWithExpiredToken as any,
       );
       mockProvider.refreshAccessToken.mockResolvedValue(mockCredentials);
-      integrationRepo.updateCredentials.mockResolvedValue(
-        mockIntegration as any,
-      );
+      integrationRepo.updateCredentials.mockResolvedValue({
+        ...mockIntegration,
+        isActive: true,
+      } as any);
       mockProvider.fetchHealthData.mockResolvedValue(mockExternalData);
-      healthDataRepo.findByUserIdAndDate.mockResolvedValue(null);
+      healthDataRepo.findByUserAndDate.mockResolvedValue(null); // ✅ FIXED METHOD NAME
       healthDataRepo.create.mockResolvedValue({} as any);
-      integrationRepo.updateLastSynced.mockResolvedValue(
-        mockIntegration as any,
-      );
+      integrationRepo.updateLastSynced.mockResolvedValue({
+        ...mockIntegration,
+        isActive: true,
+      } as any);
 
       // Act
       const result = await service.syncHealthData(mockIntegrationId);
@@ -389,6 +412,7 @@ describe('IntegrationService', () => {
       integrationRepo.findById.mockResolvedValue({
         ...mockIntegration,
         status: IntegrationStatus.REVOKED,
+        isActive: false, // ✅ SET TO FALSE for revoked integration
       } as any);
 
       // Act & Assert
@@ -399,11 +423,17 @@ describe('IntegrationService', () => {
 
     it('should handle API errors and record error status', async () => {
       // Arrange
-      integrationRepo.findById.mockResolvedValue(mockIntegration as any);
+      integrationRepo.findById.mockResolvedValue({
+        ...mockIntegration,
+        isActive: true,
+      } as any);
       mockProvider.fetchHealthData.mockRejectedValue(
         new Error('API rate limit exceeded'),
       );
-      integrationRepo.recordSyncError.mockResolvedValue(mockIntegration as any);
+      integrationRepo.recordSyncError.mockResolvedValue({
+        ...mockIntegration,
+        isActive: true,
+      } as any);
 
       // Act & Assert
       await expect(service.syncHealthData(mockIntegrationId)).rejects.toThrow(
@@ -420,8 +450,8 @@ describe('IntegrationService', () => {
     it('should return integrations without sensitive credentials', async () => {
       // Arrange
       integrationRepo.findByUserId.mockResolvedValue([
-        mockIntegration as any,
-        { ...mockIntegration, id: 'integration-789' } as any,
+        { ...mockIntegration, isActive: true } as any,
+        { ...mockIntegration, id: 'integration-789', isActive: true } as any,
       ]);
 
       // Act
@@ -439,7 +469,10 @@ describe('IntegrationService', () => {
   describe('disconnectIntegration', () => {
     it('should revoke access and delete integration', async () => {
       // Arrange
-      integrationRepo.findById.mockResolvedValue(mockIntegration as any);
+      integrationRepo.findById.mockResolvedValue({
+        ...mockIntegration,
+        isActive: true,
+      } as any);
       mockProvider.revokeAccess.mockResolvedValue();
       integrationRepo.delete.mockResolvedValue();
 
@@ -466,6 +499,7 @@ describe('IntegrationService', () => {
       integrationRepo.findById.mockResolvedValue({
         ...mockIntegration,
         userId: 'different-user-id',
+        isActive: true,
       } as any);
 
       // Act & Assert
@@ -476,7 +510,10 @@ describe('IntegrationService', () => {
 
     it('should delete integration even if provider revocation fails', async () => {
       // Arrange
-      integrationRepo.findById.mockResolvedValue(mockIntegration as any);
+      integrationRepo.findById.mockResolvedValue({
+        ...mockIntegration,
+        isActive: true,
+      } as any);
       mockProvider.revokeAccess.mockRejectedValue(
         new Error('Provider API unavailable'),
       );
@@ -494,19 +531,24 @@ describe('IntegrationService', () => {
     it('should sync multiple integrations', async () => {
       // Arrange
       const integrations = [
-        mockIntegration,
+        { ...mockIntegration, isActive: true },
         {
           ...mockIntegration,
           id: 'integration-789',
           provider: HealthDataProvider.FITBIT,
+          isActive: true,
         },
       ];
       integrationRepo.findActiveByUserId.mockResolvedValue(integrations as any);
-      integrationRepo.findById.mockResolvedValue(mockIntegration as any);
+      integrationRepo.findById.mockResolvedValue({
+        ...mockIntegration,
+        isActive: true,
+      } as any);
       mockProvider.fetchHealthData.mockResolvedValue([]);
-      integrationRepo.updateLastSynced.mockResolvedValue(
-        mockIntegration as any,
-      );
+      integrationRepo.updateLastSynced.mockResolvedValue({
+        ...mockIntegration,
+        isActive: true,
+      } as any);
 
       // Act
       const results = await service.syncAllIntegrations(mockUserId);
@@ -519,20 +561,24 @@ describe('IntegrationService', () => {
     it('should continue syncing other integrations if one fails', async () => {
       // Arrange
       const integrations = [
-        mockIntegration,
-        { ...mockIntegration, id: 'integration-789' },
+        { ...mockIntegration, isActive: true },
+        { ...mockIntegration, id: 'integration-789', isActive: true },
       ];
       integrationRepo.findActiveByUserId.mockResolvedValue(integrations as any);
 
       // First call fails, second succeeds
       integrationRepo.findById
         .mockResolvedValueOnce(null) // First integration not found (error)
-        .mockResolvedValueOnce(mockIntegration as any); // Second integration found
+        .mockResolvedValueOnce({
+          ...mockIntegration,
+          isActive: true,
+        } as any); // Second integration found
 
       mockProvider.fetchHealthData.mockResolvedValue([]);
-      integrationRepo.updateLastSynced.mockResolvedValue(
-        mockIntegration as any,
-      );
+      integrationRepo.updateLastSynced.mockResolvedValue({
+        ...mockIntegration,
+        isActive: true,
+      } as any);
 
       // Act
       const results = await service.syncAllIntegrations(mockUserId);

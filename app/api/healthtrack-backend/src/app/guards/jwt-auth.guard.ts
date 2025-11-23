@@ -11,12 +11,18 @@ import {
   CanActivate,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
+import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
-  constructor(private reflector: Reflector) {}
+  constructor(
+    private reflector: Reflector,
+    private jwtService: JwtService,
+    private configService: ConfigService,
+  ) {}
 
-  canActivate(context: ExecutionContext): boolean {
+  async canActivate(context: ExecutionContext): Promise<boolean> {
     // Check if route is marked as public
     const isPublic = this.reflector.getAllAndOverride<boolean>('isPublic', [
       context.getHandler(),
@@ -35,19 +41,24 @@ export class JwtAuthGuard implements CanActivate {
     }
 
     try {
-      // TODO: Validate JWT token
-      // we'll extract user ID from a simple token format
-      // In prod we shall use @nestjs/jwt to verify and decode tokens
+      const payload = await this.jwtService.verifyAsync(token, {
+        secret:
+          this.configService.get<string>('JWT_SECRET') || 'your-secret-key',
+      });
 
-      // Mock user extractio
+      //real user data from JWT payload
       request.user = {
-        id: 'user-123', // This should come from decoded JWT
-        email: 'user@example.com',
+        id: payload.sub, // User ID from JWT
+        email: payload.email, // Email from JWT
+        firstName: payload.firstName,
+        lastName: payload.lastName,
       };
 
       return true;
     } catch (error) {
-      throw new UnauthorizedException('Invalid authentication token');
+      throw new UnauthorizedException(
+        'Invalid or expired authentication token',
+      );
     }
   }
 

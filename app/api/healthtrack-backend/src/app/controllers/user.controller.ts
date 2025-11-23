@@ -86,18 +86,14 @@ export class UserController {
     description: 'Invalid data or weak password',
   })
   async register(@Body() dto: RegisterDto): Promise<AuthResponseDto> {
-    this.logger.log(`New user registration attempt: ${dto.email}`);
+    const result = await this.userService.register({
+      email: dto.email,
+      password: dto.password,
+      firstName: dto.firstName,
+      lastName: dto.lastName,
+    });
 
-    const user = await this.userService.register(dto);
-
-    // In a real app, you'd generate a JWT token here
-    // For now, we'll return a mock token
-    return {
-      accessToken: 'mock-jwt-token-' + user.id,
-      user: user as any,
-      tokenType: 'Bearer',
-      expiresIn: 86400, // 24 hours
-    };
+    return result as any;
   }
 
   /**
@@ -121,16 +117,8 @@ export class UserController {
   async login(@Body() dto: LoginDto): Promise<AuthResponseDto> {
     this.logger.log(`Login attempt: ${dto.email}`);
 
-    const user = await this.userService.login(dto);
-
-    // In a real app, you'd generate a JWT token here
-    // For now, we'll return a mock token
-    return {
-      accessToken: 'mock-jwt-token-' + user.id,
-      user: user as any,
-      tokenType: 'Bearer',
-      expiresIn: 86400, // 24 hours
-    };
+    const result = await this.userService.login(dto); // Gets AuthResponse with real JWT
+    return result as any; 
   }
 
   /**

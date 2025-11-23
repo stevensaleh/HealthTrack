@@ -19,7 +19,9 @@ import {
   //UpdateUserData,
   UserResponse,
   toUserResponse,
+  AuthResponse,
 } from '../types/user.types';
+import { JwtService } from '@nestjs/jwt';
 
 //DTOs for service methods
 export interface RegisterDto {
@@ -54,6 +56,7 @@ export class UserService {
   constructor(
     @Inject('IUserRepository')
     private readonly userRepo: IUserRepository,
+    private readonly jwtService: JwtService,
   ) {}
 
   /**
@@ -61,7 +64,7 @@ export class UserService {
    * @throws ConflictException if email already exists
    * @throws BadRequestException if password too weak
    */
-  async register(data: RegisterDto): Promise<UserResponse> {
+  async register(data: RegisterDto): Promise<AuthResponse> {
     // Business Rule 1: Email must be unique
     const emailExists = await this.userRepo.existsByEmail(data.email);
     if (emailExists) {
@@ -82,8 +85,23 @@ export class UserService {
       lastName: data.lastName,
     });
 
-    // Return safe data (exclude password)
-    return toUserResponse(user);
+    // Generate JWT token (same as login)
+    const payload = {
+      sub: user.id,
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+    };
+
+    const accessToken = this.jwtService.sign(payload);
+
+    // Return auth response with token
+    return {
+      accessToken,
+      user: toUserResponse(user),
+      tokenType: 'Bearer',
+      expiresIn: 86400,
+    };
   }
 
   /**
@@ -93,7 +111,7 @@ export class UserService {
    * User must have password (not OAuth-only user)
    * @throws UnauthorizedException if credentials invalid
    */
-  async login(data: LoginDto): Promise<UserResponse> {
+  async login(data: LoginDto): Promise<AuthResponse> {
     // Find user
     const user = await this.userRepo.findByEmail(data.email);
 
@@ -113,8 +131,21 @@ export class UserService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    // Return safe data
-    return toUserResponse(user);
+    const payload = {
+      sub: user.id, // Standard JWT claim for user ID
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+    };
+
+    const accessToken = this.jwtService.sign(payload);
+
+    return {
+      accessToken, // Real JWT token
+      user: toUserResponse(user),
+      tokenType: 'Bearer',
+      expiresIn: 86400, // 24 hours in seconds
+    };
   }
 
   /**

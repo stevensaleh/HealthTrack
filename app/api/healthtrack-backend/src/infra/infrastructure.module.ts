@@ -12,7 +12,7 @@ import { PrismaModule } from './database/prisma.module';
 import { UserRepository } from './database/repositories/user.repository';
 import { HealthDataRepository } from './database/repositories/health-data.repository';
 import { GoalRepository } from './database/repositories/goal.repository';
-
+import { IntegrationRepository } from './database/repositories/integration.repository';
 // Health provider adapters
 import { StravaAdapter } from './adapters/health-providers/strava.adapter';
 import { LoseItAdapter } from './adapters/health-providers/lose-it.adapter';
@@ -38,6 +38,10 @@ import { HealthDataProviderFactory } from './factories/health-data-provider.fact
       provide: 'IGoalRepository',
       useClass: GoalRepository,
     },
+    {
+      provide: 'IIntegrationRepository',
+      useClass: IntegrationRepository,
+    },
     // Health povider adapters
     StravaAdapter,
     LoseItAdapter,
@@ -48,6 +52,7 @@ import { HealthDataProviderFactory } from './factories/health-data-provider.fact
       provide: 'IHealthDataProviderFactory',
       useClass: HealthDataProviderFactory,
     },
+    HealthDataProviderFactory,
   ],
   exports: [
     'IUserRepository',
@@ -55,6 +60,7 @@ import { HealthDataProviderFactory } from './factories/health-data-provider.fact
     'IGoalRepository',
     'IIntegrationRepository',
     'IHealthDataProviderFactory',
+    HealthDataProviderFactory,
   ],
 })
 export class InfrastructureModule {}
