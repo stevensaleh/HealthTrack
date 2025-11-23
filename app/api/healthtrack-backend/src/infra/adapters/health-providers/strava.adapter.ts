@@ -40,9 +40,11 @@ export class StravaAdapter implements IHealthDataProvider {
   private readonly TOKEN_URL = 'https://www.strava.com/oauth/token';
 
   constructor(private readonly configService: ConfigService) {
-    this.clientId = this.configService.get<string>('STRAVA_CLIENT_ID');
-    this.clientSecret = this.configService.get<string>('STRAVA_CLIENT_SECRET');
-    this.redirectUri = this.configService.get<string>('OAUTH_REDIRECT_URI');
+    this.clientId = this.configService.get<string>('STRAVA_CLIENT_ID') || '';
+    this.clientSecret =
+      this.configService.get<string>('STRAVA_CLIENT_SECRET') || '';
+    this.redirectUri =
+      this.configService.get<string>('OAUTH_REDIRECT_URI') || '';
 
     // Create axios instance
     this.client = axios.create({

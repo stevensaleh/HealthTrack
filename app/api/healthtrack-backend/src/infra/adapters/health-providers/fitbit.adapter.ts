@@ -41,9 +41,11 @@ export class FitbitAdapter implements IHealthDataProvider {
   private readonly TOKEN_URL = 'https://api.fitbit.com/oauth2/token';
 
   constructor(private readonly configService: ConfigService) {
-    this.clientId = this.configService.get<string>('FITBIT_CLIENT_ID');
-    this.clientSecret = this.configService.get<string>('FITBIT_CLIENT_SECRET');
-    this.redirectUri = this.configService.get<string>('OAUTH_REDIRECT_URI');
+    this.clientId = this.configService.get<string>('FITBIT_CLIENT_ID') || '';
+    this.clientSecret =
+      this.configService.get<string>('FITBIT_CLIENT_SECRET') || '';
+    this.redirectUri =
+      this.configService.get<string>('OAUTH_REDIRECT_URI') || '';
 
     // Create axios instance
     this.client = axios.create({

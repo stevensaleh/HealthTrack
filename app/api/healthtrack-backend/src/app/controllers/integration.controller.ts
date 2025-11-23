@@ -153,8 +153,8 @@ export class IntegrationController {
       id: result.id,
       provider: result.provider,
       status: result.status as any,
-      lastSyncedAt: null,
-      syncErrorMessage: null,
+      lastSyncedAt: undefined,
+      syncErrorMessage: undefined,
       createdAt: new Date(),
       updatedAt: new Date(),
     };

@@ -18,10 +18,7 @@ import { ConfigService } from '@nestjs/config';
 import axios, { AxiosInstance } from 'axios';
 import * as qs from 'qs';
 
-import {
-  IHealthDataProvider,
-  IHealthDataProviderFactory,
-} from '@core/providers/health-data-provider.interface';
+import { IHealthDataProvider } from '@core/providers/health-data-provider.interface';
 import {
   HealthDataProvider,
   OAuthCredentials,
@@ -43,9 +40,11 @@ export class LoseItAdapter implements IHealthDataProvider {
   private readonly TOKEN_URL = 'https://api.loseit.com/oauth/token';
 
   constructor(private readonly configService: ConfigService) {
-    this.clientId = this.configService.get<string>('LOSE_IT_CLIENT_ID');
-    this.clientSecret = this.configService.get<string>('LOSE_IT_CLIENT_SECRET');
-    this.redirectUri = this.configService.get<string>('OAUTH_REDIRECT_URI');
+    this.clientId = this.configService.get<string>('LOSE_IT_CLIENT_ID') || '';
+    this.clientSecret =
+      this.configService.get<string>('LOSE_IT_CLIENT_SECRET') || '';
+    this.redirectUri =
+      this.configService.get<string>('OAUTH_REDIRECT_URI') || '';
 
     // Create axios instance for API calls
     this.client = axios.create({
@@ -144,66 +143,91 @@ export class LoseItAdapter implements IHealthDataProvider {
     const healthData: ExternalHealthData[] = [];
 
     try {
+      // Define types for Lose It! API responses
+      type NutritionEntry = {
+        date: string;
+        calories: { burned: number };
+        [key: string]: any;
+      };
+      type WeightEntry = { date: string; weight: number; [key: string]: any };
+      type ExerciseEntry = {
+        date: string;
+        duration: number;
+        calories_burned: number;
+        [key: string]: any;
+      };
+
       // Fetch nutrition data (calories, macros)
-      const nutritionData = await this.fetchNutritionData(
+      const nutritionData = (await this.fetchNutritionData(
         credentials,
         startDate,
         endDate,
-      );
+      )) as NutritionEntry[];
 
       // Fetch weight entries
-      const weightData = await this.fetchWeightData(
+      const weightData = (await this.fetchWeightData(
         credentials,
         startDate,
         endDate,
-      );
+      )) as WeightEntry[];
 
       // Fetch exercise data
-      const exerciseData = await this.fetchExerciseData(
+      const exerciseData = (await this.fetchExerciseData(
         credentials,
         startDate,
         endDate,
-      );
+      )) as ExerciseEntry[];
 
       // Combine all data sources by date
       const dataByDate = new Map<string, Partial<ExternalHealthData>>();
 
       // Process nutrition data
-      nutritionData.forEach((entry) => {
+      nutritionData.forEach((entry: NutritionEntry) => {
         const dateKey = entry.date;
         if (!dataByDate.has(dateKey)) {
           dataByDate.set(dateKey, { date: new Date(dateKey) });
         }
         const data = dataByDate.get(dateKey);
-        data.caloriesBurned = entry.calories.burned;
+        if (data) {
+          data.caloriesBurned = entry.calories.burned;
+        }
       });
-
       // Process weight data
-      weightData.forEach((entry) => {
+      weightData.forEach((entry: WeightEntry) => {
         const dateKey = entry.date;
         if (!dataByDate.has(dateKey)) {
           dataByDate.set(dateKey, { date: new Date(dateKey) });
         }
         const data = dataByDate.get(dateKey);
-        data.weight = entry.weight;
+        if (data) {
+          data.weight = entry.weight;
+        }
       });
 
       // Process exercise data
-      exerciseData.forEach((entry) => {
+      exerciseData.forEach((entry: ExerciseEntry) => {
         const dateKey = entry.date;
         if (!dataByDate.has(dateKey)) {
           dataByDate.set(dateKey, { date: new Date(dateKey) });
         }
         const data = dataByDate.get(dateKey);
-        data.exerciseMinutes = (data.exerciseMinutes || 0) + entry.duration;
-        data.caloriesBurned =
-          (data.caloriesBurned || 0) + entry.calories_burned;
+        if (data) {
+          data.exerciseMinutes = (data.exerciseMinutes || 0) + entry.duration;
+          data.caloriesBurned =
+            (data.caloriesBurned || 0) + entry.calories_burned;
+        }
       });
 
       // Convert map to array
       dataByDate.forEach((data) => {
+        const date = data.date;
+        if (!date) {
+          // skip entries without a date (should not happen because we set date when creating entries)
+          return;
+        }
+
         healthData.push({
-          date: data.date,
+          date: date,
           weight: data.weight,
           caloriesBurned: data.caloriesBurned,
           exerciseMinutes: data.exerciseMinutes,
@@ -338,7 +362,7 @@ export class LoseItAdapter implements IHealthDataProvider {
     return response.data || [];
   }
 
-  //Format date as YYYY-MM-DD 
+  //Format date as YYYY-MM-DD
   private formatDate(date: Date): string {
     return date.toISOString().split('T')[0];
   }

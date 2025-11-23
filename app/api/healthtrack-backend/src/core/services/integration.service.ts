@@ -11,9 +11,9 @@ import {
   ConflictException,
 } from '@nestjs/common';
 
-import { IIntegrationRepository } from '../repositories/integration.repository.interface';
-import { IHealthDataRepository } from '../repositories/health-data.repository.interface';
-import { IHealthDataProviderFactory } from '../providers/health-data-provider.interface';
+import type { IIntegrationRepository } from '../repositories/integration.repository.interface';
+import type { IHealthDataRepository } from '../repositories/health-data.repository.interface';
+import type { IHealthDataProviderFactory } from '../providers/health-data-provider.interface';
 
 import {
   HealthDataProvider,
@@ -63,7 +63,7 @@ export class IntegrationService {
       provider,
     );
 
-    if (existing && existing.status === IntegrationStatus.ACTIVE) {
+    if (existing && existing.isActive) {
       throw new ConflictException(
         `Already connected to ${provider}. Disconnect first to reconnect.`,
       );
@@ -159,7 +159,7 @@ export class IntegrationService {
       return {
         id: integration.id,
         provider: integration.provider as HealthDataProvider,
-        status: integration.status,
+        status: integration.isActive ? IntegrationStatus.ACTIVE : IntegrationStatus.EXPIRED,
       };
     } catch (error) {
       this.logger.error(
@@ -194,9 +194,9 @@ export class IntegrationService {
     }
 
     // Validate integration status
-    if (integration.status === IntegrationStatus.REVOKED) {
+    if (!integration.isActive) {
       throw new BadRequestException(
-        'Integration has been revoked. Please reconnect.',
+        'Integration is not active. Please reconnect.',
       );
     }
 
@@ -218,11 +218,7 @@ export class IntegrationService {
         this.logger.log('Token expired or expiring, refreshing...');
 
         if (!credentials.refreshToken) {
-          // No refresh token available, mark as expired
-          await this.integrationRepo.updateStatus(
-            integration.id,
-            IntegrationStatus.EXPIRED,
-          );
+          // No refresh token available, mark as inactive
           throw new UnauthorizedException(
             'Token expired and no refresh token available. Please reconnect.',
           );
@@ -277,7 +273,7 @@ export class IntegrationService {
 
           // Check if data already exists (unless force resync)
           if (!options.forceResync) {
-            const existing = await this.healthDataRepo.findByUserIdAndDate(
+            const existing = await this.healthDataRepo.findByUserAndDate(
               integration.userId,
               data.date,
             );
@@ -289,7 +285,8 @@ export class IntegrationService {
           }
 
           // Save to database
-          await this.healthDataRepo.create(integration.userId, {
+          await this.healthDataRepo.create({
+            userId: integration.userId,
             date: data.date,
             steps: data.steps,
             weight: data.weight,
@@ -320,8 +317,12 @@ export class IntegrationService {
         );
       }
 
-      const duration = Date.now() - startTime;
+      // Clear any previous error status
+      if (integration.syncErrorMessage) {
+        await this.integrationRepo.recordSyncError(integration.id, null);
+      }
 
+      const duration = Date.now() - startTime;
       this.logger.log(
         `Sync complete: ${synced} synced, ${skipped} skipped, ${errors} errors in ${duration}ms`,
       );
