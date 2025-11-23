@@ -36,10 +36,10 @@ export class JwtAuthGuard implements CanActivate {
 
     try {
       // TODO: Validate JWT token
-      // For now, we'll extract user ID from a simple token format
-      // In production, use @nestjs/jwt to verify and decode tokens
+      // we'll extract user ID from a simple token format
+      // In prod we shall use @nestjs/jwt to verify and decode tokens
 
-      // Mock user extraction - REPLACE THIS with real JWT validation
+      // Mock user extractio
       request.user = {
         id: 'user-123', // This should come from decoded JWT
         email: 'user@example.com',
