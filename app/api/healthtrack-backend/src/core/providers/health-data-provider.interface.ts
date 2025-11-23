@@ -95,8 +95,6 @@ export interface IHealthDataProvider {
 /**
  * Factory interface for creating health data providers
  *
- * Factory Pattern: Instead of service directly instantiating adapters,
- * it asks the factory for the right adapter based on provider type.
  */
 export interface IHealthDataProviderFactory {
   /**

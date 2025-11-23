@@ -336,19 +336,13 @@ A trace a request to create health data:
 ### 1. Dependency Rule
 > Dependencies point inward. Core never depends on Infrastructure.
 
-✅ Good:
+Good:
 ```typescript
 // Infrastructure depends on Core
 class UserRepository implements IUserRepository { }
 ```
 
-❌ Bad:
-```typescript
-// Core depending on Infrastructure
-class UserService {
-  constructor(private prisma: PrismaService) { } // NO!
-}
-```
+
 
 ### 2. Ports & Adapters
 > Ports define what we need, Adapters provide implementations.
