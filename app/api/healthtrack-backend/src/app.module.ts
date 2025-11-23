@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { PrismaModule } from './infra/database/prisma.module';
+import { ApplicationModule } from './app/application.module';
 
 @Module({
   imports: [
@@ -11,6 +12,9 @@ import { PrismaModule } from './infra/database/prisma.module';
 
     // Database module
     PrismaModule,
+
+    // Application layer module
+    ApplicationModule,
   ],
   controllers: [],
   providers: [],

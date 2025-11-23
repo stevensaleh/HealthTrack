@@ -8,7 +8,7 @@
  */
 
 import { Module } from '@nestjs/common';
-import { InfrastructureModule } from './infra/infrastructure.module';
+import { InfrastructureModule } from '../infra/infrastructure.module';
 import { UserService } from '@core/services/user.service';
 import { HealthService } from '@core/services/health.service';
 import { GoalService } from '@core/services/goal.service';
