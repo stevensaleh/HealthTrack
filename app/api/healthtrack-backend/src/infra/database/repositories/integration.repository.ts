@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { Integration, Prisma } from '@prisma/client';
 
-import { PrismaService } from '@infrastructure/database/prisma.service';
+import { PrismaService } from '@infra/database/prisma.service';
 import { IIntegrationRepository } from '@core/repositories/integration.repository.interface';
 import {
   CreateIntegrationData,
