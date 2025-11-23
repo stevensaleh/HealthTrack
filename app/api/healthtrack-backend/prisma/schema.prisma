@@ -131,4 +131,14 @@ enum IntegrationProvider {
   APPLE_HEALTH
   STRAVA
   MYFITNESSPAL
+  LOSE_IT
 }
+
+// Enum for integration status
+enum IntegrationStatus {
+  ACTIVE
+  EXPIRED
+  REVOKED
+  ERROR
+}
+
