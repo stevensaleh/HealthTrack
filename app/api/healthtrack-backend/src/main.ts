@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -22,6 +23,23 @@ async function bootstrap() {
 
   // Set global prefix for all routes
   app.setGlobalPrefix('api');
+
+  // Swagger Configuration
+  const config = new DocumentBuilder()
+    .setTitle('HealthHive API')
+    .setDescription(
+      'Health and fitness tracking API with third-party integrations',
+    )
+    .setVersion('1.0')
+    .addBearerAuth()
+    .addTag('Users', 'User authentication and profile management')
+    .addTag('Health Data', 'Health metrics tracking and analytics')
+    .addTag('Goals', 'Goal setting and progress tracking')
+    .addTag('Integrations', 'Third-party health data integrations')
+    .build();
+
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, document);
 
   const port = process.env.PORT || 3000;
   await app.listen(port);

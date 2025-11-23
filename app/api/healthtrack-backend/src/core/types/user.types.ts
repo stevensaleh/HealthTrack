@@ -53,3 +53,13 @@ export function toUserResponse(user: User): UserResponse {
   const { password, googleId, ...safeUser } = user;
   return safeUser;
 }
+
+/**
+ * AuthResponse - Response from login/register with JWT token
+ */
+export interface AuthResponse {
+  accessToken: string;
+  user: UserResponse;
+  tokenType: string;
+  expiresIn: number;
+}
