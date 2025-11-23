@@ -47,6 +47,7 @@ export class StravaAdapter implements IHealthDataProvider {
       this.configService.get<string>('OAUTH_REDIRECT_URI') || '';
 
     // Create axios instance
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     this.client = axios.create({
       baseURL: this.BASE_URL,
       timeout: 30000,
@@ -56,7 +57,9 @@ export class StravaAdapter implements IHealthDataProvider {
     });
 
     // Response interceptor for logging
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     this.client.interceptors.response.use(
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       (response) => response,
       (error) => {
         this.logger.error(`Strava API Error: ${error.message}`);
@@ -162,7 +165,10 @@ export class StravaAdapter implements IHealthDataProvider {
         if (!activitiesByDate.has(date)) {
           activitiesByDate.set(date, []);
         }
-        activitiesByDate.get(date).push(activity);
+        const dateActivities = activitiesByDate.get(date);
+        if (dateActivities) {
+          dateActivities.push(activity);
+        }
       });
 
       // Aggregate activities per day

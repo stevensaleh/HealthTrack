@@ -26,6 +26,8 @@ export type UpdateUserData = {
   lastName?: string;
   profileImage?: string;
   googleId?: string;
+  email?: string;
+  password?: string;
 };
 
 /**

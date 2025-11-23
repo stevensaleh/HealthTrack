@@ -60,6 +60,9 @@ export interface CreateIntegrationData {
   provider: HealthDataProvider;
   credentials: OAuthCredentials;
   status?: IntegrationStatus; // Defaults to ACTIVE
+  accessToken?: string;
+  refreshToken?: string;
+  expiresAt?: Date;
 }
 
 /**

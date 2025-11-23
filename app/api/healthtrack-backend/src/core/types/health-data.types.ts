@@ -24,6 +24,7 @@ export type CreateHealthDataDto = {
   heartRate?: number; // average heart rate (bpm)
   notes?: string; // User notes about the day
   mood?: string; // User's mood (e.g., "happy", "tired", "energetic")
+  distance?: number; // distance covered in km
 };
 
 //UpdateHealthDataDto - Data that can be updated after logging

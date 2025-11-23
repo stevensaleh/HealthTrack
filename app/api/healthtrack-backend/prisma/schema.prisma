@@ -45,6 +45,7 @@ model HealthData {
   water       Float?    // liters of water
   exercise    Int?      // minutes of exercise
   heartRate   Int?      // average heart rate
+  distance    Float?    // distance covered in km
   
   // Additional data
   notes       String?
@@ -112,6 +113,10 @@ model Integration {
   expiresAt     DateTime?
   isActive      Boolean   @default(true)
   lastSyncedAt  DateTime?
+
+  status            IntegrationStatus   @default(ACTIVE)    // Track integration state
+  credentials       Json?                                   // Store OAuth credentials as JSON
+  syncErrorMessage  String?                                 // Store sync error messages
   
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt

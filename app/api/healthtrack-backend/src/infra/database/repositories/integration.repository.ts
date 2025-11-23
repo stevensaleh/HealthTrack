@@ -101,13 +101,13 @@ export class IntegrationRepository implements IIntegrationRepository {
       // Find integrations where token expires soon
       const integrations = await this.prisma.integration.findMany({
         where: {
-          status: IntegrationStatus.ACTIVE as any,
+          status: 'ACTIVE',
         },
       });
 
       // Filter based on credentials expiry (stored in JSON)
       return integrations.filter((integration) => {
-        const credentials = integration.credentials;
+        const credentials = integration.credentials as any;
         if (credentials && credentials.expiresAt) {
           const expiresAt = new Date(credentials.expiresAt);
           return expiresAt <= thresholdDate;
@@ -141,9 +141,13 @@ export class IntegrationRepository implements IIntegrationRepository {
       return await this.prisma.integration.create({
         data: {
           userId: data.userId,
-          provider: data.provider as any,
+          provider: data.provider,
+          accessToken: data.accessToken || '',
+          refreshToken: data.refreshToken || null,
+          expiresAt: data.expiresAt || null,
           credentials: data.credentials as any,
-          status: (data.status || IntegrationStatus.ACTIVE) as any,
+          status: data.status,
+          isActive: true,
         },
       });
     } catch (error) {

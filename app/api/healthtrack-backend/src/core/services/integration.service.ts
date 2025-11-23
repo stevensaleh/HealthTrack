@@ -159,7 +159,9 @@ export class IntegrationService {
       return {
         id: integration.id,
         provider: integration.provider as HealthDataProvider,
-        status: integration.isActive ? IntegrationStatus.ACTIVE : IntegrationStatus.EXPIRED,
+        status: integration.isActive
+          ? IntegrationStatus.ACTIVE
+          : IntegrationStatus.EXPIRED,
       };
     } catch (error) {
       this.logger.error(
@@ -290,12 +292,11 @@ export class IntegrationService {
             date: data.date,
             steps: data.steps,
             weight: data.weight,
-            caloriesBurned: data.caloriesBurned,
-            exerciseMinutes: data.exerciseMinutes,
-            sleepMinutes: data.sleepMinutes,
+            //caloriesBurned: data.caloriesBurned,
+            exercise: data.exerciseMinutes,
+            sleep: data.sleepMinutes,
             heartRate: data.heartRate,
             distance: data.distance,
-            source: integration.provider,
           });
 
           synced++;
@@ -319,7 +320,7 @@ export class IntegrationService {
 
       // Clear any previous error status
       if (integration.syncErrorMessage) {
-        await this.integrationRepo.recordSyncError(integration.id, null);
+        await this.integrationRepo.recordSyncError(integration.id, '');
       }
 
       const duration = Date.now() - startTime;
