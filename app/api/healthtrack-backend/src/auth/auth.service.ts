@@ -27,14 +27,16 @@ export class AuthService {
   async generateTokens(userId: string, email: string) {
     const payload = { sub: userId, email };
 
+    const expiration = this.configService.get<string>('JWT_EXPIRATION') || '7d';
+    
     const accessToken = this.jwtService.sign(payload, {
-      expiresIn: this.configService.get<string>('JWT_EXPIRATION') || '7d',
-    });
+      expiresIn: expiration,
+    } as any);
 
     // For refresh token, use a longer expiration
     const refreshToken = this.jwtService.sign(payload, {
       expiresIn: '30d',
-    });
+    } as any);
 
     return {
       accessToken,
