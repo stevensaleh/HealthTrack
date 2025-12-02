@@ -1,5 +1,17 @@
 // src/components/ActivityFeed.tsx
 import { Integration } from '@/hooks/useIntegrations';
+import DirectionsRunIcon from '@mui/icons-material/DirectionsRun';
+import DirectionsBikeIcon from '@mui/icons-material/DirectionsBike';
+import PoolIcon from '@mui/icons-material/Pool';
+import DirectionsWalkIcon from '@mui/icons-material/DirectionsWalk';
+import SelfImprovementIcon from '@mui/icons-material/SelfImprovement';
+import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
+import RestaurantIcon from '@mui/icons-material/Restaurant';
+import FitnessCenterOutlinedIcon from '@mui/icons-material/FitnessCenterOutlined';
+import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
+import AddIcon from '@mui/icons-material/Add';
+import BarChartIcon from '@mui/icons-material/BarChart';
+import PhonelinkIcon from '@mui/icons-material/Phonelink';
 
 interface Activity {
   id: string;
@@ -45,16 +57,16 @@ export default function ActivityFeed({
   ];
 
   const getActivityIcon = (type: string) => {
-    const icons: { [key: string]: string } = {
-      Running: '🏃',
-      Cycling: '🚴',
-      Swimming: '🏊',
-      Walking: '🚶',
-      Yoga: '🧘',
-      Weightlifting: '🏋️',
-      Meal: '🍽️',
+    const icons: { [key: string]: any } = {
+      Running: <DirectionsRunIcon />,
+      Cycling: <DirectionsBikeIcon />,
+      Swimming: <PoolIcon />,
+      Walking: <DirectionsWalkIcon />,
+      Yoga: <SelfImprovementIcon />,
+      Weightlifting: <FitnessCenterIcon />,
+      Meal: <RestaurantIcon />,
     };
-    return icons[type] || '💪';
+    return icons[type] || <FitnessCenterOutlinedIcon />;
   };
 
   const getProviderColor = (provider: string) => {
@@ -126,9 +138,10 @@ export default function ActivityFeed({
               border: 'none',
               cursor: 'pointer',
               fontSize: '20px',
+              color: 'var(--color-text-secondary)',
             }}
           >
-            📊
+            <BarChartIcon />
           </button>
         </div>
       </div>
@@ -159,9 +172,10 @@ export default function ActivityFeed({
               alignItems: 'center',
               justifyContent: 'center',
               fontSize: '24px',
+              color: 'white',
             }}
           >
-            🔥
+            <LocalFireDepartmentIcon style={{ fontSize: '28px' }} />
           </div>
           <div>
             <div
@@ -238,7 +252,7 @@ export default function ActivityFeed({
             gap: 'var(--space-1)',
           }}
         >
-          <span>+</span>
+          <AddIcon style={{ fontSize: '16px' }} />
           <span>Add</span>
         </button>
       </div>
@@ -252,7 +266,7 @@ export default function ActivityFeed({
               padding: 'var(--space-10) var(--space-4)',
             }}
           >
-            <div style={{ fontSize: '48px', marginBottom: 'var(--space-4)' }}>📱</div>
+            <PhonelinkIcon style={{ fontSize: '64px', color: 'var(--color-text-muted)', marginBottom: 'var(--space-4)' }} />
             <p
               style={{
                 fontSize: 'var(--font-size-sm)',
@@ -297,6 +311,7 @@ export default function ActivityFeed({
                   height: '40px',
                   borderRadius: 'var(--radius-md)',
                   background: `${getProviderColor(activity.provider)}20`,
+                  color: getProviderColor(activity.provider),
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',

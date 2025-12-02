@@ -2,7 +2,7 @@
 import { ReactNode } from 'react';
 
 interface StatCardProps {
-  icon: string;
+  icon: ReactNode;
   title: string;
   value: string | number;
   unit?: string;
@@ -79,6 +79,7 @@ export default function StatCard({
               alignItems: 'center',
               justifyContent: 'center',
               fontSize: '20px',
+              color: color,
             }}
           >
             {icon}

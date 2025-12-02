@@ -1,5 +1,9 @@
 // src/components/IntegrationsModal.tsx
 import { useState } from 'react';
+import DirectionsRunIcon from '@mui/icons-material/DirectionsRun';
+import WatchIcon from '@mui/icons-material/Watch';
+import RestaurantMenuIcon from '@mui/icons-material/RestaurantMenu';
+import CloseIcon from '@mui/icons-material/Close';
 
 interface IntegrationsModalProps {
   isOpen: boolean;
@@ -20,21 +24,21 @@ export default function IntegrationsModal({
     {
       id: 'STRAVA' as const,
       name: 'Strava',
-      icon: '🏃',
+      icon: <DirectionsRunIcon />,
       color: '#FC4C02',
       description: 'Connect your running, cycling, and fitness activities',
     },
     {
       id: 'FITBIT' as const,
       name: 'Fitbit',
-      icon: '⌚',
+      icon: <WatchIcon />,
       color: '#00B0B9',
       description: 'Sync steps, heart rate, and sleep data',
     },
     {
       id: 'LOSE_IT' as const,
       name: 'Lose It!',
-      icon: '🍽️',
+      icon: <RestaurantMenuIcon />,
       color: '#00A86B',
       description: 'Track your nutrition and calorie intake',
     },
@@ -119,9 +123,12 @@ export default function IntegrationsModal({
               fontSize: '24px',
               padding: 'var(--space-2)',
               color: 'var(--color-text-muted)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
             }}
           >
-            ✕
+            <CloseIcon />
           </button>
         </div>
 
@@ -161,6 +168,7 @@ export default function IntegrationsModal({
                   height: '56px',
                   borderRadius: 'var(--radius-md)',
                   background: `${provider.color}20`,
+                  color: provider.color,
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',

@@ -46,8 +46,8 @@
   /* ===== TYPOGRAPHY ===== */
   
   /* Font Families */
-  --font-heading: 'Playfair Display', serif;
-  --font-body: 'Tinos', serif;
+--font-heading: 'Satoshi', sans-serif;
+--font-body: 'Manrope', sans-serif;
   --font-system: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   
   /* Font Sizes */

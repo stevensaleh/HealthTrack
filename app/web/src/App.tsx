@@ -5,6 +5,7 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import { AuthProvider } from './context/AuthContext';
 import StyleGuide from "./pages/StyleGuide";
 import ProtectedRoute from './components/common/ProtectedRoute';
+import NewDashboard from '@/pages/NewDashboard';
 
 // Pages
 import Landing from "./pages/Landing";
@@ -49,7 +50,7 @@ export default function App() {
                 path="/dashboard"
                 element={
                  
-                    <Dashboard />
+                    <NewDashboard />
                   
                 }
               />

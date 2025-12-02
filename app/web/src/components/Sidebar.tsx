@@ -1,6 +1,13 @@
 // src/components/Sidebar.tsx
 import { useAuth } from '@/context/AuthContext';
 import { useNavigate, useLocation } from 'react-router-dom';
+import HomeIcon from '@mui/icons-material/Home';
+import ShowChartIcon from '@mui/icons-material/ShowChart';
+import BarChartIcon from '@mui/icons-material/BarChart';
+import TrackChangesIcon from '@mui/icons-material/TrackChanges';
+import SettingsIcon from '@mui/icons-material/Settings';
+import LocalHospitalIcon from '@mui/icons-material/LocalHospital';
+import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
 
 interface SidebarProps {
   goalsCompleted: number;
@@ -14,11 +21,11 @@ export default function Sidebar({ goalsCompleted, daysTracked, currentStreak }: 
   const location = useLocation();
 
   const navItems = [
-    { icon: '🏠', label: 'Home', path: '/dashboard' },
-    { icon: '📊', label: 'Activity', path: '/activity' },
-    { icon: '📈', label: 'Analytics', path: '/analytics' },
-    { icon: '🎯', label: 'Goals', path: '/goals' },
-    { icon: '⚙️', label: 'Settings', path: '/settings' },
+    { icon: HomeIcon, label: 'Home', path: '/dashboard' },
+    { icon: ShowChartIcon, label: 'Activity', path: '/activity' },
+    { icon: BarChartIcon, label: 'Analytics', path: '/analytics' },
+    { icon: TrackChangesIcon, label: 'Goals', path: '/goals' },
+    { icon: SettingsIcon, label: 'Settings', path: '/settings' },
   ];
 
   const isActive = (path: string) => location.pathname === path;
@@ -54,49 +61,52 @@ export default function Sidebar({ goalsCompleted, daysTracked, currentStreak }: 
             gap: 'var(--space-2)',
           }}
         >
-          <span style={{ fontSize: '28px' }}>🏥</span>
+          <LocalHospitalIcon style={{ fontSize: '28px', color: 'var(--color-accent)' }} />
           HealthHive
         </h1>
       </div>
 
       {/* Navigation */}
       <nav style={{ flex: 1, padding: 'var(--space-6) var(--space-4)' }}>
-        {navItems.map((item) => (
-          <button
-            key={item.path}
-            onClick={() => navigate(item.path)}
-            style={{
-              width: '100%',
-              display: 'flex',
-              alignItems: 'center',
-              gap: 'var(--space-4)',
-              padding: 'var(--space-4) var(--space-5)',
-              marginBottom: 'var(--space-2)',
-              background: isActive(item.path) ? '#fff5ed' : 'transparent',
-              border: 'none',
-              borderRadius: 'var(--radius-md)',
-              cursor: 'pointer',
-              transition: 'all var(--transition-fast)',
-              fontFamily: 'var(--font-body)',
-              fontSize: 'var(--font-size-base)',
-              fontWeight: isActive(item.path) ? 'var(--font-weight-semibold)' : 'var(--font-weight-normal)',
-              color: isActive(item.path) ? 'var(--color-accent)' : 'var(--color-text-primary)',
-            }}
-            onMouseEnter={(e) => {
-              if (!isActive(item.path)) {
-                e.currentTarget.style.background = '#f9f9f9';
-              }
-            }}
-            onMouseLeave={(e) => {
-              if (!isActive(item.path)) {
-                e.currentTarget.style.background = 'transparent';
-              }
-            }}
-          >
-            <span style={{ fontSize: '20px' }}>{item.icon}</span>
-            <span>{item.label}</span>
-          </button>
-        ))}
+        {navItems.map((item) => {
+          const IconComponent = item.icon;
+          return (
+            <button
+              key={item.path}
+              onClick={() => navigate(item.path)}
+              style={{
+                width: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 'var(--space-4)',
+                padding: 'var(--space-4) var(--space-5)',
+                marginBottom: 'var(--space-2)',
+                background: isActive(item.path) ? '#fff5ed' : 'transparent',
+                border: 'none',
+                borderRadius: 'var(--radius-md)',
+                cursor: 'pointer',
+                transition: 'all var(--transition-fast)',
+                fontFamily: 'var(--font-body)',
+                fontSize: 'var(--font-size-base)',
+                fontWeight: isActive(item.path) ? 'var(--font-weight-semibold)' : 'var(--font-weight-normal)',
+                color: isActive(item.path) ? 'var(--color-accent)' : 'var(--color-text-primary)',
+              }}
+              onMouseEnter={(e) => {
+                if (!isActive(item.path)) {
+                  e.currentTarget.style.background = '#f9f9f9';
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (!isActive(item.path)) {
+                  e.currentTarget.style.background = 'transparent';
+                }
+              }}
+            >
+              <IconComponent style={{ fontSize: '20px' }} />
+              <span>{item.label}</span>
+            </button>
+          );
+        })}
       </nav>
 
       {/* User Profile Card */}
@@ -237,9 +247,14 @@ export default function Sidebar({ goalsCompleted, daysTracked, currentStreak }: 
                   fontSize: 'var(--font-size-xl)',
                   fontWeight: 'var(--font-weight-bold)',
                   color: 'var(--color-accent)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: 'var(--space-1)',
                 }}
               >
                 {currentStreak}
+                <LocalFireDepartmentIcon style={{ fontSize: '20px' }} />
               </div>
               <div
                 style={{
@@ -247,7 +262,7 @@ export default function Sidebar({ goalsCompleted, daysTracked, currentStreak }: 
                   color: 'var(--color-text-secondary)',
                 }}
               >
-                Streak 🔥
+                Streak
               </div>
             </div>
           </div>
