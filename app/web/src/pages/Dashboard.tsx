@@ -176,6 +176,9 @@ export default function Dashboard() {
             <input style={inputStyle} type="text" placeholder="Exercise Hours" value={exercise} onChange={(e) => setExercise(e.target.value)} />
             <input style={inputStyle} type="text" placeholder="Weight (lbs)" value={weight} onChange={(e) => setWeight(e.target.value)} />
             <input style={inputStyle} type="text" placeholder="Protein Intake (g)" value={protein} onChange={(e) => setProtein(e.target.value)} />
+            <button type="button" className="btn-primary btn-lg btn-elevated">
+              Submit Entry
+            </button>
           </div>
         </Modal>
       )}
@@ -197,6 +200,9 @@ export default function Dashboard() {
             <input style={inputStyle} type="text" placeholder="Exercise Hours Goal" value={goalExercise} onChange={(e) => setGoalExercise(e.target.value)} />
             <input style={inputStyle} type="text" placeholder="Weight Goal (lbs)" value={goalWeight} onChange={(e) => setGoalWeight(e.target.value)} />
             <input style={inputStyle} type="text" placeholder="Protein Intake Goal (g)" value={goalProtein} onChange={(e) => setGoalProtein(e.target.value)} />
+            <button type="button" className="btn-primary btn-lg btn-elevated">
+              Save Goals
+            </button>
           </div>
         </Modal>
       )}
