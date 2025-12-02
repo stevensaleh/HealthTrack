@@ -125,10 +125,10 @@ export default function Sidebar({ goalsCompleted, daysTracked, currentStreak }: 
           }}
         >
           {/* User Avatar */}
-          {user?.picture ? (
+          {user?.profileImage || user?.picture ? (
             <img
-              src={user.picture}
-              alt={user.name}
+              src={user?.profileImage || user?.picture}
+              alt={user?.firstName || user?.email}
               style={{
                 width: '64px',
                 height: '64px',
@@ -154,7 +154,7 @@ export default function Sidebar({ goalsCompleted, daysTracked, currentStreak }: 
                 margin: '0 auto var(--space-4)',
               }}
             >
-              {user?.name?.charAt(0).toUpperCase()}
+              {user?.firstName?.charAt(0).toUpperCase() || user?.email?.charAt(0).toUpperCase()}
             </div>
           )}
 
@@ -167,7 +167,9 @@ export default function Sidebar({ goalsCompleted, daysTracked, currentStreak }: 
               color: 'var(--color-text-primary)',
             }}
           >
-            {user?.name}
+            {user?.firstName && user?.lastName 
+              ? `${user.firstName} ${user.lastName}`
+              : user?.firstName || user?.email}
           </h3>
           <p
             style={{

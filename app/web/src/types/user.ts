@@ -2,9 +2,11 @@
 export interface User {
   id: string;
   email: string;
-  name: string;
+  firstName?: string;      
+  lastName?: string;       
   picture?: string;
-  provider: 'email' | 'google';
+  profileImage?: string;   // Backend uses this field name
+  provider?: 'email' | 'google';
   dateOfBirth?: Date;
   gender?: 'male' | 'female' | 'other';
   height?: number;
@@ -46,15 +48,14 @@ export interface LoginCredentials {
 export interface RegisterData {
   email: string;
   password: string;
-  name: string;
+  name: string;              
+  firstName?: string;        
+  lastName?: string;         
   dateOfBirth?: string;
   gender?: 'male' | 'female' | 'other';
   height?: number;
   weight?: number;
 }
-
-// Remove the custom GoogleCredentialResponse - we'll use the library's type
-// export interface GoogleCredentialResponse { ... }
 
 export interface GoogleUserInfo {
   sub: string;

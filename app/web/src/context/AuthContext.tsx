@@ -1,6 +1,7 @@
 // src/context/AuthContext.tsx
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { User, AuthResponse, LoginCredentials, RegisterData, GoogleUserInfo } from '@/types/user';
+import { apiClient } from '@/services/api';
 
 interface AuthContextType {
   user: User | null;
@@ -8,7 +9,7 @@ interface AuthContextType {
   loading: boolean;
   login: (credentials: LoginCredentials) => Promise<AuthResponse>;
   register: (data: RegisterData) => Promise<AuthResponse>;
-  loginWithGoogle: (credential: string) => Promise<AuthResponse>; // Changed parameter type
+  loginWithGoogle: (credential: string) => Promise<AuthResponse>;
   logout: () => void;
   updateUser: (user: User) => void;
 }
@@ -44,10 +45,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // Login with email and password
   const login = async (credentials: LoginCredentials): Promise<AuthResponse> => {
     try {
-      // TODO: Replace with actual API call to backend
-      // const response = await authService.login(credentials);
-      
-      // Mock authentication for now
+      // Validate input
       if (!credentials.email || !credentials.password) {
         return { 
           success: false, 
@@ -55,32 +53,42 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         };
       }
 
-      // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 500));
-
-      const mockUser: User = {
-        id: Date.now().toString(),
+      // Call real backend API
+      const response = await apiClient.post('/users/login', {
         email: credentials.email,
-        name: credentials.email.split('@')[0],
-        provider: 'email',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      };
+        password: credentials.password,
+      });
+
+      const { accessToken, user, tokenType, expiresIn } = response.data;
+
+      // Store tokens
+      localStorage.setItem('accessToken', accessToken);
+      localStorage.setItem('tokenType', tokenType || 'Bearer');
       
-      setUser(mockUser);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(mockUser));
+      // Store user data
+      setUser(user);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(user));
       
       return { 
         success: true, 
-        user: mockUser,
-        accessToken: 'mock_access_token',
-        refreshToken: 'mock_refresh_token'
+        user,
+        accessToken,
+        refreshToken: accessToken, // Backend returns same token for now
       };
-    } catch (error) {
+    } catch (error: any) {
       console.error('Login error:', error);
+      
+      // Handle specific error responses from backend
+      if (error.response?.status === 401) {
+        return { 
+          success: false, 
+          error: 'Invalid email or password' 
+        };
+      }
+      
       return { 
         success: false, 
-        error: error instanceof Error ? error.message : 'Login failed' 
+        error: error.response?.data?.message || error.message || 'Login failed' 
       };
     }
   };
@@ -88,10 +96,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // Register new user
   const register = async (data: RegisterData): Promise<AuthResponse> => {
     try {
-      // TODO: Replace with actual API call to backend
-      // const response = await authService.register(data);
-      
-      // Mock registration for now
+      // Validate input
       if (!data.email || !data.password || !data.name) {
         return { 
           success: false, 
@@ -106,36 +111,58 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         };
       }
 
-      // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 500));
-
-      const mockUser: User = {
-        id: Date.now().toString(),
+      // Prepare registration data
+      const registerDto = {
         email: data.email,
-        name: data.name,
-        provider: 'email',
-        dateOfBirth: data.dateOfBirth ? new Date(data.dateOfBirth) : undefined,
+        password: data.password,
+        firstName: data.name.split(' ')[0] || data.name,
+        lastName: data.name.split(' ').slice(1).join(' ') || undefined,
+        dateOfBirth: data.dateOfBirth,
         gender: data.gender,
         height: data.height,
         weight: data.weight,
-        createdAt: new Date(),
-        updatedAt: new Date(),
       };
+
+      // Call real backend API
+      const response = await apiClient.post('/users/register', registerDto);
+
+      const { accessToken, user, tokenType } = response.data;
+
+      // Store tokens
+      localStorage.setItem('accessToken', accessToken);
+      localStorage.setItem('tokenType', tokenType || 'Bearer');
       
-      setUser(mockUser);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(mockUser));
+      // Store user data
+      setUser(user);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(user));
       
       return { 
         success: true, 
-        user: mockUser,
-        accessToken: 'mock_access_token',
-        refreshToken: 'mock_refresh_token'
+        user,
+        accessToken,
+        refreshToken: accessToken, // Backend returns same token for now
       };
-    } catch (error) {
+    } catch (error: any) {
       console.error('Registration error:', error);
+      
+      // Handle specific error responses from backend
+      if (error.response?.status === 409) {
+        return { 
+          success: false, 
+          error: 'Email already exists' 
+        };
+      }
+      
+      if (error.response?.status === 400) {
+        return { 
+          success: false, 
+          error: error.response?.data?.message || 'Invalid registration data' 
+        };
+      }
+      
       return { 
         success: false, 
-        error: error instanceof Error ? error.message : 'Registration failed' 
+        error: error.response?.data?.message || error.message || 'Registration failed' 
       };
     }
   };

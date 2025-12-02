@@ -142,7 +142,7 @@ export default function NewDashboard() {
                 color: 'var(--color-text-primary)',
               }}
             >
-              {greeting}, {user?.name?.split(' ')[0] || 'User'}
+              {greeting}, {user?.firstName || 'User'}
             </h1>
             <p
               style={{
