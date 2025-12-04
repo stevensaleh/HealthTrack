@@ -26,6 +26,7 @@ import {
   HttpStatus,
   UseGuards,
   Request,
+  Res,
   Logger,
   BadRequestException,
 } from '@nestjs/common';
@@ -44,14 +45,14 @@ import { HealthDataProviderFactory } from '@infra/factories/health-data-provider
 import {
   InitiateConnectionDto,
   AuthorizationUrlResponseDto,
-  CompleteConnectionDto,
+  //CompleteConnectionDto,
   IntegrationResponseDto,
   IntegrationListResponseDto,
   SyncDataDto,
   SyncResultDto,
   DisconnectResponseDto,
   BatchSyncResponseDto,
-  GetProviderInfoDto,
+  //GetProviderInfoDto,
   ProviderInfoResponseDto,
 } from '../dto/integration.dto';
 
@@ -59,7 +60,6 @@ import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 
 @ApiTags('Integrations')
 @Controller('integrations')
-@UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
 export class IntegrationController {
   private readonly logger = new Logger(IntegrationController.name);
@@ -74,6 +74,7 @@ export class IntegrationController {
    *
    * Returns authorization URL for user to visit
    */
+  @UseGuards(JwtAuthGuard)
   @Post('connect')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
@@ -117,52 +118,67 @@ export class IntegrationController {
   /**
    * Complete OAuth flow (callback endpoint)
    *
-   * Called by frontend after user authorizes on provider's site
+   * Called by OAuth provider after user authorizes
+   * This endpoint does NOT require JWT auth because it's called by external redirect
    */
-  @Post('callback')
-  @HttpCode(HttpStatus.CREATED)
+  @Get('callback')
   @ApiOperation({
-    summary: 'Complete OAuth connection',
+    summary: 'OAuth callback endpoint',
     description:
-      'Exchange authorization code for access token and save integration',
+      'Receives authorization code from OAuth provider and completes integration',
   })
+  @ApiQuery({ name: 'code', description: 'Authorization code from provider' })
+  @ApiQuery({ name: 'state', description: 'State parameter for security' })
   @ApiResponse({
-    status: 201,
-    description: 'Integration created successfully',
-    type: IntegrationResponseDto,
-  })
-  @ApiResponse({
-    status: 400,
-    description: 'Invalid authorization code or state',
-  })
-  @ApiResponse({
-    status: 401,
-    description: 'Unauthorized - Invalid or missing JWT token',
+    status: 302,
+    description: 'Redirects to frontend with success or error',
   })
   async completeConnection(
-    @Body() dto: CompleteConnectionDto,
-  ): Promise<IntegrationResponseDto> {
-    this.logger.log('Completing OAuth connection');
+    @Query('code') code: string,
+    @Query('state') state: string,
+    @Res() res: any,
+  ): Promise<void> {
+    this.logger.log('Completing OAuth connection via callback');
 
-    const result = await this.integrationService.completeConnection(
-      dto.code,
-      dto.state,
-    );
+    try {
+      const result = await this.integrationService.completeConnection(
+        code,
+        state,
+      );
 
-    return {
-      id: result.id,
-      provider: result.provider,
-      status: result.status as any,
-      lastSyncedAt: undefined,
-      syncErrorMessage: undefined,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
+      // Immediately sync data after connection
+      this.logger.log(
+        `Integration ${result.id} connected, triggering initial sync...`,
+      );
+      try {
+        await this.integrationService.syncHealthData(result.id, {
+          forceResync: false,
+        });
+        this.logger.log(`Initial sync completed for ${result.provider}`);
+      } catch (syncError) {
+        // Log sync error but don't fail the connection
+        this.logger.error(
+          `Initial sync failed for ${result.provider}:`,
+          syncError,
+        );
+      }
+
+      // Redirect to frontend with success
+      const redirectUrl = `http://localhost:5173/dashboard?integration=success&provider=${result.provider}`;
+      this.logger.log(`Redirecting to: ${redirectUrl}`);
+      res.redirect(redirectUrl);
+    } catch (error) {
+      this.logger.error('OAuth callback failed:', error);
+      // Redirect to frontend with error
+      const redirectUrl = `http://localhost:5173/dashboard?integration=error&message=${encodeURIComponent(error.message)}`;
+      res.redirect(redirectUrl);
+    }
   }
 
   /**
    * Get all integrations for the authenticated user
    */
+  @UseGuards(JwtAuthGuard)
   @Get()
   @ApiOperation({
     summary: 'Get user integrations',
@@ -196,6 +212,7 @@ export class IntegrationController {
   /**
    * Get specific integration by ID
    */
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   @ApiOperation({
     summary: 'Get integration by ID',
@@ -241,6 +258,7 @@ export class IntegrationController {
   /**
    * Sync health data from a specific integration
    */
+  @UseGuards(JwtAuthGuard)
   @Post(':id/sync')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
@@ -289,6 +307,7 @@ export class IntegrationController {
   /**
    * Sync all active integrations for the user
    */
+  @UseGuards(JwtAuthGuard)
   @Post('sync-all')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
@@ -325,6 +344,7 @@ export class IntegrationController {
   /**
    * Disconnect an integration
    */
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
@@ -370,6 +390,7 @@ export class IntegrationController {
   /**
    * Get information about available providers
    */
+  @UseGuards(JwtAuthGuard)
   @Get('providers/info')
   @ApiOperation({
     summary: 'Get provider information',

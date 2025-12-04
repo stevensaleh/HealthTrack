@@ -1,5 +1,5 @@
 // src/pages/NewDashboard.tsx
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { useHealthData, HealthDataEntry } from '@/hooks/useHealthData';
@@ -35,7 +35,7 @@ export default function NewDashboard() {
   const [timePeriod, setTimePeriod] = useState<TimePeriod>('WEEK');
   const { latestData, historicalData, weeklyStats, trackingStatus, loading: healthLoading, refetch: refetchHealth } = useHealthData(timePeriod);
   const { stats: goalStats, loading: goalsLoading } = useGoals();
-  const { integrations, initiateConnection } = useIntegrations();
+  const { integrations, initiateConnection, disconnectIntegration, syncIntegration, refetch: refetchIntegrations } = useIntegrations();
 
   const [showIntegrationsModal, setShowIntegrationsModal] = useState(false);
   const [showHealthEntryModal, setShowHealthEntryModal] = useState(false);
@@ -56,6 +56,54 @@ export default function NewDashboard() {
       console.error('Failed to connect:', error);
     }
   };
+
+  const handleDisconnectIntegration = async (integrationId: string) => {
+    try {
+      await disconnectIntegration(integrationId);
+    } catch (error) {
+      console.error('Failed to disconnect:', error);
+      alert('Failed to disconnect integration. Please try again.');
+    }
+  };
+
+  const handleSyncIntegration = async (integrationId: string) => {
+    try {
+      await syncIntegration(integrationId);
+      // Refresh integrations list to update lastSyncAt
+      await refetchIntegrations();
+      // Refresh health data to show newly synced data
+      await refetchHealth();
+      console.log(' Sync completed successfully!');
+    } catch (error) {
+      console.error('Failed to sync:', error);
+      throw error; // Re-throw so modal can handle it
+    }
+  };
+
+  // Check for OAuth redirect success/error
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const integration = params.get('integration');
+    const provider = params.get('provider');
+    const message = params.get('message');
+
+    if (integration === 'success' && provider) {
+      console.log(`Successfully connected to ${provider}`);
+      // Refresh integrations list
+      refetchIntegrations();
+      // Refresh health data to show newly synced data
+      refetchHealth();
+      // Show success message
+      console.log(` ${provider} connected and synced successfully!`);
+      // Clean up URL
+      window.history.replaceState({}, '', '/dashboard');
+    } else if (integration === 'error') {
+      console.error('Integration error:', message);
+      alert(`Failed to connect: ${message || 'Unknown error'}`);
+      // Clean up URL
+      window.history.replaceState({}, '', '/dashboard');
+    }
+  }, [refetchIntegrations, refetchHealth]);
 
   const handleHealthEntrySuccess = async () => {
     try {
@@ -389,6 +437,9 @@ export default function NewDashboard() {
         isOpen={showIntegrationsModal}
         onClose={() => setShowIntegrationsModal(false)}
         onConnect={handleConnectIntegration}
+        integrations={integrations}
+        onDisconnect={handleDisconnectIntegration}
+        onSync={handleSyncIntegration}
       />
 
       {/* Health Entry Modal */}

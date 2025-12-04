@@ -8,7 +8,7 @@ export interface Integration {
   provider: 'STRAVA' | 'FITBIT' | 'LOSE_IT';
   status: 'ACTIVE' | 'EXPIRED' | 'REVOKED';
   isActive: boolean;
-  lastSyncAt?: string;
+  lastSyncedAt?: string;  // Changed from lastSyncAt to match backend
   syncErrorMessage?: string;
   createdAt: string;
   updatedAt: string;
@@ -33,11 +33,13 @@ export function useIntegrations() {
 
       // Fetch user integrations
       const response = await apiClient.get('/integrations');
-      setIntegrations(response.data);
+      // Backend returns { integrations: [...], total: number }
+      setIntegrations(response.data.integrations || []);
 
     } catch (err: any) {
       console.error('Error fetching integrations:', err);
       setError(err.response?.data?.message || 'Failed to fetch integrations');
+      setIntegrations([]); // Set empty array on error
     } finally {
       setLoading(false);
     }

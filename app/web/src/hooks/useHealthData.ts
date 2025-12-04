@@ -16,7 +16,6 @@ export interface HealthDataEntry {
   protein?: number;
   createdAt: string;
   updatedAt: string;
-  height?: number;
 }
 
 export interface WeeklyStats {
@@ -98,8 +97,6 @@ export function useHealthData(timePeriod: TimePeriod = 'WEEK') {
           params: {
             startDate,
             endDate: now.toISOString().split('T')[0],
-            sortBy: 'date',
-            sortOrder: 'asc'
           }
         });
         
@@ -107,6 +104,9 @@ export function useHealthData(timePeriod: TimePeriod = 'WEEK') {
       } catch (err: any) {
         if (err.response?.status === 404) {
           console.log('No historical data found yet');
+          setHistoricalData([]);
+        } else if (err.response?.status === 400) {
+          console.error('Invalid query parameters:', err.response?.data);
           setHistoricalData([]);
         } else {
           throw err;
