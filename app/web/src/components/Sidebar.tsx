@@ -2,8 +2,6 @@
 import { useAuth } from '@/context/AuthContext';
 import { useNavigate, useLocation } from 'react-router-dom';
 import HomeIcon from '@mui/icons-material/Home';
-import ShowChartIcon from '@mui/icons-material/ShowChart';
-import BarChartIcon from '@mui/icons-material/BarChart';
 import TrackChangesIcon from '@mui/icons-material/TrackChanges';
 import SettingsIcon from '@mui/icons-material/Settings';
 import LocalHospitalIcon from '@mui/icons-material/LocalHospital';

@@ -2,19 +2,29 @@
 import { useState, useEffect } from 'react';
 import { apiClient } from '@/services/api';
 
+export interface GoalProgress {
+  percentage: number;
+  currentValue: number;
+  remaining: number;
+  onTrack: boolean;
+  daysElapsed: number;
+  daysRemaining: number;
+  projectedCompletionDate?: string;
+  message?: string;
+}
+
 export interface Goal {
   id: string;
   userId: string;
-  type: 'WEIGHT_LOSS' | 'WEIGHT_GAIN' | 'STEPS' | 'EXERCISE';
+  type: 'WEIGHT_LOSS' | 'WEIGHT_GAIN' | 'STEPS' | 'EXERCISE' | 'SLEEP' | 'WATER' | 'CALORIES' | 'CUSTOM';
+  title: string;
+  description?: string;
   targetValue: number;
-  startValue: number;
-  currentValue: number;
+  startValue?: number;
   startDate: string;
-  targetDate: string;
+  endDate: string;
   status: 'ACTIVE' | 'COMPLETED' | 'CANCELLED' | 'PAUSED';
-  progress: number;
-  daysRemaining: number;
-  progressRate: string;
+  progress: GoalProgress; // Nested progress object
   createdAt: string;
   updatedAt: string;
 }
@@ -43,11 +53,11 @@ export function useGoals() {
 
       // Fetch all goals
       const goalsResponse = await apiClient.get('/goals');
-      setGoals(goalsResponse.data);
+      setGoals(Array.isArray(goalsResponse.data.goals) ? goalsResponse.data.goals : []);
 
       // Fetch active goals
       const activeResponse = await apiClient.get('/goals/active');
-      setActiveGoals(activeResponse.data);
+      setActiveGoals(Array.isArray(activeResponse.data.goals) ? activeResponse.data.goals : []);
 
       // Fetch goal statistics
       const statsResponse = await apiClient.get('/goals/stats');
@@ -56,6 +66,9 @@ export function useGoals() {
     } catch (err: any) {
       console.error('Error fetching goals:', err);
       setError(err.response?.data?.message || 'Failed to fetch goals');
+      // Ensure arrays remain even on error
+      setGoals([]);
+      setActiveGoals([]);
     } finally {
       setLoading(false);
     }

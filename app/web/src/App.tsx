@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { AuthProvider } from './context/AuthContext';
 import StyleGuide from "./pages/StyleGuide";
+import GoalsPage from './pages/GoalsPage';
 import ProtectedRoute from './components/common/ProtectedRoute';
 import NewDashboard from '@/pages/NewDashboard';
 
@@ -12,11 +13,7 @@ import Landing from "./pages/Landing";
 import Login from "./pages/Login";
 //import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
-// import DataEntry from "./pages/DataEntry";
-// import Goals from "./pages/Goals";
-// import Analytics from "./pages/Analytics";
-// import Integrations from "./pages/Integrations";
-// import Profile from "./pages/Profile";
+
 
 // Get Google Client ID from environment
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || '';
@@ -54,47 +51,15 @@ export default function App() {
                   
                 }
               />
-              {/* TO BE IMPLEMENTED LATER
-              <Route
-                path="/data-entry"
+              <Route 
+                path="/goals" 
                 element={
                   <ProtectedRoute>
-                    <DataEntry />
+                    <GoalsPage />
                   </ProtectedRoute>
-                }
+              } 
               />
-              <Route
-                path="/goals"
-                element={
-                  <ProtectedRoute>
-                    <Goals />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/analytics"
-                element={
-                  <ProtectedRoute>
-                    <Analytics />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/integrations"
-                element={
-                  <ProtectedRoute>
-                    <Integrations />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/profile"
-                element={
-                  <ProtectedRoute>
-                    <Profile />
-                  </ProtectedRoute>
-                }
-              /> */}
+              
 
               {/* Catch all */}
               <Route path="*" element={<Navigate to="/" replace />} />
