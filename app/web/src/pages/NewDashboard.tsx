@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { useHealthData } from '@/hooks/useHealthData';
+import { useHealthData, HealthDataEntry } from '@/hooks/useHealthData';
 import { useGoals } from '@/hooks/useGoals';
 import { useIntegrations } from '@/hooks/useIntegrations';
 
@@ -11,6 +11,7 @@ import ActivityFeed from '@/components/ActivityFeed';
 import StatCard from '@/components/StatCard';
 import TimePeriodToggle, { TimePeriod } from '@/components/TimePeriodToggle';
 import IntegrationsModal from '@/components/IntegrationsModal';
+import HealthEntryModal from '@/components/HealthEntryModal';
 import { MiniLineChart, MiniBarChart, SleepChart } from '@/components/MiniChart';
 
 // Material UI Icons
@@ -31,12 +32,13 @@ import LocalHospitalIcon from '@mui/icons-material/LocalHospital';
 export default function NewDashboard() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-  const { latestData, weeklyStats, trackingStatus, loading: healthLoading } = useHealthData();
+  const [timePeriod, setTimePeriod] = useState<TimePeriod>('WEEK');
+  const { latestData, historicalData, weeklyStats, trackingStatus, loading: healthLoading, refetch: refetchHealth } = useHealthData(timePeriod);
   const { stats: goalStats, loading: goalsLoading } = useGoals();
   const { integrations, initiateConnection } = useIntegrations();
 
-  const [timePeriod, setTimePeriod] = useState<TimePeriod>('WEEK');
   const [showIntegrationsModal, setShowIntegrationsModal] = useState(false);
+  const [showHealthEntryModal, setShowHealthEntryModal] = useState(false);
 
   const handleLogout = () => {
     logout();
@@ -55,6 +57,26 @@ export default function NewDashboard() {
     }
   };
 
+  const handleHealthEntrySuccess = async () => {
+    try {
+      console.log('Starting health data refresh...');
+      
+      // Close modal first
+      setShowHealthEntryModal(false);
+      
+      // Small delay to ensure modal is fully closed and unmounted
+      await new Promise(resolve => setTimeout(resolve, 100));
+      
+      // Now refresh health data
+      await refetchHealth();
+      console.log('Health data refreshed successfully');
+    } catch (error) {
+      console.error('Error refreshing health data:', error);
+      // Alert user if refresh fails
+      alert('Data saved successfully, but failed to refresh dashboard. Please reload the page.');
+    }
+  };
+
   // Get current date and time info
   const now = new Date();
   const dayName = now.toLocaleDateString('en-US', { weekday: 'long' });
@@ -64,17 +86,24 @@ export default function NewDashboard() {
   // Mock weather (in real app, fetch from API)
   const weather = 'Sunny day in Port Huron';
 
-  // Generate mock chart data based on weekly stats
-  const generateChartData = (metric: string, count: number = 7) => {
-    const base = weeklyStats?.metrics[metric as keyof typeof weeklyStats.metrics];
-    if (!base || typeof base !== 'object' || !('average' in base)) {
-      return Array.from({ length: count }, (_, i) => ({ value: Math.random() * 100, label: `Day ${i + 1}` }));
+  // Generate real chart data from historical data
+  const generateChartData = (metric: keyof HealthDataEntry) => {
+    if (!historicalData || historicalData.length === 0) {
+      return []; // Return empty array if no data
     }
-    const avg = base.average;
-    return Array.from({ length: count }, (_, i) => ({
-      value: avg + (Math.random() - 0.5) * avg * 0.3,
-      label: `Day ${i + 1}`,
-    }));
+    
+    return historicalData
+      .filter(entry => entry[metric] != null) // Only include entries with this metric
+      .map(entry => ({
+        value: entry[metric] as number,
+        label: new Date(entry.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+      }));
+  };
+
+  // Helper to check if we should show chart (need 2+ points for a trend)
+  const shouldShowChart = (metric: keyof HealthDataEntry) => {
+    const data = generateChartData(metric);
+    return data.length >= 2;
   };
 
   if (healthLoading || goalsLoading) {
@@ -92,15 +121,24 @@ export default function NewDashboard() {
           <LocalHospitalIcon
             style={{
               fontSize: '48px',
+              color: 'var(--color-accent)',
               marginBottom: 'var(--space-4)',
               animation: 'pulse 2s ease-in-out infinite',
-              color: 'var(--color-accent)',
             }}
           />
-          <p style={{ color: 'var(--color-text-secondary)' }}>Loading your health data...</p>
+          <p style={{ fontSize: 'var(--font-size-lg)', color: 'var(--color-text-muted)' }}>
+            Loading your health data...
+          </p>
         </div>
       </div>
     );
+  }
+
+  // Show empty state if no health data and not loading
+  const hasNoData = !latestData && !weeklyStats && !trackingStatus && !healthLoading;
+  
+  if (hasNoData) {
+    console.log('No health data available yet - showing empty state');
   }
 
   return (
@@ -208,7 +246,7 @@ export default function NewDashboard() {
             <StatCard
               icon={<HeightIcon />}
               title="Height"
-              value={user?.height || 170}
+              value={latestData?.height || 170}
               unit="cm"
               subtitle="Current height"
               color="#9333EA"
@@ -218,69 +256,60 @@ export default function NewDashboard() {
             <StatCard
               icon={<ScaleIcon />}
               title="Weight"
-              value={latestData?.weight || weeklyStats?.metrics.weight?.average || 0}
+              value={latestData?.weight || weeklyStats?.metrics?.weight?.average || 70}
               unit="kg"
-              subtitle={`Target: ${(latestData?.weight || 70) - 5} kg`}
+              subtitle={`Target: ${(latestData?.weight || weeklyStats?.metrics?.weight?.average || 70) - 5} kg`}
               trend="down"
               trendValue="-2%"
               color="#DC2626"
-            />
-
-            {/* Blood Type Card */}
-            <StatCard
-              icon={<BloodtypeIcon />}
-              title="Blood"
-              value="AB+"
-              subtitle="blood type"
-              color="#EF4444"
             />
 
             {/* Heart Rate Card with Chart */}
             <StatCard
               icon={<FavoriteIcon />}
               title="Heart Rate"
-              value={latestData?.heartRate || 77}
+              value={latestData?.heartRate || weeklyStats?.metrics?.heartRate?.average || 72}
               unit="BPM"
               subtitle="Normal"
               trend="neutral"
               color="#DC2626"
-              chart={<MiniLineChart data={generateChartData('heartRate', 10)} color="#DC2626" />}
+              chart={shouldShowChart('heartRate') ? <MiniLineChart data={generateChartData('heartRate')} color="#DC2626" /> : undefined}
             />
 
             {/* Steps Card with Chart */}
             <StatCard
               icon={<DirectionsWalkIcon />}
               title="Steps"
-              value={latestData?.steps || weeklyStats?.metrics.steps?.average || 1000}
-              subtitle={`Avg: ${weeklyStats?.metrics.steps?.average || 600} steps`}
+              value={latestData?.steps || weeklyStats?.metrics?.steps?.average || 8500}
+              subtitle={`Avg: ${Math.round(weeklyStats?.metrics?.steps?.average || latestData?.steps || 8500)} steps`}
               trend="up"
               trendValue="+12%"
               color="#10B981"
-              chart={<MiniLineChart data={generateChartData('steps', 7)} color="#10B981" />}
+              chart={shouldShowChart('steps') ? <MiniLineChart data={generateChartData('steps')} color="#10B981" /> : undefined}
             />
 
             {/* Active Energy Card with Bar Chart */}
             <StatCard
               icon={<LocalFireDepartmentIcon />}
               title="Active Energy"
-              value={weeklyStats?.metrics.exercise?.average?.toFixed(1) || '41.5'}
-              unit="kcal"
+              value={(latestData?.exercise || weeklyStats?.metrics?.exercise?.average || 45).toFixed(1)}
+              unit="min"
               subtitle="Normal activity level"
               color="#F59E0B"
-              chart={<MiniBarChart data={generateChartData('exercise', 6)} color="#F59E0B" />}
+              chart={shouldShowChart('exercise') ? <MiniBarChart data={generateChartData('exercise')} color="#F59E0B" /> : undefined}
             />
 
             {/* Sleep Activity Card */}
             <StatCard
               icon={<BedtimeIcon />}
               title="Sleep Activity"
-              value={latestData?.sleep || weeklyStats?.metrics.sleep?.average || 9}
+              value={latestData?.sleep || weeklyStats?.metrics?.sleep?.average || 8}
               unit="hours"
               subtitle="Good sleep quality"
               color="#6366F1"
               chart={
                 <SleepChart
-                  sleepHours={latestData?.sleep || 9}
+                  sleepHours={latestData?.sleep || weeklyStats?.metrics?.sleep?.average || 8}
                   deepSleep={2.5}
                   lightSleep={4.5}
                   rem={2}
@@ -292,7 +321,7 @@ export default function NewDashboard() {
             <StatCard
               icon={<RestaurantIcon />}
               title="Calories"
-              value={latestData?.calories || weeklyStats?.metrics.calories?.average || 2000}
+              value={latestData?.calories || weeklyStats?.metrics?.calories?.average || 2000}
               unit="kcal"
               subtitle={`Goal: ${2200} kcal`}
               trend="neutral"
@@ -303,7 +332,7 @@ export default function NewDashboard() {
             <StatCard
               icon={<WaterDropIcon />}
               title="Water"
-              value={latestData?.water || weeklyStats?.metrics.water?.average || 2.5}
+              value={latestData?.water || weeklyStats?.metrics?.water?.average || 2.5}
               unit="L"
               subtitle="Stay hydrated!"
               trend="up"
@@ -322,7 +351,7 @@ export default function NewDashboard() {
           }}
         >
           <button
-            onClick={() => navigate('/add-entry')}
+            onClick={() => setShowHealthEntryModal(true)}
             className="btn-primary btn-md"
             style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 'var(--space-2)' }}
           >
@@ -350,7 +379,7 @@ export default function NewDashboard() {
 
       {/* Right Activity Feed */}
       <ActivityFeed
-        caloriesBurned={weeklyStats?.metrics.calories?.total || 1000}
+        caloriesBurned={weeklyStats?.metrics?.calories?.total || 1000}
         integrations={integrations}
         onAddIntegration={handleAddIntegration}
       />
@@ -360,6 +389,13 @@ export default function NewDashboard() {
         isOpen={showIntegrationsModal}
         onClose={() => setShowIntegrationsModal(false)}
         onConnect={handleConnectIntegration}
+      />
+
+      {/* Health Entry Modal */}
+      <HealthEntryModal
+        isOpen={showHealthEntryModal}
+        onClose={() => setShowHealthEntryModal(false)}
+        onSuccess={handleHealthEntrySuccess}
       />
     </div>
   );
