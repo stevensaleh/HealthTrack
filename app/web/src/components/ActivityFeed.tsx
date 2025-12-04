@@ -1,72 +1,67 @@
 // src/components/ActivityFeed.tsx
 import { Integration } from '@/hooks/useIntegrations';
-import DirectionsRunIcon from '@mui/icons-material/DirectionsRun';
-import DirectionsBikeIcon from '@mui/icons-material/DirectionsBike';
-import PoolIcon from '@mui/icons-material/Pool';
+import { HealthDataEntry } from '@/hooks/useHealthData';
 import DirectionsWalkIcon from '@mui/icons-material/DirectionsWalk';
-import SelfImprovementIcon from '@mui/icons-material/SelfImprovement';
-import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
 import RestaurantIcon from '@mui/icons-material/Restaurant';
-import FitnessCenterOutlinedIcon from '@mui/icons-material/FitnessCenterOutlined';
 import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
 import AddIcon from '@mui/icons-material/Add';
 import BarChartIcon from '@mui/icons-material/BarChart';
-import PhonelinkIcon from '@mui/icons-material/Phonelink';
-
-interface Activity {
-  id: string;
-  type: string;
-  provider: 'STRAVA' | 'FITBIT' | 'LOSE_IT' | 'MANUAL';
-  date: string;
-  duration?: string;
-  distance?: string;
-  calories?: number;
-}
+import HotelIcon from '@mui/icons-material/Hotel';
+import WaterDropIcon from '@mui/icons-material/WaterDrop';
+import MonitorWeightIcon from '@mui/icons-material/MonitorWeight';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 
 interface ActivityFeedProps {
   caloriesBurned: number;
   integrations: Integration[];
   onAddIntegration: () => void;
+  healthData: HealthDataEntry[];
 }
 
 export default function ActivityFeed({
   caloriesBurned,
   integrations,
   onAddIntegration,
+  healthData,
 }: ActivityFeedProps) {
-  // Mock activities for now - in real app, fetch from API
-  const activities: Activity[] = [
-    {
-      id: '1',
-      type: 'Running',
-      provider: 'STRAVA',
-      date: new Date().toISOString(),
-      duration: '1 hour',
-      distance: '10 km',
-      calories: 600,
-    },
-    {
-      id: '2',
-      type: 'Cycling',
-      provider: 'STRAVA',
-      date: new Date(Date.now() - 86400000).toISOString(),
-      duration: '30 min',
-      distance: '5 km',
-      calories: 300,
-    },
-  ];
+  // Sort health data by date (most recent first)
+  const sortedHealthData = [...healthData].sort((a, b) => 
+    new Date(b.date).getTime() - new Date(a.date).getTime()
+  ).slice(0, 10); // Show last 10 entries
 
-  const getActivityIcon = (type: string) => {
-    const icons: { [key: string]: any } = {
-      Running: <DirectionsRunIcon />,
-      Cycling: <DirectionsBikeIcon />,
-      Swimming: <PoolIcon />,
-      Walking: <DirectionsWalkIcon />,
-      Yoga: <SelfImprovementIcon />,
-      Weightlifting: <FitnessCenterIcon />,
-      Meal: <RestaurantIcon />,
-    };
-    return icons[type] || <FitnessCenterOutlinedIcon />;
+  // Helper to format date
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const today = new Date();
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+    
+    if (date.toDateString() === today.toDateString()) {
+      return 'Today';
+    } else if (date.toDateString() === yesterday.toDateString()) {
+      return 'Yesterday';
+    } else {
+      return date.toLocaleDateString('en-US', { 
+        weekday: 'long', 
+        month: 'short', 
+        day: 'numeric' 
+      });
+    }
+  };
+
+  // Helper to get metrics summary for an entry
+  const getMetricsSummary = (entry: HealthDataEntry) => {
+    const metrics = [];
+    
+    if (entry.steps) metrics.push({ icon: <DirectionsWalkIcon />, value: `${entry.steps.toLocaleString()} steps`, color: '#10B981' });
+    if (entry.exercise) metrics.push({ icon: <LocalFireDepartmentIcon />, value: `${entry.exercise} min active`, color: '#F59E0B' });
+    if (entry.calories) metrics.push({ icon: <RestaurantIcon />, value: `${entry.calories} cal`, color: '#EF4444' });
+    if (entry.heartRate) metrics.push({ icon: <FavoriteIcon />, value: `${entry.heartRate} bpm`, color: '#DC2626' });
+    if (entry.sleep) metrics.push({ icon: <HotelIcon />, value: `${entry.sleep.toFixed(1)} hrs sleep`, color: '#8B5CF6' });
+    if (entry.water) metrics.push({ icon: <WaterDropIcon />, value: `${entry.water.toFixed(1)} L water`, color: '#3B82F6' });
+    if (entry.weight) metrics.push({ icon: <MonitorWeightIcon />, value: `${entry.weight.toFixed(1)} kg`, color: '#6B7280' });
+    
+    return metrics;
   };
 
   const getProviderColor = (provider: string) => {
@@ -77,18 +72,6 @@ export default function ActivityFeed({
       MANUAL: '#666666',
     };
     return colors[provider] || '#666666';
-  };
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffMs = now.getTime() - date.getTime();
-    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-
-    if (diffHours < 1) return 'Just now';
-    if (diffHours < 24) return `${diffHours}h ago`;
-    const diffDays = Math.floor(diffHours / 24);
-    return `${diffDays}d ago`;
   };
 
   return (
@@ -258,15 +241,15 @@ export default function ActivityFeed({
       </div>
 
       {/* Activity List */}
-      <div style={{ padding: '0 var(--space-6)', flex: 1 }}>
-        {integrations.length === 0 ? (
+      <div style={{ padding: '0 var(--space-6)', flex: 1, overflowY: 'auto' }}>
+        {sortedHealthData.length === 0 ? (
           <div
             style={{
               textAlign: 'center',
               padding: 'var(--space-10) var(--space-4)',
             }}
           >
-            <PhonelinkIcon style={{ fontSize: '64px', color: 'var(--color-text-muted)', marginBottom: 'var(--space-4)' }} />
+            <BarChartIcon style={{ fontSize: '64px', color: 'var(--color-text-muted)', marginBottom: 'var(--space-4)' }} />
             <p
               style={{
                 fontSize: 'var(--font-size-sm)',
@@ -274,62 +257,43 @@ export default function ActivityFeed({
                 marginBottom: 'var(--space-4)',
               }}
             >
-              No integrations connected yet
+              No activity data yet
             </p>
-            <button onClick={onAddIntegration} className="btn-primary btn-sm">
-              Connect Apps
-            </button>
-          </div>
-        ) : (
-          activities.map((activity) => (
-            <div
-              key={activity.id}
+            <p
               style={{
-                display: 'flex',
-                gap: 'var(--space-4)',
-                padding: 'var(--space-4)',
-                marginBottom: 'var(--space-3)',
-                background: 'var(--color-bg-white)',
-                borderRadius: 'var(--radius-md)',
-                border: '1px solid var(--color-border-light)',
-                cursor: 'pointer',
-                transition: 'all var(--transition-fast)',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = 'var(--color-accent)';
-                e.currentTarget.style.background = '#fffbf8';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = 'var(--color-border-light)';
-                e.currentTarget.style.background = 'var(--color-bg-white)';
+                fontSize: 'var(--font-size-xs)',
+                color: 'var(--color-text-muted)',
               }}
             >
-              {/* Activity Icon */}
+              {integrations.length === 0 
+                ? 'Connect apps or add manual entries to see your activity'
+                : 'Add manual entries or sync your integrations'}
+            </p>
+          </div>
+        ) : (
+          sortedHealthData.map((entry) => {
+            const metrics = getMetricsSummary(entry);
+            const source = entry.source || 'MANUAL';
+            
+            return (
               <div
+                key={entry.id}
                 style={{
-                  width: '40px',
-                  height: '40px',
+                  padding: 'var(--space-4)',
+                  marginBottom: 'var(--space-3)',
+                  background: 'var(--color-bg-white)',
                   borderRadius: 'var(--radius-md)',
-                  background: `${getProviderColor(activity.provider)}20`,
-                  color: getProviderColor(activity.provider),
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '20px',
-                  flexShrink: 0,
+                  border: '1px solid var(--color-border-light)',
+                  transition: 'all var(--transition-fast)',
                 }}
               >
-                {getActivityIcon(activity.type)}
-              </div>
-
-              {/* Activity Info */}
-              <div style={{ flex: 1, minWidth: 0 }}>
+                {/* Date and Source Badge */}
                 <div
                   style={{
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    marginBottom: '2px',
+                    marginBottom: 'var(--space-3)',
                   }}
                 >
                   <span
@@ -339,44 +303,63 @@ export default function ActivityFeed({
                       color: 'var(--color-text-primary)',
                     }}
                   >
-                    {activity.type}
+                    {formatDate(entry.date)}
                   </span>
-                  <span
+                  <div
+                    style={{
+                      padding: '2px 8px',
+                      borderRadius: 'var(--radius-sm)',
+                      fontSize: 'var(--font-size-xs)',
+                      fontWeight: 'var(--font-weight-medium)',
+                      background: `${getProviderColor(source)}20`,
+                      color: getProviderColor(source),
+                    }}
+                  >
+                    {source}
+                  </div>
+                </div>
+
+                {/* Metrics Grid */}
+                {metrics.length > 0 ? (
+                  <div
+                    style={{
+                      display: 'grid',
+                      gridTemplateColumns: 'repeat(2, 1fr)',
+                      gap: 'var(--space-2)',
+                    }}
+                  >
+                    {metrics.map((metric, idx) => (
+                      <div
+                        key={idx}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: 'var(--space-2)',
+                          fontSize: 'var(--font-size-xs)',
+                          color: 'var(--color-text-secondary)',
+                        }}
+                      >
+                        <span style={{ color: metric.color, fontSize: '16px', display: 'flex' }}>
+                          {metric.icon}
+                        </span>
+                        <span>{metric.value}</span>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div
                     style={{
                       fontSize: 'var(--font-size-xs)',
                       color: 'var(--color-text-muted)',
+                      fontStyle: 'italic',
                     }}
                   >
-                    {formatDate(activity.date)}
-                  </span>
-                </div>
-
-                <div
-                  style={{
-                    fontSize: 'var(--font-size-xs)',
-                    color: 'var(--color-text-muted)',
-                    marginBottom: 'var(--space-2)',
-                  }}
-                >
-                  {activity.duration} · {activity.distance}
-                </div>
-
-                <div
-                  style={{
-                    fontSize: 'var(--font-size-xs)',
-                    color: 'var(--color-text-primary)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 'var(--space-2)',
-                  }}
-                >
-                  <span style={{ fontWeight: 'var(--font-weight-semibold)' }}>
-                    {activity.calories} kcal
-                  </span>
-                </div>
+                    No metrics tracked
+                  </div>
+                )}
               </div>
-            </div>
-          ))
+            );
+          })
         )}
       </div>
     </aside>

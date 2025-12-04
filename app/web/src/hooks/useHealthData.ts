@@ -14,8 +14,10 @@ export interface HealthDataEntry {
   exercise?: number;
   heartRate?: number;
   protein?: number;
+  source?: string; // "STRAVA", "FITBIT", "LOSE_IT", "MANUAL"
   createdAt: string;
   updatedAt: string;
+  height?: number;
 }
 
 export interface WeeklyStats {

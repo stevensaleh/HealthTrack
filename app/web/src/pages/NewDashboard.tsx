@@ -17,7 +17,6 @@ import { MiniLineChart, MiniBarChart, SleepChart } from '@/components/MiniChart'
 // Material UI Icons
 import HeightIcon from '@mui/icons-material/Height';
 import ScaleIcon from '@mui/icons-material/Scale';
-import BloodtypeIcon from '@mui/icons-material/Bloodtype';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import DirectionsWalkIcon from '@mui/icons-material/DirectionsWalk';
 import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
@@ -269,17 +268,7 @@ export default function NewDashboard() {
             >
               Health Statistics
             </h2>
-            <button
-              style={{
-                background: 'none',
-                border: 'none',
-                cursor: 'pointer',
-                fontSize: '20px',
-                padding: 'var(--space-2)',
-              }}
-            >
-              ↗
-            </button>
+
           </div>
 
           {/* Stats Grid */}
@@ -430,6 +419,7 @@ export default function NewDashboard() {
         caloriesBurned={weeklyStats?.metrics?.calories?.total || 1000}
         integrations={integrations}
         onAddIntegration={handleAddIntegration}
+        healthData={historicalData}
       />
 
       {/* Integrations Modal */}

@@ -50,6 +50,7 @@ model HealthData {
   // Additional data
   notes       String?
   mood        String?   // e.g., "happy", "tired", "energetic"
+  source      String?   @default("MANUAL") // "STRAVA", "FITBIT", "LOSE_IT", "MANUAL"
   
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
