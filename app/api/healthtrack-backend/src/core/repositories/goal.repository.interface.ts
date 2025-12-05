@@ -1,7 +1,5 @@
 /**
- * IGoalRepository - Goal Repository Interface (PORT)
- *
- * This interface defines operations for goal management.
+ * IGoalRepository - Goal Repository Interface
  */
 
 import { Goal, GoalType, GoalStatus } from '@prisma/client';

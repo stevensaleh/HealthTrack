@@ -2,7 +2,7 @@
  * ExerciseStrategy - Calculate progress for daily exercise goals
  *
  * Algorithm:
- * - Get today's exercise minutes (or latest entry)
+ * - Get today's exercise minutes/latest entry
  * - Calculate progress: todayExercise / targetExercise * 100
  * - This is a DAILY goal - resets each day
  */

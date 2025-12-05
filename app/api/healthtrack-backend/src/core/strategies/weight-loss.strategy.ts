@@ -1,10 +1,5 @@
 /**
  * WeightLossStrategy - Calculate progress for weight loss goals
- *
- * Algorithm:
- * 1. Get user's current weight (latest health data)
- * 2. Calculate progress: (startWeight - currentWeight) / (startWeight - targetWeight)
- * 3. Determine if on track based on time elapsed
  */
 
 import { Injectable } from '@nestjs/common';

@@ -1,17 +1,5 @@
 /**
  * Strava API Adapter
- *
- * Implements IHealthDataProvider for Strava sports/exercise tracking API.
- *
- * Strava provides:
- * - Activities (runs, rides, swims, hikes, etc.)
- * - Exercise duration and distance
- * - Heart rate data
- * - Calories burned
- *
- * API Documentation: https://developers.strava.com/docs/reference
- * OAuth 2.0 with standard flow
- * Rate Limit: 200 requests/15 minutes, 2000 requests/day
  */
 
 import { Injectable, Logger } from '@nestjs/common';
@@ -46,7 +34,7 @@ export class StravaAdapter implements IHealthDataProvider {
     this.redirectUri =
       this.configService.get<string>('OAUTH_REDIRECT_URI') || '';
 
-    // Create axios instance
+    //  axios instance
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     this.client = axios.create({
       baseURL: this.BASE_URL,
@@ -85,7 +73,7 @@ export class StravaAdapter implements IHealthDataProvider {
       response_type: 'code',
       scope: 'activity:read_all,profile:read_all',
       state: state,
-      approval_prompt: 'auto', // or 'force' to always show consent
+      approval_prompt: 'auto',
     });
 
     const authUrl = `${this.AUTH_URL}?${params.toString()}`;
@@ -186,7 +174,7 @@ export class StravaAdapter implements IHealthDataProvider {
           0,
         );
 
-        // Average heart rate (if available)
+        // Average heart rate
         const activitiesWithHR = dayActivities.filter(
           (act) => act.has_heartrate && act.average_heartrate,
         );
@@ -280,7 +268,6 @@ export class StravaAdapter implements IHealthDataProvider {
       this.logger.log('Successfully revoked Strava access');
     } catch (error) {
       this.logger.error('Failed to revoke Strava access');
-      // Don't throw - we'll delete locally anyway
     }
   }
 

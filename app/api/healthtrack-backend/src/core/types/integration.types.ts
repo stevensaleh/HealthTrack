@@ -34,7 +34,7 @@ export interface ExternalHealthData {
   exerciseMinutes?: number;
   sleepMinutes?: number;
   heartRate?: number;
-  distance?: number; // in meters
+  distance?: number;
   activeMinutes?: number;
   restingHeartRate?: number;
   provider: HealthDataProvider;
@@ -46,10 +46,10 @@ export interface ExternalHealthData {
  */
 export interface OAuthCredentials {
   accessToken: string;
-  refreshToken?: string; // Some providers don't provide refresh tokens
+  refreshToken?: string;
   expiresAt: Date;
-  scope?: string; // OAuth scopes granted
-  tokenType?: string; // Usually "Bearer"
+  scope?: string;
+  tokenType?: string;
 }
 
 /**
@@ -59,7 +59,7 @@ export interface CreateIntegrationData {
   userId: string;
   provider: HealthDataProvider;
   credentials: OAuthCredentials;
-  status?: IntegrationStatus; // Defaults to ACTIVE
+  status?: IntegrationStatus;
   accessToken?: string;
   refreshToken?: string;
   expiresAt?: Date;
@@ -109,9 +109,9 @@ export interface SyncResult {
  * Options for syncing data
  */
 export interface SyncOptions {
-  startDate?: Date; // Defaults to 7 days ago
-  endDate?: Date; // Defaults to now
-  forceResync?: boolean; // Re-sync data that already exists
+  startDate?: Date;
+  endDate?: Date;
+  forceResync?: boolean;
 }
 
 /**
@@ -122,7 +122,7 @@ export interface OAuthState {
   provider: HealthDataProvider;
   redirectUri: string;
   timestamp: number;
-  nonce?: string; // Optional security token
+  nonce?: string;
 }
 
 /**

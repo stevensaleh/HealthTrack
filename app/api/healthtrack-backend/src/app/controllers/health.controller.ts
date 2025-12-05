@@ -2,19 +2,6 @@
  * Health Controller
  *
  * Handles HTTP requests for health data management.
- *
- * Endpoints:
- * - POST   /health                    - Log daily health data
- * - GET    /health                    - Get health data with filtering
- * - GET    /health/latest             - Get most recent entry
- * - GET    /health/tracking-status    - Get tracking status
- * - GET    /health/:id                - Get specific entry
- * - PATCH  /health/:id                - Update entry
- * - DELETE /health/:id                - Delete entry
- * - GET    /health/stats/weekly       - Weekly summary
- * - GET    /health/stats/monthly      - Monthly summary
- * - GET    /health/stats/custom       - Custom date range stats
- * - GET    /health/trends/:metric     - Metric trend analysis
  */
 
 import {

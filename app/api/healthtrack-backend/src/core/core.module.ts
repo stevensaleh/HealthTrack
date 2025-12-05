@@ -1,10 +1,5 @@
 /**
  * CoreModule - Business Logic Layer Module
- *
- * This module is responsible for:
- * - Providing domain services business logic
- * - Importing repositories from InfrastructureModule
- * - Making services available to application layer (controllers)
  */
 
 import { Module } from '@nestjs/common';
@@ -66,8 +61,8 @@ export class CoreModule {}
  *
  * 1. AppModule imports CoreModule
  * 2. CoreModule imports InfrastructureModule
- * 3. InfrastructureModule provides 'IUserRepository'
- * 4. CoreModule creates UserService with injected 'IUserRepository'
+ * 3. InfrastructureModule provides UserRepository
+ * 4. CoreModule creates UserService with injected IUserRepository
  * 5. CoreModule exports UserService
  * 6. Controllers inject UserService
  */

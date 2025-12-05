@@ -1,8 +1,6 @@
 /**
- * Health Data Provider Interface (PORT)
- *
- * This interface defines the contract that all external health data
- * provider adapters must implement (Google Fit, Fitbit, Apple Health, etc.)
+ * Health Data Provider Interface
+ * defines the contract that all external health data provider adapters must implement
  */
 
 import {
@@ -94,7 +92,6 @@ export interface IHealthDataProvider {
 
 /**
  * Factory interface for creating health data providers
- *
  */
 export interface IHealthDataProviderFactory {
   /**

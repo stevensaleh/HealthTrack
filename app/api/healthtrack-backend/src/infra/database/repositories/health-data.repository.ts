@@ -1,8 +1,5 @@
 /**
  * HealthDataRepository - Prisma Implementation (ADAPTER)
- *
- * Implements IHealthDataRepository using Prisma ORM.
- * Focuses on efficient time-series queries and analytics.
  */
 
 import { Injectable, NotFoundException } from '@nestjs/common';
@@ -21,7 +18,7 @@ import { PrismaService } from '../prisma.service';
 export class HealthDataRepository implements IHealthDataRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  //Find by ID - Simple lookup
+  //Find by ID
   async findById(id: string): Promise<HealthData | null> {
     return this.prisma.healthData.findUnique({
       where: { id },
@@ -52,11 +49,11 @@ export class HealthDataRepository implements IHealthDataRepository {
       where: {
         userId,
         date: {
-          gte: toDateOnly(startDate), // Greater than or equal
-          lte: toDateOnly(endDate), // Less than or equal
+          gte: toDateOnly(startDate),
+          lte: toDateOnly(endDate),
         },
       },
-      orderBy: { date: 'asc' }, // Chronological order for charts/trends
+      orderBy: { date: 'asc' }, // Chronological order
     });
   }
 

@@ -1,24 +1,11 @@
 /**
  * Fitbit API Adapter
- *
- * Implements IHealthDataProvider for Fitbit comprehensive health tracking API.
- *
- * Fitbit provides:
- * - Activity data (steps, distance, calories)
- * - Sleep data (duration, efficiency)
- * - Heart rate data (resting, average)
- * - Weight/body data
- *
- * API Documentation: https://dev.fitbit.com/build/reference
- * OAuth 2.0 with Basic Auth header for token exchange
- * Rate Limit: 150 requests/hour per user
  */
 
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import axios, { AxiosInstance } from 'axios';
 import * as qs from 'qs';
-
 import { IHealthDataProvider } from '@core/providers/health-data-provider.interface';
 import {
   HealthDataProvider,
@@ -47,7 +34,7 @@ export class FitbitAdapter implements IHealthDataProvider {
     this.redirectUri =
       this.configService.get<string>('OAUTH_REDIRECT_URI') || '';
 
-    // Create axios instance
+    // axios instance
     this.client = axios.create({
       baseURL: this.BASE_URL,
       timeout: 30000,
@@ -310,7 +297,6 @@ export class FitbitAdapter implements IHealthDataProvider {
       this.logger.log('Successfully revoked Fitbit access');
     } catch (error) {
       this.logger.error('Failed to revoke Fitbit access');
-      // Don't throw - we'll delete locally anyway
     }
   }
 

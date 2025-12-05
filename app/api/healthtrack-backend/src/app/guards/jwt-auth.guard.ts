@@ -1,9 +1,6 @@
 /**
- * JWT Authentication Guard
- *
- * Protects routes by validating JWT tokens.
+ * JWT Authentication Guard, it validates JWT tokens.
  */
-
 import {
   Injectable,
   ExecutionContext,
@@ -43,10 +40,9 @@ export class JwtAuthGuard implements CanActivate {
     try {
       const payload = await this.jwtService.verifyAsync(token, {
         secret:
-          this.configService.get<string>('JWT_SECRET') || 'your-secret-key',
+          this.configService.get<string>('JWT_SECRET') || '',
       });
 
-      //real user data from JWT payload
       request.user = {
         id: payload.sub, // User ID from JWT
         email: payload.email, // Email from JWT

@@ -1,8 +1,5 @@
 /**
- * Integration DTOs (Data Transfer Objects)
- *
- * These DTOs define the shape of data for HTTP requests/responses
- * and provide validation rules using class-validator decorators.
+ * Integration DTOs - defines the shape of data for HTTP requests/responses and provide validation rules using decorators.
  *
  */
 

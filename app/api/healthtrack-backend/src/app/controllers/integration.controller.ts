@@ -1,19 +1,7 @@
 /**
  * Integration Controller
- *
  * Handles HTTP requests for external health data integrations.
- *
- * Endpoints:
- * - POST   /integrations/connect          - Initiate OAuth connection
- * - POST   /integrations/callback         - Complete OAuth flow
- * - POST   /integrations/:id/sync         - Sync data from provider
- * - POST   /integrations/sync-all         - Sync all active integrations
- * - GET    /integrations                  - Get user's integrations
- * - GET    /integrations/:id              - Get specific integration
- * - DELETE /integrations/:id              - Disconnect integration
- * - GET    /integrations/providers/info   - Get provider information
  */
-
 import {
   Controller,
   Post,
@@ -38,21 +26,17 @@ import {
   ApiParam,
   ApiQuery,
 } from '@nestjs/swagger';
-
 import { IntegrationService } from '@core/services/integration.service';
 import { HealthDataProviderFactory } from '@infra/factories/health-data-provider.factory';
-
 import {
   InitiateConnectionDto,
   AuthorizationUrlResponseDto,
-  //CompleteConnectionDto,
   IntegrationResponseDto,
   IntegrationListResponseDto,
   SyncDataDto,
   SyncResultDto,
   DisconnectResponseDto,
   BatchSyncResponseDto,
-  //GetProviderInfoDto,
   ProviderInfoResponseDto,
 } from '../dto/integration.dto';
 
@@ -119,7 +103,7 @@ export class IntegrationController {
    * Complete OAuth flow (callback endpoint)
    *
    * Called by OAuth provider after user authorizes
-   * This endpoint does NOT require JWT auth because it's called by external redirect
+   * This endpoint does NOT require JWT auth because its called by external redirect
    */
   @Get('callback')
   @ApiOperation({
@@ -156,7 +140,6 @@ export class IntegrationController {
         });
         this.logger.log(`Initial sync completed for ${result.provider}`);
       } catch (syncError) {
-        // Log sync error but don't fail the connection
         this.logger.error(
           `Initial sync failed for ${result.provider}:`,
           syncError,
@@ -192,7 +175,7 @@ export class IntegrationController {
   })
   @ApiResponse({
     status: 401,
-    description: 'Unauthorized - Invalid or missing JWT token',
+    description: 'Unauthorized  Invalid or missing JWT token',
   })
   async getUserIntegrations(
     @Request() req: any,

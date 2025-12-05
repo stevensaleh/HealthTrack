@@ -1,12 +1,5 @@
 /**
  * IGoalCalculationStrategy - Strategy Pattern Interface
- *
- * This interface defines how to calculate progress for a goal.
- * Each goal type has its own strategy implementation.
- *
- * This is a PORT in Hexagonal Architecture:
- * - Defines WHAT we need (calculate progress)
- * - Doesn't define HOW (that's in implementations)
  */
 
 import { Goal } from '@prisma/client';

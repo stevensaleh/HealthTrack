@@ -1,7 +1,6 @@
 /**
- * Integration Repository Interface (PORT)
- *
- * Defines contract for persisting and retrieving integration data.
+ * Integration Repository Interface
+ * Defines contract for persisting and retrieving integration data
  */
 
 import { Integration } from '@prisma/client';

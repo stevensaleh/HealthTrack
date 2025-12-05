@@ -1,7 +1,5 @@
 /**
  * UserRepository - Prisma Implementation (ADAPTER)
- * This class implements IUserRepository using Prisma ORM.
- * It's the "adapter" that connects our domain (interface) to infrastructure (database).
  */
 
 import { Injectable, NotFoundException } from '@nestjs/common';

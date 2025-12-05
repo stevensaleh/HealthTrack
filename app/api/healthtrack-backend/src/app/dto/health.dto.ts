@@ -1,6 +1,5 @@
 /**
- * Health DTOs (Data Transfer Objects)
- * Defines the structure of data for health tracking operations
+ * Health DTOs - Defines the structure of data for health tracking operations
  */
 
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';

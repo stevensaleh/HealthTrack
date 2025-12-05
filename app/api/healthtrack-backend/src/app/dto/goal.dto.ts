@@ -1,5 +1,5 @@
 /**
- * Goal DTOs (Data Transfer Objects)
+ * Goal DTOs
  */
 
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
@@ -10,8 +10,6 @@ import {
   IsOptional,
   IsDateString,
   IsNotEmpty,
-  Min,
-  Max,
   MinLength,
 } from 'class-validator';
 import { GoalType, GoalStatus } from '@prisma/client';
