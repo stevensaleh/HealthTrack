@@ -1,5 +1,4 @@
-// src/pages/GoalsPage.tsx
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useGoals } from '@/hooks/useGoals';
 import { useGoalActions } from '@/hooks/useGoalActions';
@@ -18,16 +17,17 @@ export default function GoalsPage() {
   const navigate = useNavigate();
   const { goals, stats, loading, error, refetch } = useGoals();
   const goalActions = useGoalActions();
-
   const [activeTab, setActiveTab] = useState<TabType>('active');
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [editingGoal, setEditingGoal] = useState<Goal | null>(null);
 
   // Filter goals based on active tab
   const filteredGoals = (goals || []).filter((goal) => {
-    if (activeTab === 'active') return goal.status === 'ACTIVE';
-    if (activeTab === 'completed') return goal.status === 'COMPLETED';
-    return true; // 'all' shows everything
+    if (activeTab === 'active')
+         return goal.status === 'ACTIVE';
+    if (activeTab === 'completed')
+         return goal.status === 'COMPLETED';
+    return true; 
   });
 
   const handleCreateGoal = async (data: any) => {
@@ -72,7 +72,7 @@ export default function GoalsPage() {
       // Show success message with confetti effect
       const goal = goals.find(g => g.id === goalId);
       if (goal) {
-        alert(`🎉 Congratulations! You completed "${goal.title}"!`);
+        alert(`Congratulations! You completed "${goal.title}"!`);
       }
     } catch (error) {
       console.error('Failed to complete goal:', error);
@@ -146,8 +146,12 @@ export default function GoalsPage() {
           background: '#fafafa',
         }}
       >
-        <div style={{ textAlign: 'center', maxWidth: '400px' }}>
-          <p style={{ color: 'var(--color-error)', fontSize: 'var(--font-size-lg)' }}>
+        <div style={{ 
+            textAlign: 'center',
+             maxWidth: '400px' }}>
+          <p style={{ 
+            color: 'var(--color-error)',
+            fontSize: 'var(--font-size-lg)' }}>
             {error}
           </p>
           <button
@@ -477,7 +481,6 @@ export default function GoalsPage() {
                 opacity: 0.3,
               }}
             >
-              🎯
             </div>
             <h3
               style={{

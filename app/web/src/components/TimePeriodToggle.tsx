@@ -1,5 +1,3 @@
-// src/components/TimePeriodToggle.tsx
-
 export type TimePeriod = 'DAY' | 'WEEK' | 'MONTH' | 'YEAR';
 
 interface TimePeriodToggleProps {

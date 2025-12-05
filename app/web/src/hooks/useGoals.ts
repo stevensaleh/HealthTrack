@@ -1,4 +1,3 @@
-// src/hooks/useGoals.ts
 import { useState, useEffect } from 'react';
 import { apiClient } from '@/services/api';
 
@@ -24,7 +23,7 @@ export interface Goal {
   startDate: string;
   endDate: string;
   status: 'ACTIVE' | 'COMPLETED' | 'CANCELLED' | 'PAUSED';
-  progress: GoalProgress; // Nested progress object
+  progress: GoalProgress; 
   createdAt: string;
   updatedAt: string;
 }
@@ -47,6 +46,7 @@ export function useGoals() {
   const [error, setError] = useState<string | null>(null);
 
   const fetchGoals = async () => {
+
     try {
       setLoading(true);
       setError(null);
@@ -63,15 +63,19 @@ export function useGoals() {
       const statsResponse = await apiClient.get('/goals/stats');
       setStats(statsResponse.data);
 
-    } catch (err: any) {
+    } 
+    catch (err: any) {
+
       console.error('Error fetching goals:', err);
       setError(err.response?.data?.message || 'Failed to fetch goals');
-      // Ensure arrays remain even on error
+      
       setGoals([]);
       setActiveGoals([]);
+
     } finally {
       setLoading(false);
     }
+
   };
 
   useEffect(() => {

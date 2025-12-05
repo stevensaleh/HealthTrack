@@ -1,4 +1,3 @@
-// src/hooks/useGoalActions.ts
 import { useState } from 'react';
 import { apiClient } from '@/services/api';
 
@@ -19,14 +18,14 @@ export interface CreateGoalData {
   targetValue: number;
   startValue?: number;
   startDate?: string;
-  endDate: string; // Backend expects 'endDate', not 'targetDate'
+  endDate: string; 
 }
 
 export interface UpdateGoalData {
   title?: string;
   description?: string;
   targetValue?: number;
-  endDate?: string; // Backend expects 'endDate', not 'targetDate'
+  endDate?: string; 
 }
 
 export function useGoalActions() {
@@ -34,6 +33,7 @@ export function useGoalActions() {
   const [error, setError] = useState<string | null>(null);
 
   const createGoal = async (data: CreateGoalData) => {
+
     try {
       setLoading(true);
       setError(null);
@@ -66,64 +66,76 @@ export function useGoalActions() {
   };
 
   const deleteGoal = async (goalId: string) => {
+
     try {
       setLoading(true);
       setError(null);
       
       await apiClient.delete(`/goals/${goalId}`);
-    } catch (err: any) {
+    } 
+    catch (err: any) {
       const errorMessage = err.response?.data?.message || 'Failed to delete goal';
       setError(errorMessage);
       throw new Error(errorMessage);
-    } finally {
+    } 
+    finally {
       setLoading(false);
     }
   };
 
   const completeGoal = async (goalId: string) => {
+
     try {
       setLoading(true);
       setError(null);
       
       const response = await apiClient.post(`/goals/${goalId}/complete`);
       return response.data;
-    } catch (err: any) {
+    } 
+    catch (err: any) {
       const errorMessage = err.response?.data?.message || 'Failed to complete goal';
       setError(errorMessage);
       throw new Error(errorMessage);
-    } finally {
+    } 
+    finally {
       setLoading(false);
     }
   };
 
   const pauseGoal = async (goalId: string) => {
+
     try {
       setLoading(true);
       setError(null);
       
       const response = await apiClient.post(`/goals/${goalId}/pause`);
       return response.data;
-    } catch (err: any) {
+    } 
+    catch (err: any) {
       const errorMessage = err.response?.data?.message || 'Failed to pause goal';
       setError(errorMessage);
       throw new Error(errorMessage);
-    } finally {
+    } 
+    finally {
       setLoading(false);
     }
   };
 
   const resumeGoal = async (goalId: string) => {
+    
     try {
       setLoading(true);
       setError(null);
       
       const response = await apiClient.post(`/goals/${goalId}/resume`);
       return response.data;
-    } catch (err: any) {
+    } 
+    catch (err: any) {
       const errorMessage = err.response?.data?.message || 'Failed to resume goal';
       setError(errorMessage);
       throw new Error(errorMessage);
-    } finally {
+    } 
+    finally {
       setLoading(false);
     }
   };

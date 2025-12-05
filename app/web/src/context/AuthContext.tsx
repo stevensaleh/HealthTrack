@@ -1,6 +1,5 @@
-// src/context/AuthContext.tsx
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { User, AuthResponse, LoginCredentials, RegisterData, GoogleUserInfo } from '@/types/user';
+import { User, AuthResponse, LoginCredentials, RegisterData } from '@/types/user';
 import { apiClient } from '@/services/api';
 
 interface AuthContextType {
@@ -9,13 +8,11 @@ interface AuthContextType {
   loading: boolean;
   login: (credentials: LoginCredentials) => Promise<AuthResponse>;
   register: (data: RegisterData) => Promise<AuthResponse>;
-  loginWithGoogle: (credential: string) => Promise<AuthResponse>;
   logout: () => void;
   updateUser: (user: User) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
 const STORAGE_KEY = 'healthhive_user';
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -27,6 +24,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const initAuth = () => {
       try {
         const storedUser = localStorage.getItem(STORAGE_KEY);
+
         if (storedUser) {
           const parsedUser = JSON.parse(storedUser) as User;
           setUser(parsedUser);
@@ -59,7 +57,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         password: credentials.password,
       });
 
-      const { accessToken, user, tokenType, expiresIn } = response.data;
+      const { accessToken, user, tokenType } = response.data;
 
       // Store tokens
       localStorage.setItem('accessToken', accessToken);
@@ -73,7 +71,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         success: true, 
         user,
         accessToken,
-        refreshToken: accessToken, // Backend returns same token for now
+        refreshToken: accessToken, 
       };
     } catch (error: any) {
       console.error('Login error:', error);
@@ -140,12 +138,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         success: true, 
         user,
         accessToken,
-        refreshToken: accessToken, // Backend returns same token for now
+        refreshToken: accessToken,
       };
     } catch (error: any) {
       console.error('Registration error:', error);
       
-      // Handle specific error responses from backend
+      
       if (error.response?.status === 409) {
         return { 
           success: false, 
@@ -167,51 +165,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  // Login with Google - now accepts string token directly
-  const loginWithGoogle = async (credential: string): Promise<AuthResponse> => {
-    try {
-      // Decode the JWT token to get user info
-      const base64Url = credential.split('.')[1];
-      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-      const jsonPayload = decodeURIComponent(
-        atob(base64)
-          .split('')
-          .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
-          .join('')
-      );
-      
-      const googleUser: GoogleUserInfo = JSON.parse(jsonPayload);
-      
-      // TODO: Send this token to backend for verification
-      // const response = await authService.loginWithGoogle(credential);
-      
-      const user: User = {
-        id: googleUser.sub,
-        email: googleUser.email,
-        name: googleUser.name,
-        picture: googleUser.picture,
-        provider: 'google',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      };
 
-      setUser(user);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(user));
-      
-      return { 
-        success: true, 
-        user,
-        accessToken: 'mock_google_access_token',
-        refreshToken: 'mock_google_refresh_token'
-      };
-    } catch (error) {
-      console.error('Google login error:', error);
-      return { 
-        success: false, 
-        error: error instanceof Error ? error.message : 'Google authentication failed' 
-      };
-    }
-  };
 
   // Logout
   const logout = () => {
@@ -231,7 +185,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     user,
     loading,
     login,
-    loginWithGoogle,
     logout,
     register,
     updateUser,

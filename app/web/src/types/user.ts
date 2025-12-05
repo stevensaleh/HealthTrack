@@ -1,12 +1,11 @@
-// src/types/user.ts
 export interface User {
   id: string;
   email: string;
   firstName?: string;      
   lastName?: string;       
   picture?: string;
-  profileImage?: string;   // Backend uses this field name
-  provider?: 'email' | 'google';
+  profileImage?: string;  
+  provider?: 'email';
   dateOfBirth?: Date;
   gender?: 'male' | 'female' | 'other';
   height?: number;
@@ -27,10 +26,7 @@ export interface UserPreferences {
 export type DataSource = 
   | 'manual'
   | 'fitbit'
-  | 'strava'
-  | 'google_fit'
-  | 'apple_health'
-  | 'nutritionix';
+  | 'strava';
 
 export interface AuthResponse {
   success: boolean;
@@ -55,14 +51,4 @@ export interface RegisterData {
   gender?: 'male' | 'female' | 'other';
   height?: number;
   weight?: number;
-}
-
-export interface GoogleUserInfo {
-  sub: string;
-  email: string;
-  name: string;
-  picture?: string;
-  email_verified?: boolean;
-  given_name?: string;
-  family_name?: string;
 }

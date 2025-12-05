@@ -1,11 +1,9 @@
-// src/pages/NewDashboard.tsx
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { useHealthData, HealthDataEntry } from '@/hooks/useHealthData';
 import { useGoals } from '@/hooks/useGoals';
 import { useIntegrations } from '@/hooks/useIntegrations';
-
 import Sidebar from '@/components/Sidebar';
 import ActivityFeed from '@/components/ActivityFeed';
 import StatCard from '@/components/StatCard';
@@ -13,8 +11,6 @@ import TimePeriodToggle, { TimePeriod } from '@/components/TimePeriodToggle';
 import IntegrationsModal from '@/components/IntegrationsModal';
 import HealthEntryModal from '@/components/HealthEntryModal';
 import { MiniLineChart, MiniBarChart, SleepChart } from '@/components/MiniChart';
-
-// Material UI Icons
 import HeightIcon from '@mui/icons-material/Height';
 import ScaleIcon from '@mui/icons-material/Scale';
 import FavoriteIcon from '@mui/icons-material/Favorite';
@@ -35,7 +31,6 @@ export default function NewDashboard() {
   const { latestData, historicalData, weeklyStats, trackingStatus, loading: healthLoading, refetch: refetchHealth } = useHealthData(timePeriod);
   const { stats: goalStats, loading: goalsLoading } = useGoals();
   const { integrations, initiateConnection, disconnectIntegration, syncIntegration, refetch: refetchIntegrations } = useIntegrations();
-
   const [showIntegrationsModal, setShowIntegrationsModal] = useState(false);
   const [showHealthEntryModal, setShowHealthEntryModal] = useState(false);
 
@@ -68,14 +63,12 @@ export default function NewDashboard() {
   const handleSyncIntegration = async (integrationId: string) => {
     try {
       await syncIntegration(integrationId);
-      // Refresh integrations list to update lastSyncAt
       await refetchIntegrations();
-      // Refresh health data to show newly synced data
       await refetchHealth();
       console.log(' Sync completed successfully!');
     } catch (error) {
       console.error('Failed to sync:', error);
-      throw error; // Re-throw so modal can handle it
+      throw error; // Rethrow 
     }
   };
 
@@ -88,66 +81,57 @@ export default function NewDashboard() {
 
     if (integration === 'success' && provider) {
       console.log(`Successfully connected to ${provider}`);
-      // Refresh integrations list
       refetchIntegrations();
-      // Refresh health data to show newly synced data
       refetchHealth();
-      // Show success message
       console.log(` ${provider} connected and synced successfully!`);
-      // Clean up URL
       window.history.replaceState({}, '', '/dashboard');
     } else if (integration === 'error') {
       console.error('Integration error:', message);
       alert(`Failed to connect: ${message || 'Unknown error'}`);
-      // Clean up URL
       window.history.replaceState({}, '', '/dashboard');
     }
   }, [refetchIntegrations, refetchHealth]);
 
   const handleHealthEntrySuccess = async () => {
     try {
-      console.log('Starting health data refresh...');
+      console.log('Starting health data refresh');
       
-      // Close modal first
+      // Close modal
       setShowHealthEntryModal(false);
       
-      // Small delay to ensure modal is fully closed and unmounted
+      // delay to ensure modal is closed and unmounted
       await new Promise(resolve => setTimeout(resolve, 100));
-      
-      // Now refresh health data
       await refetchHealth();
       console.log('Health data refreshed successfully');
+
     } catch (error) {
       console.error('Error refreshing health data:', error);
-      // Alert user if refresh fails
       alert('Data saved successfully, but failed to refresh dashboard. Please reload the page.');
     }
   };
 
-  // Get current date and time info
+  // Get current date and time
   const now = new Date();
   const dayName = now.toLocaleDateString('en-US', { weekday: 'long' });
   const dateStr = now.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
   const greeting = now.getHours() < 12 ? 'Good Morning' : now.getHours() < 18 ? 'Good Afternoon' : 'Good Evening';
 
-  // Mock weather (in real app, fetch from API)
-  const weather = 'Sunny day in Port Huron';
 
-  // Generate real chart data from historical data
+  // Generate real data from historical data
   const generateChartData = (metric: keyof HealthDataEntry) => {
     if (!historicalData || historicalData.length === 0) {
-      return []; // Return empty array if no data
+      return []; 
     }
     
     return historicalData
-      .filter(entry => entry[metric] != null) // Only include entries with this metric
+      .filter(entry => entry[metric] != null)
       .map(entry => ({
         value: entry[metric] as number,
         label: new Date(entry.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
       }));
   };
 
-  // Helper to check if we should show chart (need 2+ points for a trend)
+  // Helper to check if we should show chart 
   const shouldShowChart = (metric: keyof HealthDataEntry) => {
     const data = generateChartData(metric);
     return data.length >= 2;
@@ -181,11 +165,11 @@ export default function NewDashboard() {
     );
   }
 
-  // Show empty state if no health data and not loading
+  //if no health data and not loading: Show empty state
   const hasNoData = !latestData && !weeklyStats && !trackingStatus && !healthLoading;
   
   if (hasNoData) {
-    console.log('No health data available yet - showing empty state');
+    console.log('No health data available yet');
   }
 
   return (
@@ -236,7 +220,7 @@ export default function NewDashboard() {
                 color: 'var(--color-text-secondary)',
               }}
             >
-              {dayName}, {dateStr} | {weather}
+              {dayName}, {dateStr}
             </p>
           </div>
 
@@ -301,7 +285,7 @@ export default function NewDashboard() {
               color="#DC2626"
             />
 
-            {/* Heart Rate Card with Chart */}
+            {/* Heart Rate Card has Chart */}
             <StatCard
               icon={<FavoriteIcon />}
               title="Heart Rate"
@@ -313,7 +297,7 @@ export default function NewDashboard() {
               chart={shouldShowChart('heartRate') ? <MiniLineChart data={generateChartData('heartRate')} color="#DC2626" /> : undefined}
             />
 
-            {/* Steps Card with Chart */}
+            {/* Steps Card has Chart */}
             <StatCard
               icon={<DirectionsWalkIcon />}
               title="Steps"
@@ -325,7 +309,7 @@ export default function NewDashboard() {
               chart={shouldShowChart('steps') ? <MiniLineChart data={generateChartData('steps')} color="#10B981" /> : undefined}
             />
 
-            {/* Active Energy Card with Bar Chart */}
+            {/* Active Energy Card has Bar Chart */}
             <StatCard
               icon={<LocalFireDepartmentIcon />}
               title="Active Energy"

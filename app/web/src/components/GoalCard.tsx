@@ -1,4 +1,3 @@
-// src/components/GoalCard.tsx
 import { Goal } from '@/hooks/useGoals';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import PauseIcon from '@mui/icons-material/Pause';
@@ -44,6 +43,8 @@ export default function GoalCard({
       CALORIES: 'kcal',
       CUSTOM: 'units',
     };
+
+    
     return units[type] || 'units';
   };
   
@@ -58,6 +59,7 @@ export default function GoalCard({
       CALORIES: <RestaurantIcon />,
       CUSTOM: <StarIcon />,
     };
+
     return icons[type] || <StarIcon />;
   };
 
@@ -72,6 +74,8 @@ export default function GoalCard({
       CALORIES: '#F97316',
       CUSTOM: '#6B7280',
     };
+
+    
     return colors[type] || '#6B7280';
   };
 
@@ -82,6 +86,8 @@ export default function GoalCard({
       PAUSED: { label: 'Paused', color: '#F59E0B', bg: '#FEF3C7' },
       CANCELLED: { label: 'Cancelled', color: '#6B7280', bg: '#F3F4F6' },
     };
+
+    
     return config[status] || config.ACTIVE;
   };
 

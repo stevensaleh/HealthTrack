@@ -1,5 +1,3 @@
-// src/components/MiniChart.tsx
-
 interface DataPoint {
   value: number;
   label?: string;
@@ -15,7 +13,9 @@ export function MiniLineChart({ data, color = 'var(--color-accent)', height = 60
   if (!data || data.length === 0) {
     return (
       <div style={{ height: `${height}px`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <span style={{ fontSize: '12px', color: 'var(--color-text-muted)' }}>No data</span>
+        <span style={{ fontSize: '12px', color: 'var(--color-text-muted)' }}>
+          No data
+        </span>
       </div>
     );
   }

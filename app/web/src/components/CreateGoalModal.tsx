@@ -1,4 +1,3 @@
-// src/components/CreateGoalModal.tsx
 import { useState, useEffect } from 'react';
 import { Goal } from '@/hooks/useGoals';
 import { GoalType } from '@/hooks/useGoalActions';
@@ -77,6 +76,7 @@ export default function CreateGoalModal({
     }
 
     setSubmitting(true);
+
     try {
       if (editingGoal) {
         // Update existing goal
@@ -173,7 +173,7 @@ export default function CreateGoalModal({
         </div>
 
         <form onSubmit={handleSubmit}>
-          {/* Goal Type Selector (only for new goals) */}
+          {/* Goal Type Selector */}
           {!editingGoal && (
             <div style={{ marginBottom: 'var(--space-6)' }}>
               <label

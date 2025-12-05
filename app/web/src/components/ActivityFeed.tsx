@@ -1,4 +1,3 @@
-// src/components/ActivityFeed.tsx
 import { Integration } from '@/hooks/useIntegrations';
 import { HealthDataEntry } from '@/hooks/useHealthData';
 import DirectionsWalkIcon from '@mui/icons-material/DirectionsWalk';
@@ -24,10 +23,10 @@ export default function ActivityFeed({
   onAddIntegration,
   healthData,
 }: ActivityFeedProps) {
-  // Sort health data by date (most recent first)
+  // Sort health data by date descending
   const sortedHealthData = [...healthData].sort((a, b) => 
     new Date(b.date).getTime() - new Date(a.date).getTime()
-  ).slice(0, 10); // Show last 10 entries
+  ).slice(0, 10); // last 10 entries
 
   // Helper to format date
   const formatDate = (dateString: string) => {

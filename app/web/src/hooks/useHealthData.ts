@@ -1,4 +1,3 @@
-// src/hooks/useHealthData.ts
 import { useState, useEffect } from 'react';
 import { apiClient } from '@/services/api';
 
@@ -14,7 +13,7 @@ export interface HealthDataEntry {
   exercise?: number;
   heartRate?: number;
   protein?: number;
-  source?: string; // "STRAVA", "FITBIT", "LOSE_IT", "MANUAL"
+  source?: string; 
   createdAt: string;
   updatedAt: string;
   height?: number;
@@ -59,16 +58,21 @@ export function useHealthData(timePeriod: TimePeriod = 'WEEK') {
       setLoading(true);
       setError(null);
 
-      // Fetch latest health data - handle 404 gracefully
+      // Fetch latest health data
       try {
         const latestResponse = await apiClient.get('/health/latest');
+
         setLatestData(latestResponse.data);
+
       } catch (err: any) {
+
         if (err.response?.status === 404) {
           console.log('No health data found yet - this is normal for new users');
           setLatestData(null);
-        } else {
-          throw err; // Re-throw other errors
+
+        } 
+        else {
+          throw err; 
         }
       }
 
@@ -106,38 +110,46 @@ export function useHealthData(timePeriod: TimePeriod = 'WEEK') {
       } catch (err: any) {
         if (err.response?.status === 404) {
           console.log('No historical data found yet');
+          
           setHistoricalData([]);
-        } else if (err.response?.status === 400) {
+        } 
+        else if (err.response?.status === 400) {
+
           console.error('Invalid query parameters:', err.response?.data);
           setHistoricalData([]);
-        } else {
+        } 
+        else {
           throw err;
         }
       }
 
-      // Fetch statistics - handle 404 gracefully
+      // Fetch stats
       try {
         const statsEndpoint = (timePeriod === 'MONTH' || timePeriod === 'YEAR') 
           ? '/health/stats/monthly' 
           : '/health/stats/weekly';
         const statsResponse = await apiClient.get(statsEndpoint);
+
         setWeeklyStats(statsResponse.data);
+
       } catch (err: any) {
         if (err.response?.status === 404) {
-          console.log('No stats yet - this is normal for new users');
+          console.log('No stats yet this is normal for new users');
+
           setWeeklyStats(null);
+
         } else {
           throw err;
         }
       }
 
-      // Fetch tracking status - handle 404 gracefully
+      // Fetch tracking status
       try {
         const statusResponse = await apiClient.get('/health/tracking-status');
         setTrackingStatus(statusResponse.data);
       } catch (err: any) {
         if (err.response?.status === 404) {
-          console.log('No tracking status yet - this is normal for new users');
+          console.log('No tracking status yet this is normal for new users');
           setTrackingStatus(null);
         } else {
           throw err;
@@ -146,7 +158,9 @@ export function useHealthData(timePeriod: TimePeriod = 'WEEK') {
 
     } catch (err: any) {
       console.error('Error fetching health data:', err);
+
       setError(err.response?.data?.message || 'Failed to fetch health data');
+
     } finally {
       setLoading(false);
     }
@@ -154,7 +168,7 @@ export function useHealthData(timePeriod: TimePeriod = 'WEEK') {
 
   useEffect(() => {
     fetchHealthData();
-  }, [timePeriod]); // Re-fetch when time period changes
+  }, [timePeriod]); 
 
   return {
     latestData,

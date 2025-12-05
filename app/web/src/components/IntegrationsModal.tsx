@@ -1,4 +1,3 @@
-// src/components/IntegrationsModal.tsx
 import { useState } from 'react';
 import DirectionsRunIcon from '@mui/icons-material/DirectionsRun';
 import WatchIcon from '@mui/icons-material/Watch';
@@ -12,7 +11,7 @@ interface Integration {
   id: string;
   provider: 'STRAVA' | 'FITBIT' | 'LOSE_IT';
   status: 'ACTIVE' | 'EXPIRED' | 'REVOKED';
-  lastSyncedAt?: string;  // Changed from lastSyncAt to match backend
+  lastSyncedAt?: string; 
 }
 
 interface IntegrationsModalProps {

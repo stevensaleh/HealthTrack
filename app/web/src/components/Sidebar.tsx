@@ -1,4 +1,3 @@
-// src/components/Sidebar.tsx
 import { useAuth } from '@/context/AuthContext';
 import { useNavigate, useLocation } from 'react-router-dom';
 import HomeIcon from '@mui/icons-material/Home';

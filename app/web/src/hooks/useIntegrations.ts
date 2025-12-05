@@ -1,4 +1,3 @@
-// src/hooks/useIntegrations.ts
 import { useState, useEffect } from 'react';
 import { apiClient } from '@/services/api';
 
@@ -8,7 +7,7 @@ export interface Integration {
   provider: 'STRAVA' | 'FITBIT' | 'LOSE_IT';
   status: 'ACTIVE' | 'EXPIRED' | 'REVOKED';
   isActive: boolean;
-  lastSyncedAt?: string;  // Changed from lastSyncAt to match backend
+  lastSyncedAt?: string; 
   syncErrorMessage?: string;
   createdAt: string;
   updatedAt: string;
@@ -30,17 +29,19 @@ export function useIntegrations() {
     try {
       setLoading(true);
       setError(null);
-
       // Fetch user integrations
       const response = await apiClient.get('/integrations');
-      // Backend returns { integrations: [...], total: number }
+   
       setIntegrations(response.data.integrations || []);
 
     } catch (err: any) {
       console.error('Error fetching integrations:', err);
+
       setError(err.response?.data?.message || 'Failed to fetch integrations');
-      setIntegrations([]); // Set empty array on error
+
+      setIntegrations([]); 
     } finally {
+      
       setLoading(false);
     }
   };
@@ -54,6 +55,7 @@ export function useIntegrations() {
       }
     } catch (err: any) {
       console.error('Error initiating connection:', err);
+
       throw new Error(err.response?.data?.message || 'Failed to connect');
     }
   };
@@ -61,20 +63,28 @@ export function useIntegrations() {
   const disconnectIntegration = async (integrationId: string) => {
     try {
       await apiClient.delete(`/integrations/${integrationId}`);
-      await fetchIntegrations(); // Refresh list
+
+      await fetchIntegrations(); 
     } catch (err: any) {
+
       console.error('Error disconnecting integration:', err);
+
       throw new Error(err.response?.data?.message || 'Failed to disconnect');
+
     }
   };
 
   const syncIntegration = async (integrationId: string) => {
     try {
       await apiClient.post(`/integrations/${integrationId}/sync`);
-      await fetchIntegrations(); // Refresh list
+
+      await fetchIntegrations(); 
+
     } catch (err: any) {
       console.error('Error syncing integration:', err);
+
       throw new Error(err.response?.data?.message || 'Failed to sync');
+
     }
   };
 

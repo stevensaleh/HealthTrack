@@ -1,4 +1,3 @@
-// src/components/HealthEntryModal.tsx
 import { useState } from 'react';
 import { apiClient } from '@/services/api';
 import CloseIcon from '@mui/icons-material/Close';
@@ -56,7 +55,7 @@ export default function HealthEntryModal({ isOpen, onClose, onSuccess }: HealthE
     setError(null);
 
     try {
-      // Convert string values to numbers where needed
+
       const payload: any = {
         date: formData.date,
       };
@@ -78,20 +77,22 @@ export default function HealthEntryModal({ isOpen, onClose, onSuccess }: HealthE
 
       setSuccess(true);
       
-      // Wait a moment to show success message, then trigger parent callback
+      // Wait to show success message, then trigger parent callback
       setTimeout(async () => {
         try {
           await onSuccess();  // Parent will refresh data and close modal
+
         } catch (error) {
           console.error('Error in success callback:', error);
-          handleClose();      // Close on error
+          handleClose();     
+
         }
       }, 1500);
     } catch (err: any) {
+
       console.error('Error saving health data:', err);
       console.error('Error response:', err.response?.data);
       
-      // Show detailed error message from backend
       const errorMessage = err.response?.data?.message 
         || err.response?.data?.error
         || (Array.isArray(err.response?.data?.message) 
