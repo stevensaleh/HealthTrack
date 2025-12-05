@@ -1,17 +1,6 @@
 /**
  * User Controller
- *
  * Handles HTTP requests for user management and authentication.
- *
- * Endpoints:
- * - POST   /users/register           - Register new user
- * - POST   /users/login              - Login with email/password
- * - POST   /users/google-login       - Login with Google OAuth
- * - GET    /users/me                 - Get current user profile
- * - PATCH  /users/me                 - Update user profile
- * - POST   /users/change-password    - Change password
- * - DELETE /users/me                 - Delete account
- * - GET    /users/stats              - Get user statistics
  */
 
 import {
@@ -33,7 +22,6 @@ import {
   ApiResponse,
   ApiBearerAuth,
 } from '@nestjs/swagger';
-
 import { UserService } from '@core/services/user.service';
 import { HealthService } from '@core/services/health.service';
 import { GoalService } from '@core/services/goal.service';
@@ -49,7 +37,6 @@ import {
   DeleteAccountResponseDto,
   UserStatsResponseDto,
 } from '../dto/user.dto';
-
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 
 @ApiTags('Users')
@@ -117,7 +104,7 @@ export class UserController {
   async login(@Body() dto: LoginDto): Promise<AuthResponseDto> {
     this.logger.log(`Login attempt: ${dto.email}`);
 
-    const result = await this.userService.login(dto); // Gets AuthResponse with real JWT
+    const result = await this.userService.login(dto);
     return result as any; 
   }
 
@@ -169,7 +156,7 @@ export class UserController {
   })
   @ApiResponse({
     status: 401,
-    description: 'Unauthorized - Invalid or missing JWT token',
+    description: 'Unauthorized Invalid or missing JWT token',
   })
   async getProfile(@Request() req: any): Promise<UserResponseDto> {
     this.logger.log(`User ${req.user.id} retrieving profile`);
@@ -196,7 +183,7 @@ export class UserController {
   })
   @ApiResponse({
     status: 401,
-    description: 'Unauthorized - Invalid or missing JWT token',
+    description: 'Unauthorized Invalid or missing JWT token',
   })
   async updateProfile(
     @Body() dto: UpdateProfileDto,
@@ -271,28 +258,16 @@ export class UserController {
   })
   async getUserStats(@Request() req: any): Promise<UserStatsResponseDto> {
     this.logger.log(`User ${req.user.id} retrieving statistics`);
-
-    // Get user to calculate account age
     const user = await this.userService.findById(req.user.id);
     const accountAgeDays = Math.floor(
       (Date.now() - new Date(user.createdAt).getTime()) / (1000 * 60 * 60 * 24),
     );
 
-    // Get health data count
-    const healthDataCount = await this.healthService.getTotalDaysTracked(
-      req.user.id,
-    );
-
-    // Get goal statistics
+    const healthDataCount = await this.healthService.getTotalDaysTracked(req.user.id);
     const goalStats = await this.goalService.getGoalStatistics(req.user.id);
-
-    // For integrations, we'd need to inject IntegrationService
-    // For now, we'll set it to 0
     const integrationsCount = 0;
-
-    // Calculate streak (simplified - you might want more complex logic)
     const hasLoggedToday = await this.healthService.hasLoggedToday(req.user.id);
-    const currentStreak = hasLoggedToday ? 1 : 0; // Simplified
+    const currentStreak = hasLoggedToday ? 1 : 0;
 
     return {
       healthDataCount,
@@ -301,7 +276,7 @@ export class UserController {
       integrationsCount,
       accountAgeDays,
       currentStreak,
-      longestStreak: currentStreak, // Simplified - would need to calculate from data
+      longestStreak: currentStreak,
     };
   }
 
@@ -323,7 +298,7 @@ export class UserController {
   })
   @ApiResponse({
     status: 401,
-    description: 'Unauthorized - Invalid or missing JWT token',
+    description: 'Unauthorized  Invalid or missing JWT token',
   })
   async deleteAccount(@Request() req: any): Promise<DeleteAccountResponseDto> {
     this.logger.log(`User ${req.user.id} deleting account`);

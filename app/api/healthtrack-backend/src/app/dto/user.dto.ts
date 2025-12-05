@@ -1,5 +1,5 @@
 /**
- * User DTOs (Data Transfer Objects)
+ * User DTOs
  */
 
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';

@@ -328,7 +328,6 @@ export class HealthService {
 
   /**
    * Check if user has logged data today
-   * Use case: Remind user to log if they haven't
    */
   async hasLoggedToday(userId: string): Promise<boolean> {
     const today = toDateOnly(new Date());
@@ -338,7 +337,6 @@ export class HealthService {
 
   /**
    * Get total days tracked
-   * Use case: "You've tracked 127 days!"
    */
   async getTotalDaysTracked(userId: string): Promise<number> {
     return this.healthDataRepo.countByUser(userId);

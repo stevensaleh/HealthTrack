@@ -1,20 +1,7 @@
 /**
  * Goal Controller
  *
- * Handles HTTP requests for goal management.
- *
- * Endpoints:
- * - POST   /goals                - Create new goal
- * - GET    /goals                - Get all goals with progress
- * - GET    /goals/active         - Get active goals
- * - GET    /goals/stats          - Get goal statistics
- * - GET    /goals/:id            - Get specific goal with progress
- * - PATCH  /goals/:id            - Update goal
- * - POST   /goals/:id/complete   - Mark goal as completed
- * - POST   /goals/:id/cancel     - Cancel goal
- * - POST   /goals/:id/pause      - Pause goal
- * - POST   /goals/:id/resume     - Resume goal
- * - DELETE /goals/:id            - Delete goal
+ * Handles HTTP requests for goal management
  */
 
 import {

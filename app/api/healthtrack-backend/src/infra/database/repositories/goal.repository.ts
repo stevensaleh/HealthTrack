@@ -1,8 +1,5 @@
 /**
  * GoalRepository - Prisma Implementation (ADAPTER)
- *
- * Implements IGoalRepository using Prisma ORM.
- * Focuses on efficient queries for status and type filtering.
  */
 
 import { Injectable, NotFoundException } from '@nestjs/common';
@@ -19,7 +16,7 @@ import { PrismaService } from '../prisma.service';
 export class GoalRepository implements IGoalRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  //Find by ID - Simple lookup
+  //Find by ID
   async findById(id: string): Promise<Goal | null> {
     return this.prisma.goal.findUnique({
       where: { id },

@@ -1,5 +1,5 @@
 /**
- * Health DTOs (Data Transfer Objects)
+ * Health DTOs - Defines the structure of data for health tracking operations
  */
 
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
@@ -337,6 +337,13 @@ export class HealthDataResponseDto {
     example: 'Happy',
   })
   mood?: string;
+
+  @ApiPropertyOptional({
+    description: 'Data source',
+    example: 'STRAVA',
+    enum: ['STRAVA', 'FITBIT', 'LOSE_IT', 'MANUAL'],
+  })
+  source?: string;
 
   @ApiProperty({
     description: 'Creation timestamp',

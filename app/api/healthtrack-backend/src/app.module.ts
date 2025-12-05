@@ -5,15 +5,15 @@ import { ApplicationModule } from './app/application.module';
 
 @Module({
   imports: [
-    // Load environment variables
+    // Load environment vars
     ConfigModule.forRoot({
       isGlobal: true, // Makes ConfigModule available everywhere
     }),
 
-    // Database module
+    // DB module
     PrismaModule,
 
-    // Application layer module
+    // App layer module
     ApplicationModule,
   ],
   controllers: [],

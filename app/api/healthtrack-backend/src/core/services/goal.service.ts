@@ -1,11 +1,5 @@
 /**
  * GoalService - Business Logic Layer
- *
- * - Validate goal targets (realistic ranges)
- * - Prevent conflicts (one active goal per type)
- * - Calculate progress using Strategy Pattern
- * - Manage goal status transitions
- * - Coordinate with HealthData for calculations
  */
 
 import {
@@ -15,7 +9,7 @@ import {
   NotFoundException,
   ConflictException,
 } from '@nestjs/common';
-import { GoalType, GoalStatus } from '@prisma/client';
+import { GoalType } from '@prisma/client';
 import type { IGoalRepository } from '@core/repositories/goal.repository.interface';
 import type { IHealthDataRepository } from '@core/repositories/health-data.repository.interface';
 import {
@@ -60,13 +54,7 @@ export class GoalService {
 
   /**
    * Create a new goal
-   *
-   * Business Rules:
-   * - Target must be within realistic range for type
-   * - End date must be after start date
-   * - Cannot have duplicate active goal of same type
-   * - For trajectory goals, start value required
-   *
+   * 
    * @throws BadRequestException if validation fails
    * @throws ConflictException if active goal of same type exists
    */
@@ -74,19 +62,16 @@ export class GoalService {
     userId: string,
     data: CreateGoalRequestDto,
   ): Promise<GoalResponse> {
-    // Business Rule 1: Validate target value
     this.validateTargetValue(data.type, data.targetValue);
 
     // Set dates
     const startDate = data.startDate || new Date();
     const endDate = data.endDate;
 
-    // Business Rule 2: End date must be after start date
     if (endDate <= startDate) {
       throw new BadRequestException('End date must be after start date');
     }
 
-    // Check if end date is too far in the future (sanity check)
     const oneYearFromNow = new Date();
     oneYearFromNow.setFullYear(oneYearFromNow.getFullYear() + 1);
     if (endDate > oneYearFromNow) {
@@ -95,7 +80,6 @@ export class GoalService {
       );
     }
 
-    // Business Rule 3: Check for conflicting active goal
     const existingActiveGoal = await this.goalRepo.findActiveByTypeAndUser(
       userId,
       data.type,
@@ -108,9 +92,7 @@ export class GoalService {
       );
     }
 
-    // Business Rule 4: Trajectory goals need start value
     if (isTrajectoryGoal(data.type) && !data.startValue) {
-      // Get current weight from latest health data
       const latestHealthData =
         await this.healthDataRepo.findLatestByUser(userId);
 
@@ -156,7 +138,6 @@ export class GoalService {
     userId: string,
     goalId: string,
   ): Promise<GoalWithProgress> {
-    // Get goal
     const goal = await this.goalRepo.findById(goalId);
 
     if (!goal || goal.userId !== userId) {
@@ -174,7 +155,6 @@ export class GoalService {
 
   /**
    * Get all goals for user with progress
-   * Returns all goals with calculated progress
    */
   async getAllGoalsWithProgress(userId: string): Promise<GoalWithProgress[]> {
     const goals = await this.goalRepo.findByUserId(userId);
@@ -192,7 +172,6 @@ export class GoalService {
 
   /**
    * Get active goals with progress
-   * Returns only active goals (most common use case)
    */
   async getActiveGoalsWithProgress(
     userId: string,
@@ -211,13 +190,6 @@ export class GoalService {
 
   /**
    * Update goal
-   *
-   * Business Rules:
-   * - Goal must exist and belong to user
-   * - Cannot change type or start date
-   * - New target must be valid
-   * - New end date must be in future
-   *
    * @throws NotFoundException if goal doesn't exist or doesn't belong to user
    * @throws BadRequestException if validation fails
    */
@@ -226,18 +198,15 @@ export class GoalService {
     goalId: string,
     data: UpdateGoalRequestDto,
   ): Promise<GoalResponse> {
-    // Business Rule 1: Goal must exist and belong to user
     const goal = await this.goalRepo.findById(goalId);
 
     if (!goal || goal.userId !== userId) {
       throw new NotFoundException('Goal not found');
     }
 
-    // Business Rule 3: Validate new target if provided
     if (data.targetValue !== undefined) {
       this.validateTargetValue(goal.type, data.targetValue);
 
-      // Additional validation for weight goals
       if (goal.type === 'WEIGHT_LOSS' || goal.type === 'WEIGHT_GAIN') {
         if (!goal.startValue) {
           throw new BadRequestException(
@@ -248,7 +217,6 @@ export class GoalService {
       }
     }
 
-    // Business Rule 4: New end date must be valid
     if (data.endDate) {
       if (data.endDate <= goal.startDate) {
         throw new BadRequestException('End date must be after start date');
@@ -265,12 +233,6 @@ export class GoalService {
 
   /**
    * Complete a goal
-   *
-   * Marks goal as completed
-   *
-   * Business Rules:
-   * 1. Goal must be active
-   * 2. User must own the goal
    */
   async completeGoal(userId: string, goalId: string): Promise<GoalResponse> {
     const goal = await this.goalRepo.findById(goalId);
@@ -378,20 +340,16 @@ export class GoalService {
    * 4. Return result
    */
   private async calculateGoalProgress(goal: any): Promise<GoalProgress> {
-    // Step 1: Get strategy for this goal type
     const strategy = this.strategyFactory.getStrategy(goal.type);
 
-    // Step 2: Get health data needed for calculation
     let healthData;
     if (isTrajectoryGoal(goal.type)) {
-      // Trajectory goals: Get all data since goal started
       healthData = await this.healthDataRepo.findByUserAndDateRange(
         goal.userId,
         goal.startDate,
         new Date(),
       );
     } else {
-      // Daily goals: Get recent data (last 7 days)
       const range = getLastNDaysRange(7);
       healthData = await this.healthDataRepo.findByUserAndDateRange(
         goal.userId,
@@ -400,7 +358,6 @@ export class GoalService {
       );
     }
 
-    // Step 3: Calculate progress using strategy
     // Different strategies implement different algorithms
     const progress = strategy.calculate(goal, healthData);
 
@@ -418,18 +375,14 @@ export class GoalService {
 
     // For weight goals, validate the target weight is reasonable (not too low/high)
     if (type === 'WEIGHT_LOSS' || type === 'WEIGHT_GAIN') {
-      // Target weight should be reasonable for a human (20-300kg)
-
       if (targetValue < 20 || targetValue > 300) {
         throw new BadRequestException(
           `Target weight must be between 20 and 300 kg`,
         );
       }
 
-      return; // Don't check against GOAL_VALIDATION_RULES for weight goals
+      return;
     }
-
-    // For other goals, validate against rules
 
     if (targetValue < rules.min || targetValue > rules.max) {
       throw new BadRequestException(
@@ -461,7 +414,7 @@ export class GoalService {
         );
       }
 
-      // Warn if target is too low (BMI considerations)
+      // Warn if target is too low
       if (targetWeight < 40) {
         throw new BadRequestException(
           'Target weight seems too low. Please consult with a healthcare professional.',

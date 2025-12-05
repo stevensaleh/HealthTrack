@@ -1,10 +1,11 @@
-// src/types/user.ts
 export interface User {
   id: string;
   email: string;
-  name: string;
+  firstName?: string;      
+  lastName?: string;       
   picture?: string;
-  provider: 'email' | 'google';
+  profileImage?: string;  
+  provider?: 'email';
   dateOfBirth?: Date;
   gender?: 'male' | 'female' | 'other';
   height?: number;
@@ -25,10 +26,7 @@ export interface UserPreferences {
 export type DataSource = 
   | 'manual'
   | 'fitbit'
-  | 'strava'
-  | 'google_fit'
-  | 'apple_health'
-  | 'nutritionix';
+  | 'strava';
 
 export interface AuthResponse {
   success: boolean;
@@ -46,22 +44,11 @@ export interface LoginCredentials {
 export interface RegisterData {
   email: string;
   password: string;
-  name: string;
+  name: string;              
+  firstName?: string;        
+  lastName?: string;         
   dateOfBirth?: string;
   gender?: 'male' | 'female' | 'other';
   height?: number;
   weight?: number;
-}
-
-// Remove the custom GoogleCredentialResponse - we'll use the library's type
-// export interface GoogleCredentialResponse { ... }
-
-export interface GoogleUserInfo {
-  sub: string;
-  email: string;
-  name: string;
-  picture?: string;
-  email_verified?: boolean;
-  given_name?: string;
-  family_name?: string;
 }

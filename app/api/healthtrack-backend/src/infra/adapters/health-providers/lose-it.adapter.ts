@@ -1,16 +1,5 @@
 /**
  * Lose It! API Adapter
- *
- * Implements IHealthDataProvider for Lose It! nutrition tracking API.
- *
- * Lose It! provides:
- * - Nutrition data (calories consumed)
- * - Weight entries
- * - Exercise data (calories burned)
- *
- * API Documentation: https://api.loseit.com/docs
- * OAuth 2.0 with standard flow
- * Rate Limit: 60 requests/hour
  */
 
 import { Injectable, Logger } from '@nestjs/common';
@@ -34,7 +23,7 @@ export class LoseItAdapter implements IHealthDataProvider {
   private readonly clientSecret: string;
   private readonly redirectUri: string;
 
-  // Lose It! API endpoints
+  // Lose It API endpoints
   private readonly BASE_URL = 'https://api.loseit.com';
   private readonly AUTH_URL = 'https://api.loseit.com/oauth/authorize';
   private readonly TOKEN_URL = 'https://api.loseit.com/oauth/token';
@@ -143,7 +132,7 @@ export class LoseItAdapter implements IHealthDataProvider {
     const healthData: ExternalHealthData[] = [];
 
     try {
-      // Define types for Lose It! API responses
+      // Define types for Lose It API responses
       type NutritionEntry = {
         date: string;
         calories: { burned: number };
@@ -222,7 +211,7 @@ export class LoseItAdapter implements IHealthDataProvider {
       dataByDate.forEach((data) => {
         const date = data.date;
         if (!date) {
-          // skip entries without a date (should not happen because we set date when creating entries)
+          // skip entries without a date
           return;
         }
 
@@ -280,7 +269,7 @@ export class LoseItAdapter implements IHealthDataProvider {
       };
     } catch (error) {
       this.logger.error('Failed to refresh Lose It! token');
-      throw new Error(`Lose It! token refresh failed: ${error.message}`);
+      throw new Error(`Lose It token refresh failed: ${error.message}`);
     }
   }
 
@@ -289,7 +278,7 @@ export class LoseItAdapter implements IHealthDataProvider {
 
     try {
       this.logger.warn(
-        'Lose It! does not provide a revocation endpoint. Token will expire naturally.',
+        'Lose It does not provide a revocation endpoint. Token will expire naturally.',
       );
     } catch (error) {
       this.logger.error('Failed to revoke Lose It! access');

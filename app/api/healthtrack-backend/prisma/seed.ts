@@ -4,7 +4,7 @@ import bcrypt from 'bcrypt';
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log('🌱 Starting database seeding...');
+  console.log(' Starting database seeding');
 
   // Create a test user with email/password
   const hashedPassword: string = await bcrypt.hash('password123', 10);
@@ -76,7 +76,7 @@ async function main() {
     data: healthDataEntries,
   });
 
-  console.log('✅ Created 7 days of health data for test user');
+  console.log('Created 7 days of health data for test user');
 
   // Create sample goals for user1
   const futureDate = new Date();
@@ -108,7 +108,7 @@ async function main() {
     },
   });
 
-  console.log('✅ Created 2 goals for test user');
+  console.log('Created 2 goals for test user');
 
   // Create a sample integration
   const integration = await prisma.integration.create({
@@ -121,7 +121,7 @@ async function main() {
     },
   });
 
-  console.log('✅ Created sample integration for test user');
+  console.log('Created sample integration for test user');
 
   console.log('');
   console.log('🎉 Database seeding completed successfully!');
@@ -133,7 +133,7 @@ async function main() {
 
 main()
   .catch((e) => {
-    console.error('❌ Error seeding database:', e);
+    console.error('Error seeding database:', e);
     process.exit(1);
   })
   .finally(async () => {

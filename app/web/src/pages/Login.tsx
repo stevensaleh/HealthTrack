@@ -1,11 +1,9 @@
-// src/pages/Login.tsx
 import { useState, useEffect, FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { GoogleLogin, CredentialResponse } from '@react-oauth/google';
 import { useAuth } from '@/context/AuthContext';
 
 export default function Login() {
-  const { isAuthenticated, login, register, loginWithGoogle } = useAuth();
+  const { isAuthenticated, login, register } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -64,34 +62,6 @@ export default function Login() {
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleGoogleSuccess = async (credentialResponse: CredentialResponse) => {
-    if (!credentialResponse.credential) {
-      setError('Google sign-in failed. No credential received.');
-      return;
-    }
-
-    setError('');
-    setLoading(true);
-
-    try {
-      const result = await loginWithGoogle(credentialResponse.credential);
-      if (result.success) {
-        navigate('/dashboard');
-      } else {
-        setError(result.error || 'Google authentication failed');
-      }
-    } catch (err) {
-      setError('An error occurred with Google sign-in. Please try again.');
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleGoogleError = () => {
-    setError('Google sign-in failed. Please try again.');
   };
 
   const toggleMode = () => {
@@ -173,23 +143,6 @@ export default function Login() {
             {loading ? 'Loading...' : isLoginMode ? 'Sign In' : 'Sign Up'}
           </button>
         </form>
-
-        {/* Divider */}
-        <div className="divider">
-          <span className="divider-text">OR</span>
-        </div>
-
-        {/* Google Login */}
-        <div className="flex-center mb-8">
-          <GoogleLogin
-            onSuccess={handleGoogleSuccess}
-            onError={handleGoogleError}
-            theme="outline"
-            size="large"
-            text={isLoginMode ? 'signin_with' : 'signup_with'}
-            width="360"
-          />
-        </div>
 
         {/* Footer */}
         <div className="text-center">

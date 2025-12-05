@@ -1,8 +1,6 @@
 /**
- * IHealthDataRepository - HealthData Repository Interface (PORT)
- *
- * This interface defines operations for health data management.
- * Focuses on time-series data, analytics, and date-based queries.
+ * IHealthDataRepository - HealthData Repository Interface
+ * defines operations for health data management
  */
 
 import { HealthData } from '@prisma/client';
@@ -10,7 +8,6 @@ import {
   CreateHealthDataDto,
   UpdateHealthDataDto,
   HealthDataWithUser,
-  DateRangeQuery,
   MetricType,
 } from '@core/types/health-data.types';
 

@@ -1,6 +1,6 @@
 /**
  * UserService - Business Logic Layer
- * This service contains all business rules and orchestration for user operations.
+ *  contains all business rules and orchestration for user operations.
  */
 
 import {
@@ -132,7 +132,7 @@ export class UserService {
     }
 
     const payload = {
-      sub: user.id, // Standard JWT claim for user ID
+      sub: user.id,
       email: user.email,
       firstName: user.firstName,
       lastName: user.lastName,
@@ -141,7 +141,7 @@ export class UserService {
     const accessToken = this.jwtService.sign(payload);
 
     return {
-      accessToken, // Real JWT token
+      accessToken,
       user: toUserResponse(user),
       tokenType: 'Bearer',
       expiresIn: 86400, // 24 hours in seconds
@@ -322,10 +322,6 @@ export class UserService {
 
   /**
    * Validate password strength
-   * - Minimum 8 characters
-   * - At least one uppercase letter
-   * - At least one lowercase letter
-   * - At least one number
    * @throws BadRequestException if password too weak
    */
   private validatePasswordStrength(password: string): void {
@@ -375,8 +371,6 @@ export class UserService {
     const clean = (text: string | undefined): string | undefined => {
       if (!text) return text;
 
-      // Cast sanitizeHtml to a known function signature to avoid `error`-typed value issues,
-      // then ensure the result is a string before calling .trim().
       const sanitizer = sanitizeHtml as unknown as (
         input: string,
         options?: {

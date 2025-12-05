@@ -1,8 +1,5 @@
 /**
  * Health Data Provider Factory
- *
- * Implements the Factory Pattern to create and return appropriate
- * health data provider adapters based on provider type.
  */
 
 import { Injectable, Logger } from '@nestjs/common';

@@ -13,18 +13,18 @@ import { HealthData } from '@prisma/client';
  */
 export type CreateHealthDataDto = {
   userId: string;
-  date?: Date; // Optional, defaults to today
-  weight?: number; // kg
-  height?: number; // cm
-  steps?: number; // daily steps
-  calories?: number; // calories consumed
-  sleep?: number; // hours of sleep
-  water?: number; // liters of water
-  exercise?: number; // minutes of exercise
-  heartRate?: number; // average heart rate (bpm)
-  notes?: string; // User notes about the day
-  mood?: string; // User's mood (e.g., "happy", "tired", "energetic")
-  distance?: number; // distance covered in km
+  date?: Date;
+  weight?: number;
+  height?: number;
+  steps?: number;
+  calories?: number;
+  sleep?: number;
+  water?: number;
+  exercise?: number;
+  heartRate?: number;
+  notes?: string;
+  mood?: string;
+  distance?: number;
 };
 
 //UpdateHealthDataDto - Data that can be updated after logging
@@ -74,8 +74,8 @@ export type DateRangeQuery = {
  * Used when: Displaying weekly/monthly summaries
  */
 export type HealthDataStats = {
-  period: string; // e.g., "2024-11-01 to 2024-11-07"
-  entriesCount: number; // Number of days with data
+  period: string;
+  entriesCount: number;
 
   // Averages (null if no data)
   avgWeight?: number;
@@ -98,7 +98,6 @@ export type HealthDataStats = {
 
 /**
  * MetricType - Enum of trackable metrics
- * Used for: Type-safe metric selection in queries
  */
 export type MetricType =
   | 'weight'
@@ -112,23 +111,21 @@ export type MetricType =
 
 /**
  * TrendDirection - Direction of a metric trend
- * Used when: Analyzing if metrics are improving/worsening
  */
 export type TrendDirection = 'increasing' | 'decreasing' | 'stable';
 
 /**
  * MetricValidationRules - Realistic ranges for each metric
- * Used for: Validating user input
  */
 export const METRIC_VALIDATION_RULES = {
-  weight: { min: 20, max: 300, unit: 'kg' }, // Adult human range
-  height: { min: 50, max: 250, unit: 'cm' }, // Adult human range
-  steps: { min: 0, max: 100000, unit: 'steps' }, // Max realistic daily steps
-  calories: { min: 0, max: 10000, unit: 'kcal' }, // Max realistic daily intake
-  sleep: { min: 0, max: 24, unit: 'hours' }, // Max 24 hours
-  water: { min: 0, max: 20, unit: 'liters' }, // Max realistic daily intake
-  exercise: { min: 0, max: 1440, unit: 'minutes' }, // Max 24 hours
-  heartRate: { min: 30, max: 250, unit: 'bpm' }, // Human range
+  weight: { min: 20, max: 300, unit: 'kg' },
+  height: { min: 50, max: 250, unit: 'cm' },
+  steps: { min: 0, max: 100000, unit: 'steps' },
+  calories: { min: 0, max: 10000, unit: 'kcal' },
+  sleep: { min: 0, max: 24, unit: 'hours' },
+  water: { min: 0, max: 20, unit: 'liters' },
+  exercise: { min: 0, max: 1440, unit: 'minutes' },
+  heartRate: { min: 30, max: 250, unit: 'bpm' },
 };
 
 /**
@@ -154,7 +151,7 @@ export function isSameDay(date1: Date, date2: Date): boolean {
 export function getLastNDaysRange(days: number): DateRangeQuery {
   const endDate = new Date();
   const startDate = new Date();
-  startDate.setDate(startDate.getDate() - days + 1); // Include today
+  startDate.setDate(startDate.getDate() - days + 1);
 
   return {
     startDate: toDateOnly(startDate),

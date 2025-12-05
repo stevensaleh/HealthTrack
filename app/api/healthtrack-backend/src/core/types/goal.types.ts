@@ -32,30 +32,26 @@ export type GoalResponse = Goal;
 
 /**
  * GoalProgress - Result of progress calculation
- *
- * This is what Strategy Pattern implementations return
- * Contains all information about goal progress
- * Used when Calculating how close user is to goal
  */
 export type GoalProgress = {
-  percentage: number; // Progress as percentage (0-100, can exceed 100)
-  status: ProgressStatus; // Current progress status
-  currentValue: number; // Current metric value
-  targetValue: number; // Goal target value
-  startValue?: number; // Starting value (for trajectory goals)
-  remainingValue: number; // Amount left to reach goal
-  remainingDays: number; // Days until end date
-  isOnTrack: boolean; // Is user trending toward goal?
-  message: string; // Human-readable progress message
-  completedAt?: Date; // When goal was completed (if applicable)
+  percentage: number;
+  status: ProgressStatus;
+  currentValue: number;
+  targetValue: number;
+  startValue?: number;
+  remainingValue: number;
+  remainingDays: number;
+  isOnTrack: boolean;
+  message: string;
+  completedAt?: Date;
 };
 
 //ProgressStatus - Progress state
 export type ProgressStatus =
-  | 'not_started' // No progress yet
-  | 'in_progress' // Working toward goal
-  | 'completed' // Goal achieved!
-  | 'overdue'; // Past end date, not completed
+  | 'not_started'
+  | 'in_progress'
+  | 'completed'
+  | 'overdue';
 
 /**
  * GoalWithProgress - Goal with calculated progress
@@ -159,9 +155,6 @@ export const DAILY_TARGET_GOALS: GoalType[] = [
 
 /**
  * Helper function to check if goal type is trajectory based
- *
- * Trajectory goals: Progress over time toward a final value
- * Daily target goals: Meet target each day
  */
 export function isTrajectoryGoal(type: GoalType): boolean {
   return TRAJECTORY_GOALS.includes(type);

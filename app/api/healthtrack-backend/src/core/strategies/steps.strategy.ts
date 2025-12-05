@@ -1,11 +1,5 @@
 /**
  * StepsStrategy - Calculate progress for daily step goals
- *
- * Algorithm:
- * - Get today's steps (or latest entry)
- * - Calculate progress: todaySteps / targetSteps * 100
- * - This is a DAILY goal - resets each day
- *
  */
 
 import { Injectable } from '@nestjs/common';
@@ -47,7 +41,7 @@ export class StepsStrategy implements IGoalCalculationStrategy {
       status = 'not_started';
     }
 
-    // For daily goals, "on track" means making progress today
+    // For daily goals, on track means making progress today
     const isOnTrack = percentage > 0;
 
     // Remaining steps
