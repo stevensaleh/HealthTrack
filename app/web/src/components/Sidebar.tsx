@@ -59,7 +59,7 @@ export default function Sidebar({ goalsCompleted, daysTracked, currentStreak }: 
           }}
         >
           <LocalHospitalIcon style={{ fontSize: '28px', color: 'var(--color-accent)' }} />
-          HealthHive
+          HealthTrack
         </h1>
       </div>
 

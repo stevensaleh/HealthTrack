@@ -26,7 +26,7 @@ async function bootstrap() {
 
   // Swagger Configuration
   const config = new DocumentBuilder()
-    .setTitle('HealthHive API')
+    .setTitle('HealthTrack API')
     .setDescription(
       'Health and fitness tracking API with third-party integrations',
     )
@@ -43,7 +43,7 @@ async function bootstrap() {
 
   const port = process.env.PORT || 3000;
   await app.listen(port);
-  console.log(`🚀 HealthHive Backend is running on: http://localhost:${port}`);
+  console.log(`🚀 HealthTrack Backend is running on: http://localhost:${port}`);
   console.log(`📚 API Documentation: http://localhost:${port}/api`);
 }
 
