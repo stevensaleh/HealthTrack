@@ -26,7 +26,13 @@ export default function ActivityFeed({
   // Sort health data by date descending
   const sortedHealthData = [...healthData].sort((a, b) => 
     new Date(b.date).getTime() - new Date(a.date).getTime()
-  ).slice(0, 10); // last 10 entries
+  ).slice(0, 10); // Show last 10 entries
+
+  // Calculate average calories
+  const calorieEntries = healthData.filter(entry => entry.calories && entry.calories > 0);
+  const averageCalories = calorieEntries.length > 0
+    ? Math.round(calorieEntries.reduce((sum, entry) => sum + (entry.calories || 0), 0) / calorieEntries.length)
+    : 0;
 
   // Helper to format date
   const formatDate = (dateString: string) => {
@@ -176,7 +182,7 @@ export default function ActivityFeed({
                 color: 'var(--color-text-primary)',
               }}
             >
-              {caloriesBurned}
+              {averageCalories}
               <span
                 style={{
                   fontSize: 'var(--font-size-base)',
@@ -196,8 +202,10 @@ export default function ActivityFeed({
             color: 'var(--color-text-muted)',
           }}
         >
-          Average calorie burnt over the all activity is{' '}
-          <span style={{ fontWeight: 'var(--font-weight-semibold)' }}>500 kcal</span>
+          Average calorie burnt over all activity is{' '}
+          <span style={{ fontWeight: 'var(--font-weight-semibold)' }}>
+            {averageCalories > 0 ? `${averageCalories} kcal` : 'N/A'}
+          </span>
         </div>
       </div>
 
