@@ -33,7 +33,6 @@ export function useGoalActions() {
   const [error, setError] = useState<string | null>(null);
 
   const createGoal = async (data: CreateGoalData) => {
-
     try {
       setLoading(true);
       setError(null);
@@ -41,7 +40,25 @@ export function useGoalActions() {
       const response = await apiClient.post('/goals', data);
       return response.data;
     } catch (err: any) {
-      const errorMessage = err.response?.data?.message || 'Failed to create goal';
+      console.log('Full error object:', err);
+      console.log('Error response:', err.response);
+      console.log('Error response data:', err.response?.data);
+      
+      let errorMessage = 'Failed to create goal';
+      
+      if (err.response?.data) {
+        const data = err.response.data;
+        if (typeof data.message === 'string') {
+          errorMessage = data.message;
+        }
+        else if (Array.isArray(data.message)) {
+          errorMessage = data.message.join(', ');
+        }
+        else if (typeof data.error === 'string') {
+          errorMessage = data.error;
+        }
+      }
+      
       setError(errorMessage);
       throw new Error(errorMessage);
     } finally {
@@ -57,7 +74,19 @@ export function useGoalActions() {
       const response = await apiClient.patch(`/goals/${goalId}`, data);
       return response.data;
     } catch (err: any) {
-      const errorMessage = err.response?.data?.message || 'Failed to update goal';
+      let errorMessage = 'Failed to update goal';
+      
+      if (err.response?.data) {
+        const data = err.response.data;
+        if (typeof data.message === 'string') {
+          errorMessage = data.message;
+        } else if (Array.isArray(data.message)) {
+          errorMessage = data.message.join(', ');
+        } else if (typeof data.error === 'string') {
+          errorMessage = data.error;
+        }
+      }
+      
       setError(errorMessage);
       throw new Error(errorMessage);
     } finally {
@@ -66,76 +95,64 @@ export function useGoalActions() {
   };
 
   const deleteGoal = async (goalId: string) => {
-
     try {
       setLoading(true);
       setError(null);
       
       await apiClient.delete(`/goals/${goalId}`);
-    } 
-    catch (err: any) {
+    } catch (err: any) {
       const errorMessage = err.response?.data?.message || 'Failed to delete goal';
       setError(errorMessage);
       throw new Error(errorMessage);
-    } 
-    finally {
+    } finally {
       setLoading(false);
     }
   };
 
   const completeGoal = async (goalId: string) => {
-
     try {
       setLoading(true);
       setError(null);
       
       const response = await apiClient.post(`/goals/${goalId}/complete`);
       return response.data;
-    } 
-    catch (err: any) {
+    } catch (err: any) {
       const errorMessage = err.response?.data?.message || 'Failed to complete goal';
       setError(errorMessage);
       throw new Error(errorMessage);
-    } 
-    finally {
+    } finally {
       setLoading(false);
     }
   };
 
   const pauseGoal = async (goalId: string) => {
-
     try {
       setLoading(true);
       setError(null);
       
       const response = await apiClient.post(`/goals/${goalId}/pause`);
       return response.data;
-    } 
-    catch (err: any) {
+    } catch (err: any) {
       const errorMessage = err.response?.data?.message || 'Failed to pause goal';
       setError(errorMessage);
       throw new Error(errorMessage);
-    } 
-    finally {
+    } finally {
       setLoading(false);
     }
   };
 
   const resumeGoal = async (goalId: string) => {
-    
     try {
       setLoading(true);
       setError(null);
       
       const response = await apiClient.post(`/goals/${goalId}/resume`);
       return response.data;
-    } 
-    catch (err: any) {
+    } catch (err: any) {
       const errorMessage = err.response?.data?.message || 'Failed to resume goal';
       setError(errorMessage);
       throw new Error(errorMessage);
-    } 
-    finally {
+    } finally {
       setLoading(false);
     }
   };

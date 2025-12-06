@@ -107,6 +107,7 @@ export class HealthDataRepository implements IHealthDataRepository {
         heartRate: data.heartRate,
         notes: data.notes,
         mood: data.mood,
+        source: data.source,
       },
     });
   }

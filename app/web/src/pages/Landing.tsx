@@ -31,10 +31,12 @@ export default function Landing() {
         alt="HealthTrack logo"
         style={{
           position: 'absolute',
-          top: '15%',
+          top: '10%',
+          left: '50%',
           transform: 'translate(-50%, -50%)',
-          height: '25%',
-          width: 'auto',
+          height: 'auto',
+          width: '200px',
+          maxWidth: '25vw',
         }}
       />
 

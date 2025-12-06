@@ -6,7 +6,6 @@ import ProtectedRoute from './components/common/ProtectedRoute';
 import NewDashboard from '@/pages/NewDashboard';
 import Landing from "./pages/Landing";
 import Login from "./pages/Login";
-import Dashboard from "./pages/Dashboard";
 
 
 //React Query client
