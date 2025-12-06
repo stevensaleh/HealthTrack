@@ -192,8 +192,8 @@ You should see `healthtrack-backend` container running.
 Generate Prisma client and create database tables:
 
 ```bash
-npm run prisma:generate
-npm run prisma:migrate
+npm run prisma generate
+npm run prisma migrate deploy
 ```
 
 **When prompted:** 
@@ -268,11 +268,7 @@ npm run dev
 
 ### Login
 
-**Use one of the seeded accounts:**
-- **Email:** `gigi@example.com`
-- **Password:** `password123`
-
-**OR create a new account:**
+**Create a new account:**
 - Click "Sign Up"
 - Fill in your details
 - Click "Create Account"
@@ -302,7 +298,7 @@ Once logged in, you can:
 
 ### 4. Connect Integrations (Optional)
 - Click "Connect Apps" in sidebar
-- Connect to Strava, Fitbit, or Lose It
+- Connect to Strava, Fitbit, or Lose It (**NOTE: you must have an account with either strava, fitbit or lose it for this to work**)
 - Sync data automatically
 
 ---
@@ -356,13 +352,13 @@ taskkill /PID <PID_NUMBER> /F
 
 2. If no containers running, start database:
    ```bash
-   cd backend
+   cd app/api/healthtrack-backend/
    docker-compose up -d
    ```
 
 3. Check database logs:
    ```bash
-   docker logs healthhive-db
+   docker logs healthtrack-backend
    ```
 
 ---
@@ -373,8 +369,8 @@ taskkill /PID <PID_NUMBER> /F
 
 **Solution:**
 ```bash
-cd backend
-npm run prisma:generate
+cd app/api/healthtrack-backend/
+npx prisma generate
 ```
 
 ---
@@ -386,12 +382,12 @@ npm run prisma:generate
 **Solution:**
 ```bash
 # In backend:
-cd backend
+cd app/api/healthtrack-backend/
 rm -rf node_modules package-lock.json
 npm install
 
 # In frontend:
-cd frontend
+cd app/web/
 rm -rf node_modules package-lock.json
 npm install
 ```
@@ -436,18 +432,21 @@ You can test all endpoints directly from the browser!
 
 ```
 src/
-├── domain/              # Domain entities and interfaces
+├── core/               # Domain entities and interfaces
 │   ├── repositories/    # Repository interfaces
+│   ├── services/       # service mehtods
+│   ├── providers/     
 │   └── strategies/      # Strategy interfaces
 │
-├── infrastructure/      # External concerns
+├── infra/               # External concerns
 │   ├── database/        # Prisma and repositories
 │   ├── adapters/        # Third-party API adapters
 │   └── strategies/      # Goal calculation strategies
 │
-├── application/         # Application logic
+├── app/                 # Application logic
 │   ├── services/        # Business logic
 │   ├── controllers/     # HTTP endpoints
+│   ├── guards/          # Auth Guards
 │   └── dto/             # Data transfer objects
 │
 └── core/                # Shared utilities

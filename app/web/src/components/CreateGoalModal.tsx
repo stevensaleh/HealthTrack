@@ -31,8 +31,8 @@ export default function CreateGoalModal({
   const [targetValue, setTargetValue] = useState('');
   const [targetDate, setTargetDate] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  // Populate form when editing
   useEffect(() => {
     if (editingGoal) {
       setType(editingGoal.type as GoalType);
@@ -40,7 +40,7 @@ export default function CreateGoalModal({
       setDescription(editingGoal.description || '');
       setStartValue(editingGoal.startValue?.toString() || '');
       setTargetValue(editingGoal.targetValue.toString());
-      setTargetDate(editingGoal.endDate.split('T')[0]); // Backend uses 'endDate'
+      setTargetDate(editingGoal.endDate.split('T')[0]); 
     } else {
       // Reset form
       setType('STEPS');
@@ -50,6 +50,7 @@ export default function CreateGoalModal({
       setTargetValue('');
       setTargetDate('');
     }
+    setErrorMessage(null);
   }, [editingGoal, isOpen]);
 
   if (!isOpen) return null;
@@ -71,12 +72,12 @@ export default function CreateGoalModal({
     e.preventDefault();
     
     if (!title.trim() || !targetValue || !targetDate) {
-      alert('Please fill in all required fields');
+      setErrorMessage('Please fill in all required fields');
       return;
     }
 
     setSubmitting(true);
-
+    setErrorMessage(null); // Clear previous errors
     try {
       if (editingGoal) {
         // Update existing goal
@@ -98,8 +99,11 @@ export default function CreateGoalModal({
         });
       }
       onClose();
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error submitting goal:', error);
+      // Extract error message from Error object
+      const message = error.message || 'Failed to submit goal. Please try again.';
+      setErrorMessage(message);
     } finally {
       setSubmitting(false);
     }
@@ -173,7 +177,7 @@ export default function CreateGoalModal({
         </div>
 
         <form onSubmit={handleSubmit}>
-          {/* Goal Type Selector */}
+          {/* Goal Type Selector (only for new goals) */}
           {!editingGoal && (
             <div style={{ marginBottom: 'var(--space-6)' }}>
               <label
@@ -439,6 +443,68 @@ export default function CreateGoalModal({
               onBlur={(e) => (e.target.style.borderColor = 'var(--color-border-light)')}
             />
           </div>
+
+          {/* Error Message */}
+          {errorMessage && (
+            <div
+              style={{
+                padding: 'var(--space-4)',
+                background: '#FEE2E2',
+                border: '2px solid #EF4444',
+                borderRadius: 'var(--radius-md)',
+                marginBottom: 'var(--space-4)',
+              }}
+            >
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'flex-start',
+                  gap: 'var(--space-2)',
+                }}
+              >
+                <div style={{ flex: 1 }}>
+                  <p
+                    style={{
+                      margin: 0,
+                      fontSize: 'var(--font-size-sm)',
+                      fontWeight: 'var(--font-weight-semibold)',
+                      color: '#DC2626',
+                      marginBottom: 'var(--space-1)',
+                    }}
+                  >
+                    Error!!
+                  </p>
+                  <p
+                    style={{
+                      margin: 0,
+                      fontSize: 'var(--font-size-sm)',
+                      color: '#991B1B',
+                      lineHeight: '1.5',
+                    }}
+                  >
+                    {errorMessage}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setErrorMessage(null)}
+                  style={{
+                    background: 'transparent',
+                    border: 'none',
+                    cursor: 'pointer',
+                    padding: '4px',
+                    color: '#DC2626',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                  aria-label="Dismiss error"
+                >
+                  <CloseIcon style={{ fontSize: '18px' }} />
+                </button>
+              </div>
+            </div>
+          )}
 
           {/* Buttons */}
           <div style={{ display: 'flex', gap: 'var(--space-3)' }}>

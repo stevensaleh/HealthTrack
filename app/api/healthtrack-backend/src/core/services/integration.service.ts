@@ -292,11 +292,12 @@ export class IntegrationService {
             date: data.date,
             steps: data.steps,
             weight: data.weight,
-            //caloriesBurned: data.caloriesBurned,
+            calories: data.caloriesBurned,
             exercise: data.exerciseMinutes,
             sleep: data.sleepMinutes,
             heartRate: data.heartRate,
             distance: data.distance,
+            source: integration.provider,
           });
 
           synced++;

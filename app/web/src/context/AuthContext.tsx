@@ -173,6 +173,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.removeItem(STORAGE_KEY);
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
+    window.location.href = '/';
   };
 
   // Update user profile

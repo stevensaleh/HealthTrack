@@ -23,35 +23,23 @@ export default function GoalsPage() {
 
   // Filter goals based on active tab
   const filteredGoals = (goals || []).filter((goal) => {
-    if (activeTab === 'active')
-         return goal.status === 'ACTIVE';
-    if (activeTab === 'completed')
-         return goal.status === 'COMPLETED';
+    if (activeTab === 'active') return goal.status === 'ACTIVE';
+    if (activeTab === 'completed') return goal.status === 'COMPLETED';
     return true; 
   });
 
   const handleCreateGoal = async (data: any) => {
-    try {
-      await goalActions.createGoal(data);
-      await refetch();
-      setShowCreateModal(false);
-    } catch (error) {
-      console.error('Failed to create goal:', error);
-      alert('Failed to create goal. Please try again.');
-    }
+    await goalActions.createGoal(data);
+    await refetch();
+    setShowCreateModal(false);
   };
 
   const handleUpdateGoal = async (data: any) => {
     if (!editingGoal) return;
     
-    try {
-      await goalActions.updateGoal(editingGoal.id, data);
-      await refetch();
-      setEditingGoal(null);
-    } catch (error) {
-      console.error('Failed to update goal:', error);
-      alert('Failed to update goal. Please try again.');
-    }
+    await goalActions.updateGoal(editingGoal.id, data);
+    await refetch();
+    setEditingGoal(null);
   };
 
   const handleDeleteGoal = async (goalId: string) => {
@@ -68,8 +56,6 @@ export default function GoalsPage() {
     try {
       await goalActions.completeGoal(goalId);
       await refetch();
-      
-      // Show success message with confetti effect
       const goal = goals.find(g => g.id === goalId);
       if (goal) {
         alert(`Congratulations! You completed "${goal.title}"!`);
@@ -146,12 +132,8 @@ export default function GoalsPage() {
           background: '#fafafa',
         }}
       >
-        <div style={{ 
-            textAlign: 'center',
-             maxWidth: '400px' }}>
-          <p style={{ 
-            color: 'var(--color-error)',
-            fontSize: 'var(--font-size-lg)' }}>
+        <div style={{ textAlign: 'center', maxWidth: '400px' }}>
+          <p style={{ color: 'var(--color-error)', fontSize: 'var(--font-size-lg)' }}>
             {error}
           </p>
           <button

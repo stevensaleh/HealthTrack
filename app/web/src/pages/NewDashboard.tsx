@@ -31,12 +31,12 @@ export default function NewDashboard() {
   const { latestData, historicalData, weeklyStats, trackingStatus, loading: healthLoading, refetch: refetchHealth } = useHealthData(timePeriod);
   const { stats: goalStats, loading: goalsLoading } = useGoals();
   const { integrations, initiateConnection, disconnectIntegration, syncIntegration, refetch: refetchIntegrations } = useIntegrations();
+
   const [showIntegrationsModal, setShowIntegrationsModal] = useState(false);
   const [showHealthEntryModal, setShowHealthEntryModal] = useState(false);
 
   const handleLogout = () => {
     logout();
-    navigate('/login');
   };
 
   const handleAddIntegration = () => {
@@ -62,13 +62,17 @@ export default function NewDashboard() {
 
   const handleSyncIntegration = async (integrationId: string) => {
     try {
+
       await syncIntegration(integrationId);
       await refetchIntegrations();
       await refetchHealth();
-      console.log(' Sync completed successfully!');
+      console.log('sync completed successfully!');
+
     } catch (error) {
+
       console.error('Failed to sync:', error);
-      throw error; // Rethrow 
+      throw error; 
+
     }
   };
 
@@ -80,58 +84,58 @@ export default function NewDashboard() {
     const message = params.get('message');
 
     if (integration === 'success' && provider) {
+
       console.log(`Successfully connected to ${provider}`);
       refetchIntegrations();
       refetchHealth();
-      console.log(` ${provider} connected and synced successfully!`);
+      console.log(`${provider} connected and synced successfully!`);
       window.history.replaceState({}, '', '/dashboard');
+
     } else if (integration === 'error') {
+
       console.error('Integration error:', message);
       alert(`Failed to connect: ${message || 'Unknown error'}`);
       window.history.replaceState({}, '', '/dashboard');
+
     }
   }, [refetchIntegrations, refetchHealth]);
 
   const handleHealthEntrySuccess = async () => {
     try {
-      console.log('Starting health data refresh');
-      
-      // Close modal
+
+      console.log('Starting health data refresh...');
       setShowHealthEntryModal(false);
-      
-      // delay to ensure modal is closed and unmounted
       await new Promise(resolve => setTimeout(resolve, 100));
+      
       await refetchHealth();
       console.log('Health data refreshed successfully');
-
     } catch (error) {
       console.error('Error refreshing health data:', error);
       alert('Data saved successfully, but failed to refresh dashboard. Please reload the page.');
     }
   };
 
-  // Get current date and time
+  // Get current date and time info
   const now = new Date();
   const dayName = now.toLocaleDateString('en-US', { weekday: 'long' });
   const dateStr = now.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
   const greeting = now.getHours() < 12 ? 'Good Morning' : now.getHours() < 18 ? 'Good Afternoon' : 'Good Evening';
 
 
-  // Generate real data from historical data
+  // Generate real chart data from historical data
   const generateChartData = (metric: keyof HealthDataEntry) => {
     if (!historicalData || historicalData.length === 0) {
-      return []; 
+      return [];
     }
     
     return historicalData
-      .filter(entry => entry[metric] != null)
+      .filter(entry => entry[metric] != null) 
       .map(entry => ({
         value: entry[metric] as number,
         label: new Date(entry.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
       }));
   };
 
-  // Helper to check if we should show chart 
   const shouldShowChart = (metric: keyof HealthDataEntry) => {
     const data = generateChartData(metric);
     return data.length >= 2;
@@ -165,11 +169,11 @@ export default function NewDashboard() {
     );
   }
 
-  //if no health data and not loading: Show empty state
+  // Show empty state if no health data and not loading
   const hasNoData = !latestData && !weeklyStats && !trackingStatus && !healthLoading;
   
   if (hasNoData) {
-    console.log('No health data available yet');
+    console.log('No health data available yet - showing empty state');
   }
 
   return (
@@ -252,7 +256,17 @@ export default function NewDashboard() {
             >
               Health Statistics
             </h2>
+            <button
+              style={{
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                fontSize: '20px',
+                padding: 'var(--space-2)',
+              }}
+            >
 
+            </button>
           </div>
 
           {/* Stats Grid */}
@@ -267,9 +281,9 @@ export default function NewDashboard() {
             <StatCard
               icon={<HeightIcon />}
               title="Height"
-              value={latestData?.height || 170}
+              value={latestData?.height || 0}
               unit="cm"
-              subtitle="Current height"
+              subtitle={latestData?.height ? "Current height" : "No data yet"}
               color="#9333EA"
             />
 
@@ -277,45 +291,51 @@ export default function NewDashboard() {
             <StatCard
               icon={<ScaleIcon />}
               title="Weight"
-              value={latestData?.weight || weeklyStats?.metrics?.weight?.average || 70}
+              value={latestData?.weight || weeklyStats?.metrics?.weight?.average || 0}
               unit="kg"
-              subtitle={`Target: ${(latestData?.weight || weeklyStats?.metrics?.weight?.average || 70) - 5} kg`}
-              trend="down"
-              trendValue="-2%"
+              subtitle={latestData?.weight || weeklyStats?.metrics?.weight?.average 
+                ? `Target: ${((latestData?.weight || weeklyStats?.metrics?.weight?.average) - 5).toFixed(1)} kg`
+                : "No data yet"}
+              trend={latestData?.weight || weeklyStats?.metrics?.weight?.average ? "down" : undefined}
+              trendValue={latestData?.weight || weeklyStats?.metrics?.weight?.average ? "-2%" : undefined}
               color="#DC2626"
             />
 
-            {/* Heart Rate Card has Chart */}
+            {/* Heart Rate Card with Chart */}
             <StatCard
               icon={<FavoriteIcon />}
               title="Heart Rate"
-              value={latestData?.heartRate || weeklyStats?.metrics?.heartRate?.average || 72}
+              value={latestData?.heartRate || weeklyStats?.metrics?.heartRate?.average || 0}
               unit="BPM"
-              subtitle="Normal"
-              trend="neutral"
+              subtitle={latestData?.heartRate || weeklyStats?.metrics?.heartRate?.average ? "Normal" : "No data yet"}
+              trend={latestData?.heartRate || weeklyStats?.metrics?.heartRate?.average ? "neutral" : undefined}
               color="#DC2626"
               chart={shouldShowChart('heartRate') ? <MiniLineChart data={generateChartData('heartRate')} color="#DC2626" /> : undefined}
             />
 
-            {/* Steps Card has Chart */}
+            {/* Steps Card with Chart */}
             <StatCard
               icon={<DirectionsWalkIcon />}
               title="Steps"
-              value={latestData?.steps || weeklyStats?.metrics?.steps?.average || 8500}
-              subtitle={`Avg: ${Math.round(weeklyStats?.metrics?.steps?.average || latestData?.steps || 8500)} steps`}
-              trend="up"
-              trendValue="+12%"
+              value={latestData?.steps || weeklyStats?.metrics?.steps?.average || 0}
+              subtitle={weeklyStats?.metrics?.steps?.average || latestData?.steps 
+                ? `Avg: ${Math.round(weeklyStats?.metrics?.steps?.average || latestData?.steps)} steps`
+                : "No data yet"}
+              trend={weeklyStats?.metrics?.steps?.average || latestData?.steps ? "up" : undefined}
+              trendValue={weeklyStats?.metrics?.steps?.average || latestData?.steps ? "+12%" : undefined}
               color="#10B981"
               chart={shouldShowChart('steps') ? <MiniLineChart data={generateChartData('steps')} color="#10B981" /> : undefined}
             />
 
-            {/* Active Energy Card has Bar Chart */}
+            {/* Active Energy Card with Bar Chart */}
             <StatCard
               icon={<LocalFireDepartmentIcon />}
               title="Active Energy"
-              value={(latestData?.exercise || weeklyStats?.metrics?.exercise?.average || 45).toFixed(1)}
+              value={(latestData?.exercise || weeklyStats?.metrics?.exercise?.average || 0).toFixed(1)}
               unit="min"
-              subtitle="Normal activity level"
+              subtitle={latestData?.exercise || weeklyStats?.metrics?.exercise?.average 
+                ? "Normal activity level" 
+                : "No data yet"}
               color="#F59E0B"
               chart={shouldShowChart('exercise') ? <MiniBarChart data={generateChartData('exercise')} color="#F59E0B" /> : undefined}
             />
@@ -324,17 +344,21 @@ export default function NewDashboard() {
             <StatCard
               icon={<BedtimeIcon />}
               title="Sleep Activity"
-              value={latestData?.sleep || weeklyStats?.metrics?.sleep?.average || 8}
+              value={latestData?.sleep || weeklyStats?.metrics?.sleep?.average || 0}
               unit="hours"
-              subtitle="Good sleep quality"
+              subtitle={latestData?.sleep || weeklyStats?.metrics?.sleep?.average 
+                ? "Good sleep quality" 
+                : "No data yet"}
               color="#6366F1"
               chart={
-                <SleepChart
-                  sleepHours={latestData?.sleep || weeklyStats?.metrics?.sleep?.average || 8}
-                  deepSleep={2.5}
-                  lightSleep={4.5}
-                  rem={2}
-                />
+                (latestData?.sleep || weeklyStats?.metrics?.sleep?.average) ? (
+                  <SleepChart
+                    sleepHours={latestData?.sleep || weeklyStats?.metrics?.sleep?.average}
+                    deepSleep={2.5}
+                    lightSleep={4.5}
+                    rem={2}
+                  />
+                ) : undefined
               }
             />
 
@@ -342,10 +366,12 @@ export default function NewDashboard() {
             <StatCard
               icon={<RestaurantIcon />}
               title="Calories"
-              value={latestData?.calories || weeklyStats?.metrics?.calories?.average || 2000}
+              value={latestData?.calories || weeklyStats?.metrics?.calories?.average || 0}
               unit="kcal"
-              subtitle={`Goal: ${2200} kcal`}
-              trend="neutral"
+              subtitle={latestData?.calories || weeklyStats?.metrics?.calories?.average 
+                ? `Goal: ${2200} kcal` 
+                : "No data yet"}
+              trend={latestData?.calories || weeklyStats?.metrics?.calories?.average ? "neutral" : undefined}
               color="#FF8C42"
             />
 
@@ -353,11 +379,13 @@ export default function NewDashboard() {
             <StatCard
               icon={<WaterDropIcon />}
               title="Water"
-              value={latestData?.water || weeklyStats?.metrics?.water?.average || 2.5}
+              value={latestData?.water || weeklyStats?.metrics?.water?.average || 0}
               unit="L"
-              subtitle="Stay hydrated!"
-              trend="up"
-              trendValue="+8%"
+              subtitle={latestData?.water || weeklyStats?.metrics?.water?.average 
+                ? "Stay hydrated!" 
+                : "No data yet"}
+              trend={latestData?.water || weeklyStats?.metrics?.water?.average ? "up" : undefined}
+              trendValue={latestData?.water || weeklyStats?.metrics?.water?.average ? "+8%" : undefined}
               color="#06B6D4"
             />
           </div>

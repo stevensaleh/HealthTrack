@@ -25,6 +25,7 @@ export type CreateHealthDataDto = {
   notes?: string;
   mood?: string;
   distance?: number;
+  source?: string;
 };
 
 //UpdateHealthDataDto - Data that can be updated after logging

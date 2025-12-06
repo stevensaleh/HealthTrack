@@ -129,9 +129,9 @@ export default function Dashboard() {
           <h1 className="heading-4">HealthTrack</h1>
           <div className="header-actions">
             {user?.picture && (
-              <img src={user.picture} alt={user.name} className="user-avatar" />
+              <img src={user.picture} alt={user.firstName} className="user-avatar" />
             )}
-            <span className="user-name">{user?.name || user?.email}</span>
+            <span className="user-name">{user?.firstName || user?.email}</span>
             <button onClick={handleLogout} className="btn-secondary btn-sm">
               Logout
             </button>

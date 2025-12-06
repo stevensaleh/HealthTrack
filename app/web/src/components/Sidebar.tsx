@@ -19,10 +19,8 @@ export default function Sidebar({ goalsCompleted, daysTracked, currentStreak }: 
 
   const navItems = [
     { icon: HomeIcon, label: 'Home', path: '/dashboard' },
-    // { icon: ShowChartIcon, label: 'Activity', path: '/activity' },
-    // { icon: BarChartIcon, label: 'Analytics', path: '/analytics' },
     { icon: TrackChangesIcon, label: 'Goals', path: '/goals' },
-    { icon: SettingsIcon, label: 'Settings', path: '/settings' },
+    { icon: SettingsIcon, label: 'Settings' },
   ];
 
   const isActive = (path: string) => location.pathname === path;
